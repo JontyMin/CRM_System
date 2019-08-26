@@ -1,0 +1,58 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title></title>
+    <link href="CSS/left.css" rel="stylesheet" type="text/css" />
+
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/json.js"></script>
+    <script src="js/MyJquery.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+
+            $.myAjax("../webServers/Menu.asmx/GetMenus",null, function (d) {
+                
+                var div2 = $("#div2");
+                $.each(d, function (k,v) {
+                    if (v.ParentID == 0)
+                    {
+                        var p_div = $(" <div class='menuDiv'></div>").text(v.MenuName).appendTo(div2);
+
+                        var p_child1 =$("<div class='contentDiv'>").appendTo(div2);
+                        $.each(d, function (a,b) {
+
+                            console.log(v.ID + ":" + b.ParentID);
+                            if (v.ID == b.ParentID)
+                            {
+                                $("<div><img src='images/left.gif' /><a href='"+b.Url+"' target='main'>" + b.MenuName + "</a></div>").appendTo(p_child1);
+                            }
+                        })
+                    }
+                })
+            });
+
+            $(document).on("click", ".menuDiv", function () {
+                $(this).next("div").slideToggle(300);
+            })
+
+            //$(".menuDiv")on.click(function() {
+            //    $(this).next("div").slideToggle(300);
+            //});
+        });
+    </script>
+</head>
+<body>
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="td1"></td>
+        <td id="td2">
+            <div id="div1">管理菜单
+            </div>
+            <div id="div2">
+                
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

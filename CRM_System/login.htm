@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/json.js"></script>
+    <script src="js/MyJquery.js"></script>
+    <title>CRM客户关系管理系统</title>
+    <style type="text/css">
+        body
+        {
+            margin: 0px;
+            background-color: #016aa9;
+            overflow: hidden;
+        }
+        .STYLE1
+        {
+            color: #000000;
+            font-size: 12px;
+        }
+    </style>
+<script>
+	$(function () {
+
+		//按钮点击拿到文本框的值，进行登录操作
+		$("#bt1").click(function () {
+			//alert("aa");
+			var UserLName = $(":input:eq(0)").val();//第1个文本框的值—用户名
+			var UserLPWD = $(":input:eq(1)").val();//第2个文本框的值—密码
+			//alert(UserLName + "" + UserLPWD);
+			if (UserLName == "" || UserLName == null) {//非空判断
+				alert("请输入用户名");
+			}
+			if (UserLPWD == "" || UserLPWD == null) {
+				alert("请输入密码");
+			}
+			if (UserLName != "" && UserLPWD!="") {//都不为空调用ajax
+
+			$.myAjax("../webServers/Users.asmx/UsersLogin", { "UserLName": UserLName, "UserLPWD": UserLPWD }, function (d) {
+
+				if (d>0) {
+					window.location = "main.htm";
+				} else {
+					alert("登录失败");
+				}
+
+			});
+				
+			} else {
+				alert("请输入用户名和密码");
+			}
+		});
+
+	});
+
+
+
+	//确保登录页面不作为框架页面显示，而是显示为独立的页面
+        if (window.top != window.self) {
+            window.top.location = "login.htm";
+        }
+
+</script>
+</head>
+<body>
+    <form id="form1">
+    <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <table width="962" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td height="235" background="images/login_03.gif">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="53">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="394" height="53" background="images/login_05.gif">
+                                        &nbsp;
+                                    </td>
+                                    <td width="206" background="images/login_06.gif">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="16%" height="25">
+                                                    <div align="right">
+                                                        <span class="STYLE1">用户</span></div>
+                                                </td>
+                                                <td width="57%" height="25">
+                                                    <div align="center">
+                                                        <input type="text" name="textfield" style="width: 105px; height: 17px; background-color: #292929;
+                                                            border: solid 1px #7dbad7; font-size: 12px; color: #6cd0ff">
+                                                    </div>
+                                                </td>
+                                                <td width="27%" height="25">
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="25">
+                                                    <div align="right">
+                                                        <span class="STYLE1">密码</span></div>
+                                                </td>
+                                                <td height="25">
+                                                    <div align="center">
+                                                        <input type="password" name="textfield2" style="width: 105px; height: 17px; background-color: #292929;
+                                                            border: solid 1px #7dbad7; font-size: 12px; color: #6cd0ff">
+                                                    </div>
+                                                </td>
+                                                <td height="25">
+                                                    <div align="left">
+                                                        <input type="button" id="bt1" style="background-image:url(images/dl.gif);border:none;width:49px;height:18px" value=""  />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="362" background="images/login_07.gif">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="213" background="images/login_08.gif">
+                            &nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

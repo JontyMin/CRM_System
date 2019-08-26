@@ -1,0 +1,47 @@
+﻿body
+{
+	font-size:12px;
+}
+a
+{
+	text-decoration:none;	
+}
+input[type='text']
+{
+	border:solid 1px black;	
+}
+textarea
+{
+	border:solid 1px black;	
+	width:200px;
+	height:100px;
+}
+.tableEdit
+{
+	border:solid 1px #B5D6E6;	
+	border-collapse:collapse;
+	width:90%;	
+	margin:5px;
+}
+.tableEdit th
+{
+	text-align:left;
+	padding:5px 8px;	
+	border:solid 1px #B5D6E6;	
+	width:100px;
+	background-color:#f4f4f4;
+	font-weight:normal;
+}
+.tableEdit td
+{
+	text-align:left;
+	padding:5px 8px;	
+	border:solid 1px #B5D6E6;	
+}
+.tableEdit thead
+{
+	border:solid 1px #B5D6E6;
+	background-color:#C1EBFF;
+	padding:5px;
+	font-weight:bold;
+}

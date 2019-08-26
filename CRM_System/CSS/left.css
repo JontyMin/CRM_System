@@ -1,0 +1,59 @@
+﻿body {
+	margin:0px;
+	padding:0px;
+	font-size:12px;
+}
+table
+{
+	height:100%;	
+}
+#td1
+{
+	background-image:url(../images/main_39.gif);	
+	width:6px;
+}
+#td2
+{
+	width:165px;	
+	vertical-align:top;
+}
+#div1
+{
+	background-image:url(../images/main_40.gif);
+	height:28px;
+	text-align:center;	
+	color:White;
+	font-size:12px;
+	line-height:27px;
+}
+#div2
+{
+	margin:0px,8px;
+}
+.menuDiv
+{
+	background-image:url(../images/main_47.gif);
+	height:23px;
+	font-size:12px;
+	color:White;
+	cursor:pointer;
+	padding-left:30px;
+	line-height:23px;
+	margin-top:8px;
+}
+.contentDiv
+{
+	border:solid 1px #95D6E4;
+	padding:5px 5px;
+	padding-left:10px;
+}
+.contentDiv div
+{
+	font-size:12px;
+	height:20px;
+}
+.contentDiv a
+{
+	text-decoration:none;
+	margin-left:5px;
+}

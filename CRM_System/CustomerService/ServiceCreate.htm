@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title></title>
+    <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+    <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
+    <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function showCustomer(input) {
+            $.showModalDialog("../publicPage/SelectCustomer.htm?data=" + Math.random(), 400, 220, function(id){
+                input.value = id;
+            });
+        }
+    </script>
+</head>
+<body>
+<table class="tableEdit" style="width:600px;">
+        <thead>
+            <tr>
+                <td colspan="4">创建服务</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>客户编号：</th>
+            <td>
+                <input type="text" ondblclick="showCustomer(this)" /></td>
+            <th>服务类型：</th>
+            <td>
+                <select style="width:100px">
+                    <option>咨询</option>
+                    <option>投诉</option>
+                    <option>建议</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>服务概要：</th>
+            <td colspan="3">
+                <input type="text" />
+             </td>
+        </tr>
+        <tr>
+            <th>详细信息：</th>
+            <td colspan="3">
+                <textarea></textarea>
+             </td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <input type="button" value="确定" />&nbsp;&nbsp;
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

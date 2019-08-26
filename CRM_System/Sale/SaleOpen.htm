@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title></title>
+    <link href="../CSS/style3.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .tableEdit th,.tableEdit td { width:270px;}
+    </style>
+    <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    //开发成功
+    function showSuccess(){
+        if(!confirm("开发成功后，系统会记录该项目的客户资料，确认已开发成功吗？"))return;
+        //服务器处理...   ...略...
+        //返回值
+        window.returnValue = 1; //开发成功
+        window.close();
+    }
+
+    //显示新建
+    function showNew(){
+        $(".tb_fail, .tb_enter").hide();
+        $(".tb_new").toggle();
+    }
+    //保存新建计划 
+    function saveNew(){
+        $(".tb_new").hide();
+        //...略...
+        //刷新计划列表...
+    }
+
+    //显示执行结果
+    function showEnter(PlanID){
+        $(".tb_new, .tb_fail").hide();
+        $(".tb_enter").toggle();
+        //...略...
+    }
+    //保存执行结果
+    function saveEnter(PlanID){
+        $(".tb_enter").hide();
+        //...略...
+        //刷新计划列表...
+    }
+
+    //显示开发失败
+    function showFail(){
+        $(".tb_new, .tb_enter").hide();
+        $(".tb_fail").toggle();
+    }
+    //保存开发失败
+    function saveFail(){
+        if(!confirm("确认要终止开发吗？"))return;
+        //服务器处理...   ...略...
+        //返回值
+        window.returnValue = 2; //开发失败
+        window.close();
+    }
+    </script>
+</head>
+<body>
+
+    <!-- 标题和工具栏 -->
+    <table class="tableEdit" style="width:540px;">
+        <thead>
+            <tr>
+                <td>开发计划查看（<span style="color:blue">状态：开发中</span>）</td>
+                <td style="text-align:right"><a href="#" onclick="showNew();">新建</a>&nbsp;&nbsp;<a href="#" onclick="showSuccess();">开发成功</a>&nbsp;&nbsp;<a href="#" onclick="showFail();">开发终止</a></td>
+            </tr>
+        </thead>
+    </table>
+
+    <!-- 开发计划列表 -->
+    <table class="tableEdit" style="width:540px;">
+        <tr>
+            <th>计划： 2011-5-16</th><th>执行：2011-5-22</th>
+        </tr>
+        <tr>
+            <td>电话联系，初步接触</td>
+            <td>已电话联系，有购买意向，进一步接触</td>
+        </tr>
+        <tr>
+            <th>计划： 2011-5-16</th><th>执行：</th>
+        </tr>
+        <tr>
+            <td>电话联系，初步接触</td>
+            <td><a href="#" onclick="showEnter(123);">输入执行结果</a></td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="2">
+                    <input type="button" value="关闭" onclick="window.close()" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <!-- 操作面板：输入新计划 -->
+    <table class="tableEdit tb_new" style="width:540px;display:none;">
+        <tr>
+            <th>新建计划： <a href="#" onclick="saveNew();">保存</a><br /></th>
+            <td><textarea>请在这里输入新计划...</textarea></td>
+        </tr>
+    </table>
+
+    <!-- 操作面板：输入执行结果 -->
+    <table class="tableEdit tb_enter" style="width:540px;display:none;">
+        <tr>
+            <th>执行结果： <a href="#" onclick="saveEnter();">保存</a><br /></th>
+            <td><textarea>请在这里输入执行结果...</textarea></td>
+        </tr>
+    </table>
+
+    <!-- 操作面板：输入失败原因 -->
+    <table class="tableEdit tb_fail" style="width:540px;display:none;">
+        <tr>
+            <th>失败原因： <a href="#" onclick="saveFail();">保存</a><br /></th>
+            <td><textarea>请在这里输入失败原因...</textarea></td>
+        </tr>
+    </table>
+    
+</body>
+</html>

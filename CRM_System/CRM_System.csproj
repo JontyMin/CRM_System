@@ -1,0 +1,287 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{23351634-EE3E-48C2-9C4B-AE3A2EB4FBA5}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CRM_System</RootNamespace>
+    <AssemblyName>CRM_System</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44315</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CSS\left.css" />
+    <Content Include="CSS\Style1.css" />
+    <Content Include="CSS\style2.css" />
+    <Content Include="CSS\style3.css" />
+    <Content Include="CSS\Style4.css" />
+    <Content Include="CSS\style5.css" />
+    <Content Include="CustomerService\ServiceAllot.htm" />
+    <Content Include="CustomerService\ServiceCreate.htm" />
+    <Content Include="CustomerService\ServiceDetail.htm" />
+    <Content Include="CustomerService\ServiceDetailDialog.htm" />
+    <Content Include="CustomerService\ServiceDispose.htm" />
+    <Content Include="CustomerService\ServiceDisposeDialog.htm" />
+    <Content Include="CustomerService\ServiceResult.htm" />
+    <Content Include="CustomerService\ServiceResultDialog.htm" />
+    <Content Include="Customer\ActivitysEdit.htm" />
+    <Content Include="Customer\CustomerEdit.htm" />
+    <Content Include="Customer\CustomerPage.htm" />
+    <Content Include="Customer\LinkManEdit.htm" />
+    <Content Include="Customer\LostEnter.htm" />
+    <Content Include="Customer\LostInfo.htm" />
+    <Content Include="Customer\LostsPage.htm" />
+    <Content Include="DatePicker\calendar.js" />
+    <Content Include="DatePicker\config.js" />
+    <Content Include="DatePicker\lang\en.js" />
+    <Content Include="DatePicker\lang\zh-cn.js" />
+    <Content Include="DatePicker\lang\zh-tw.js" />
+    <Content Include="DatePicker\My97DatePicker.htm" />
+    <Content Include="DatePicker\skin\datePicker.gif" />
+    <Content Include="DatePicker\skin\default\datepicker.css" />
+    <Content Include="DatePicker\skin\default\img.gif" />
+    <Content Include="DatePicker\skin\WdatePicker.css" />
+    <Content Include="DatePicker\skin\whyGreen\bg.jpg" />
+    <Content Include="DatePicker\skin\whyGreen\datepicker.css" />
+    <Content Include="DatePicker\skin\whyGreen\img.gif" />
+    <Content Include="DatePicker\WdatePicker.js" />
+    <Content Include="default.htm" />
+    <Content Include="foot.htm" />
+    <Content Include="head.htm" />
+    <Content Include="Images\11.gif" />
+    <Content Include="Images\22.gif" />
+    <Content Include="Images\33.gif" />
+    <Content Include="Images\back.gif" />
+    <Content Include="Images\bg.gif" />
+    <Content Include="Images\bt_acti.gif" />
+    <Content Include="Images\bt_confirm.gif" />
+    <Content Include="Images\bt_deal.gif" />
+    <Content Include="Images\bt_del.gif" />
+    <Content Include="Images\bt_detail.gif" />
+    <Content Include="Images\bt_edit.gif" />
+    <Content Include="Images\bt_feedback.gif" />
+    <Content Include="Images\bt_linkman.gif" />
+    <Content Include="Images\bt_orders.gif" />
+    <Content Include="Images\bt_plan.gif" />
+    <Content Include="Images\bt_relay.gif" />
+    <Content Include="Images\bt_yes.gif" />
+    <Content Include="Images\del.gif" />
+    <Content Include="Images\dl.gif" />
+    <Content Include="Images\edt.gif" />
+    <Content Include="Images\first.gif" />
+    <Content Include="Images\go.gif" />
+    <Content Include="Images\last.gif" />
+    <Content Include="Images\left.gif" />
+    <Content Include="Images\login_03.gif" />
+    <Content Include="Images\login_05.gif" />
+    <Content Include="Images\login_06.gif" />
+    <Content Include="Images\login_07.gif" />
+    <Content Include="Images\login_08.gif" />
+    <Content Include="Images\main_03.gif" />
+    <Content Include="Images\main_04.gif" />
+    <Content Include="Images\main_05.gif" />
+    <Content Include="Images\main_07.gif" />
+    <Content Include="Images\main_09.gif" />
+    <Content Include="Images\main_11.gif" />
+    <Content Include="Images\main_20.gif" />
+    <Content Include="Images\main_21.gif" />
+    <Content Include="Images\main_29.gif" />
+    <Content Include="Images\main_30.gif" />
+    <Content Include="Images\main_31.gif" />
+    <Content Include="Images\main_32.gif" />
+    <Content Include="Images\main_34.gif" />
+    <Content Include="Images\main_36.gif" />
+    <Content Include="Images\main_37.gif" />
+    <Content Include="Images\main_39.gif" />
+    <Content Include="Images\main_40.gif" />
+    <Content Include="Images\main_41.gif" />
+    <Content Include="Images\main_45.gif" />
+    <Content Include="Images\main_47.gif" />
+    <Content Include="Images\main_48.gif" />
+    <Content Include="Images\main_51.gif" />
+    <Content Include="Images\main_52.gif" />
+    <Content Include="Images\main_55.gif" />
+    <Content Include="Images\main_55_1.gif" />
+    <Content Include="Images\main_58.gif" />
+    <Content Include="Images\main_59.gif" />
+    <Content Include="Images\main_61.gif" />
+    <Content Include="Images\main_62.gif" />
+    <Content Include="Images\next.gif" />
+    <Content Include="Images\tab_03.gif" />
+    <Content Include="Images\tab_05.gif" />
+    <Content Include="Images\tab_07.gif" />
+    <Content Include="Images\tab_12.gif" />
+    <Content Include="Images\tab_15.gif" />
+    <Content Include="Images\tab_17.gif" />
+    <Content Include="Images\tab_18.gif" />
+    <Content Include="Images\tab_19.gif" />
+    <Content Include="Images\tab_20.gif" />
+    <Content Include="Images\tb.gif" />
+    <Content Include="js\jquery-1.10.2.js" />
+    <Content Include="js\jquery-1.10.2.min.js" />
+    <Content Include="js\jquery.showModalDialog.css" />
+    <Content Include="js\jquery.showModalDialog.js" />
+    <Content Include="js\json.js" />
+    <Content Include="js\MaxDanJQUERY.js" />
+    <Content Include="js\MyJquery.js" />
+    <Content Include="left.htm" />
+    <Content Include="login.htm" />
+    <Content Include="main.htm" />
+    <Content Include="Manager\EditRole.htm" />
+    <Content Include="Manager\EditRolePower.htm" />
+    <Content Include="Manager\EditUser.htm" />
+    <Content Include="Manager\PopedomDetail.htm" />
+    <Content Include="Manager\PowerManager.htm" />
+    <Content Include="Manager\RoleManager.htm" />
+    <Content Include="Manager\UserManager.htm" />
+    <Content Include="PublicPage\SelectCustomer.htm" />
+    <Content Include="PublicPage\SelectEmp.htm" />
+    <Content Include="rigth.htm" />
+    <Content Include="Sale\EditSale.htm" />
+    <Content Include="Sale\SaleAllot.htm" />
+    <Content Include="Sale\SaleChance.htm" />
+    <Content Include="Sale\saleManager.htm" />
+    <Content Include="Sale\SaleNo.htm" />
+    <Content Include="Sale\SaleOk.htm" />
+    <Content Include="Sale\SaleOpen.htm" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery.showModalDialog.css" />
+    <Content Include="Scripts\jquery.showModalDialog.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="size.htm" />
+    <Content Include="Web.config" />
+    <Content Include="webServers\Main.asmx" />
+    <Content Include="webServers\Menu.asmx" />
+    <Content Include="webServers\Users.asmx" />
+    <Content Include="welcome.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="webServers\Main.asmx.cs">
+      <DependentUpon>Main.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="webServers\Menu.asmx.cs">
+      <DependentUpon>Menu.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="webServers\Users.asmx.cs">
+      <DependentUpon>Users.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dal\Dal.csproj">
+      <Project>{7d24c410-ca58-48bd-8616-3870bb06f131}</Project>
+      <Name>Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{0551f7c1-2e2b-4fbf-888d-52dc2134aa3b}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>50741</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44315/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

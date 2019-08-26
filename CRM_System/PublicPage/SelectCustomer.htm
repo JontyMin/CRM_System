@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title></title>
+    <link href="../CSS/style5.css" rel="stylesheet" type="text/css" />
+    <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    $(function(){
+        $(".tableEdit tbody tr").live("dblclick", function(){
+            //得到编号
+            var bh = $(this).find("td:eq(0)").text();
+            window.returnValue = bh;
+            window.close();
+        });
+    });
+    </script>
+</head>
+<body>
+<table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="2">
+                    客户选择<span style="color:Red;font-weight:normal">(选择双击确定)</span>
+                </td>
+            </tr>
+            <tr>
+                <th>客户编号</th>
+                <th>客户名称</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>KH20110101</td>
+                <td>金兴科技</td>
+            </tr>
+            <tr>
+                <td>KH20100505</td>
+                <td>今天科技</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

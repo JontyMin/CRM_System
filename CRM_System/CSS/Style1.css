@@ -1,0 +1,82 @@
+﻿body
+{
+	font-size:12px;
+}
+a
+{
+	text-decoration:none;	
+}
+#desDiv
+{
+	border:solid 1px #B5D6E6;
+	background-color:#C1EBFF;
+	padding:5px;
+}
+#desDiv span
+{
+	font-weight:bold;	
+	font-size:14px;
+}
+#dataDiv
+{
+	border:solid 1px #A5D1EC;
+	margin:5px 0px;
+}
+#headDiv
+{
+	background-image:url(../images/tab_05.gif);	
+	height:25px;
+	line-height:22px;
+	padding-left:10px;
+}
+#headDiv img
+{
+	vertical-align:middle;	
+}
+#pageDiv
+{
+	background-image:url(../images/tab_19.gif);	
+	height:26px;	
+}
+#pageDiv input[type="text"]
+{
+	width:40px;
+}
+.dataTable
+{
+	width:99%;
+	margin:5px;
+	border:solid 1px #B5D6E6;
+	border-collapse:collapse;
+}
+.dataTable th,td
+{
+	border:solid 1px #B5D6E6;
+	padding:3px;
+}
+.dataTable th
+{
+	height:16px;
+	font-size:12px;
+	background-image:url(../images/bg.gif);
+	font-weight:normal;	
+}
+.dataTable img
+{
+	cursor:pointer;	
+}
+.dataTable input[type="text"]
+{
+	width:50px;
+}
+#leftPage
+{
+	float:left;
+	padding:5px 10px;	
+	line-height:25px;
+}
+#rightPage
+{
+	float:right;
+	padding:2px 10px;	
+}
