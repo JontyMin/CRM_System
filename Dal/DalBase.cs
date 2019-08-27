@@ -323,11 +323,22 @@ namespace Dal
 			return Convert.ToInt32( ExecuteObject(sql,sp));
 
 		}
-		//public static int GetMax<T>() where T : ModelBase {
-		//	Type t = typeof(T);
-		//	string tableName = t.Name;
-		//	string sql = "select Max() from " + tableName + "";
-		//	return Convert.ToInt32(ExecuteObject(sql));
-		//}
+		public static int GetMax<T>() where T : ModelBase
+		{
+			Type t = typeof(T);
+			string keyname = "";
+			object[] objs = t.GetCustomAttributes(true);
+			if (objs.Length > 0)
+			{
+				keyname = (objs[0] as KeyInfoAttribute).KeyName;
+			}
+			else
+			{
+				throw new Exception("get out");
+			}
+			string tableName = t.Name;
+			string sql = "select Max("+keyname+") from " + tableName + "";
+			return Convert.ToInt32(ExecuteObject(sql,null));
+		}
 	}
 }

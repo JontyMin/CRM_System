@@ -6,7 +6,67 @@
     <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
     <script type="text/javascript">
+		$(function () {
+
+				$.myAjax("../webServers/Role.asmx/GetRoles", null, function (d) {
+				//alert(d);
+					$.each(d, function (key, value) {
+						var tr = $("<tr>");
+						$("<td>").text(value.ID).appendTo(tr);
+						$("<td>").text(value.RoleName).appendTo(tr);
+						$(" <td><img key1='" + value.ID + "' title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key='" + value.ID + "' title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+                    $(".dataTable").append(tr);
+					});
+					
+			});
+
+			//委派删除
+			$(document).on("click", "img[key]", function () {
+
+				var id = $(this).attr("key");
+				//alert(id);
+				var row = $(this).parent().parent();
+				$.myAjax("../webServers/Role.asmx/DelRole", { "id": id }, function (d) {
+					$(row).remove();
+					alert("删除成功");
+
+				});
+			})
+
+			$("#add").click(function () {
+				//$.showModalDialog("EditRole.htm?data=" + Math.random(), 600, 150, function () {
+				//	alert(1);
+
+				//});
+
+				$.showModalDialog("EditRole.htm?data=" + Math.random(), null, 600, 150, function (d) {
+					////alert(JSON.stringify(d));
+					//$(row).children().eq(1).text(d.RoleName);
+					var tr = $("<tr>");
+					 $("<td>").text(d.ID).appendTo(tr);
+					 $("<td>").text(d.RoleName).appendTo(tr);
+					 $(" <td><img key='" + d.ID + "' title='修改' src='../images/edt.gif' onclick='showEdit()' />&nbsp;&nbsp;<img key='" + d.ID + "' title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+					 $(".dataTable").append(tr);
+                //...
+            });
+			});
+
+			$(document).on("click", "img[key1]", function () {
+				var id = $(this).attr("key1");
+				var row = $(this).parent().parent();
+
+				//alert(id);
+				$.showModalDialog("EditRole.htm?data=" + Math.random(), { "key1": id }, 600, 150, function (d) {
+					//alert(JSON.stringify(d));
+					$(row).children().eq(1).text(d.RoleName);
+                //...
+            });
+
+			});
+		});
+
         function showEdit() {
             $.showModalDialog("EditRole.htm?data=" + Math.random(), null, 600, 150, function(){
                 //...
@@ -21,7 +81,7 @@
 </div>
 <div id="dataDiv">
     <div id="headDiv">
-        <img src="../images/22.gif" />&nbsp;&nbsp;<a href="javascript:showEdit()">新建角色</a>
+        <img src="../images/22.gif" />&nbsp;&nbsp;<a href="" id="add">新建角色</a>
     </div>
     <table class="dataTable">
         <tr>
@@ -29,7 +89,7 @@
             <th>角色名</th>
             <th>操作</th>
         </tr>
-        <tr>
+        <!--<tr>
             <td>数据</td>
             <td>数据</td>
             <td><img title="修改" src="../images/edt.gif" onclick="showEdit()" />&nbsp;&nbsp;<img title="删除" src="../images/del.gif" /></td>
@@ -43,7 +103,7 @@
             <td>数据</td>
             <td>数据</td>
             <td><img title="修改" src="../images/edt.gif" onclick="showEdit()" />&nbsp;&nbsp;<img title="删除" src="../images/del.gif" /></td>
-        </tr>
+        </tr>-->
     </table>
     <div id="pageDiv">
         <div id="leftPage">共有120条记录，当前第1/10页</div>

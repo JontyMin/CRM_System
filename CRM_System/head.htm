@@ -26,7 +26,7 @@ body {
 				$("#dataDiv span:eq(0)").text(d);
 
 			});
-
+			$.myAjax("../webServers/Main.asmx/ClearSession", null, function (d) { });
             $.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
                 if(d.status)
                 {
@@ -90,7 +90,7 @@ body {
      
    </div>
    <div style="float:right;font-size:12px;line-height:35px;margin-right:5px;margin-top:3px;">
-    <a href="login.htm" target="_top" ><img src="images/main_20.gif" style="border:solid 0px red"/></a>
+    <a href="login.htm" target="_top" ><img id="out" src="images/main_20.gif" style="border:solid 0px red"/></a>
    </div>
     </td>
   </tr>

@@ -51,6 +51,7 @@
     <Compile Include="Measures.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="ModelBase.cs" />
+    <Compile Include="MyPage.cs" />
     <Compile Include="Orders.cs" />
     <Compile Include="Plans.cs" />
     <Compile Include="Power.cs" />

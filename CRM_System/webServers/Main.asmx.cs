@@ -47,6 +47,15 @@ namespace CRM_System.webServers
 			return date;
 		}
 
+		/// <summary>
+		/// 点击退出清空Session
+		/// </summary>
+		/// <returns></returns>
+		[WebMethod(EnableSession = true)]
+		public bool ClearSession() {
+			Session.Abandon();
+			return true;
+		}
 		//#region 根据年月日计算星期几(Label2.Text=CaculateWeekDay(xxxx,xx,xx);)
 		///// <summary>
 		///// 根据年月日计算星期几(Label2.Text=CaculateWeekDay(2004,12,9);)

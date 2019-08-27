@@ -1,26 +1,118 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
-    <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<title></title>
+	<link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<script src="../js/jquery-1.10.2.js"></script>
+	<script src="../js/json.js"></script>
+	<script src="../js/MyJquery.js"></script>
+	<script>
+		$(function () {
+			var RoleName;
+			var id;
+			var data = window.dialogArguments;
+			if (data != null) {
+				$(":button:eq(0)").hide();
+				$("#dpTitle").text("修改角色");
+				id = data.key1;
+				$.myAjax("../webServers/Role.asmx/GetRolesById", { "id": id }, function (d) {
+					$.each(d, function (k, v) {
+						RoleName = v.RoleName;
+						$("#RoleName").val(v.RoleName)
+					});
+				});
+		
+
+			} else {
+				$("#dpTitle").text("添加角色");
+				  $(":button:eq(1)").hide();
+			}
+
+			//点击添加数据
+			$("#add").click(function () {
+				//alert("ok");
+				var RoleName = $("#RoleName").val();
+				if (RoleName != null && RoleName != "") {
+
+				var data = { "RoleName": $("#RoleName").val() };
+				$.myAjax("../webServers/Role.asmx/AddRole", { "role": data }, function (d) {
+				if (d > 0) {
+					alert("新增成功");
+					var data1 = {
+						"ID": d,
+						"RoleName":$("#RoleName").val()
+					};
+					//alert(JSON.stringify(data1))
+					window.returnValue = data1;
+					window.close();
+				}
+
+				});
+					
+				} else {
+					alert("请填写角色名");
+				}
+			});
+
+			//点击按钮修改数据
+			$("#update").click(function () {
+				var aa = $("#RoleName").val();
+				if (aa != RoleName) {
+
+					if (aa != null && aa != "") {
+
+					
+					var data = {
+						"ID": id,
+						"RoleName": $("#RoleName").val(),
+					};
+
+					$.myAjax("../webServers/Role.asmx/UpdRole", { "role": data }, function (d) {
+						if (d > 0) {
+							alert("修改成功");
+							var data1 = {
+								"ID": id,
+								"RoleName": $("#RoleName").val(),
+							};
+							window.returnValue = data1;
+							window.close();
+						}
+
+
+					});
+					} else {
+						alert("请填写数据");
+					}
+				} else {
+					
+					if (confirm("未进行修改，是否退出")) {
+						window.close();
+					}
+				}
+				});
+
+		});
+
+	</script>
 </head>
 <body>
     <table class="tableEdit">
         <thead>
             <tr>
-                <td colspan="4">添加角色</td>
+                <td colspan="4" id="dpTitle">添加角色</td>
             </tr>
         </thead>
         <tr>
             <th>角色名：</th>
-            <td colspan="3"><input type="text" style="width:300px" /></td>
+            <td colspan="3"><input type="text" id="RoleName" style="width:300px" /></td>
         </tr>
         <tfoot>
             <tr>
-                <td colspan="4">
-                    <input type="button" value="确定" />&nbsp;&nbsp;
-                    <input type="button" value="关闭" onclick="window.close()" />
-                </td>
+				<td colspan="4">
+					<input type="button" value="确定" id="add" />&nbsp;&nbsp;
+					<input type="button" value="确定" id="update" />&nbsp;&nbsp;
+					<input type="button" value="关闭" onclick="window.close()" />
+				</td>
             </tr>
         </tfoot>
     </table>
