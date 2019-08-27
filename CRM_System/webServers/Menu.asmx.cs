@@ -6,6 +6,7 @@ using System.Web.Services;
 using Dal;
 using Model;
 using System.Data.SqlClient;
+using System.Web.Script.Serialization;
 namespace CRM_System.webServers
 {
 	/// <summary>
@@ -36,6 +37,33 @@ namespace CRM_System.webServers
 				new SqlParameter("@UserLName",Session["UserLName"])
 			};
 			return DalBase.SelectsByWhere<Model.Menu>(sql,sp);
+		}
+
+		/// <summary>
+		/// 根据角色id拿到所有的权限
+		/// </summary>
+		/// <param name="rid"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public String GetAllMenu(int rid) {
+			JavaScriptSerializer js = new JavaScriptSerializer();
+			Dictionary<string, object> dic = new Dictionary<string, object>();
+			dic.Add("all",DalBase.SelectAll<Model.Menu>());
+
+			string sql1 = string.Format(@"select * from Menu where ID in(
+select MenuID from Power where  RoleID=@RoleID)");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@RoleID",rid)
+			};
+			dic.Add("has",DalBase.SelectsByWhere<Model.Menu>(sql1,sp1));
+
+			string sql2 = string.Format(@"select * from Menu where ID not in(
+select MenuID from Power where  RoleID=@RoleID)");
+			SqlParameter[] sp2 = new SqlParameter[] {
+				new SqlParameter("@RoleID",rid)
+			};
+			dic.Add("no",DalBase.SelectsByWhere<Model.Menu>(sql2,sp2));
+			return js.Serialize(dic);
 		}
 	}
 }

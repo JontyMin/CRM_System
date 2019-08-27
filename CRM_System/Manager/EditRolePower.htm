@@ -3,15 +3,85 @@
 <head>
     <title></title>
     <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<script src="../js/jquery-1.10.2.js"></script>
+	<script src="../js/json.js"></script>
+	<script src="../js/MyJquery.js"></script>
+	<script>
+		$(function () {
+			var rid = window.dialogArguments;
+			//alert(rid);
+			//得到角色名称
+			$.myAjax("../webServers/Role.asmx/GetRole", { "rid": rid }, function (d) {
+
+				$.each(d, function (k, v) {
+					//alert(v.RoleName);
+					$("#RoleName").text("设置角色【"+v.RoleName+"】的权限");
+				});
+			});
+
+			//拿到该角色的权限和所有权限
+			$.myAjax("../webServers/Menu.asmx/GetAllMenu", { "rid": rid }, function (d) {
+				//console.log(d);
+				var data = JSON.parse(d);//json字符串转对象
+				var tbs = $(".tableEdit");
+				$.each(data.all, function (key, value) {
+					if (value.ParentID==0) {
+						var tr = $("<tr>");
+						var th1 = $("<th key=" + value.ID + ">" + value.MenuName + "</th>").appendTo(tr);
+						var td = $("<td colspan='3'>").appendTo(tr);
+						$(tbs).append(tr);
+
+						$.each(data.has, function (i, j) {
+							if (value.ID == j.ParentID) {
+								 $("<label><input key='"+j.ID+"' checked='checked'   type='checkbox' /> " + j.MenuName + "</label> <br />").appendTo(td);
+							}
+
+						});
+
+						$.each(data.no, function (i, j) {
+
+							if (value.ID == j.ParentID) {
+								 $("<label><input key='" + j.ID + "'   type='checkbox' /> " + j.MenuName + "</label> <br />").appendTo(td);
+							}
+						});
+					}
+
+				});
+			});
+
+
+			$("#sendOK").click(function () {
+				//alert(1);
+				var itemID = [];//保存id
+				$(":checkbox:checked").each(function (key, value) {
+					//循环拿到选中的i
+					var pid = $(this).parent().parent().prev().attr("key");
+					itemID.push(pid);
+					itemID.push($(value).attr("key"));
+				});
+
+				$.myAjax("../webServers/Power.asmx/ChangePower", { "rid": rid, "ids": itemID }, function
+					(d) {
+					if (d) {
+						window.confirm("修改成功");
+					} else {
+						window.confirm("修改失败");
+					}
+				});
+			});
+		});
+
+
+	</script>
 </head>
 <body>
     <table class="tableEdit">
         <thead>
             <tr>
-                <td colspan="4">设置角色【市场部经理】的权限</td>
+                <td colspan="4" id="RoleName">设置角色【市场部经理】的权限</td>
             </tr>
         </thead>
-        <tr>
+        <!--<tr>
             <th>营销管理</th>
             <td colspan="3">
                 <label><input type="checkbox" /> 销售机会管理</label> <br />
@@ -43,11 +113,11 @@
                 <label><input type="checkbox" /> 角色管理</label> <br />
                 <label><input type="checkbox" /> 权限管理</label> <br />
             </td>
-        </tr>
+        </tr>-->
         <tfoot>
             <tr>
                 <td colspan="4">
-                    <input type="button" value="确定" />&nbsp;&nbsp;
+                    <input type="button" value="确定" id="sendOK" />&nbsp;&nbsp;
                     <input type="button" value="关闭" onclick="window.close()" />
                 </td>
             </tr>

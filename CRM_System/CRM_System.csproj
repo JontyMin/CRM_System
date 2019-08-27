@@ -67,6 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\bootstrap-grid.min.css" />
+    <Content Include="CSS\htmleaf-demo.css" />
     <Content Include="CSS\left.css" />
     <Content Include="CSS\Style1.css" />
     <Content Include="CSS\style2.css" />
@@ -174,6 +176,9 @@
     <Content Include="Images\tab_19.gif" />
     <Content Include="Images\tab_20.gif" />
     <Content Include="Images\tb.gif" />
+    <Content Include="webServers\Power.asmx" />
+    <Content Include="webServers\Role.asmx" />
+    <Content Include="welcome.htm" />
     <Content Include="js\jquery-1.10.2.js" />
     <Content Include="js\jquery-1.10.2.min.js" />
     <Content Include="js\jquery.showModalDialog.css" />
@@ -210,7 +215,6 @@
     <Content Include="webServers\Main.asmx" />
     <Content Include="webServers\Menu.asmx" />
     <Content Include="webServers\Users.asmx" />
-    <Content Include="welcome.htm" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -220,6 +224,14 @@
     </Compile>
     <Compile Include="webServers\Menu.asmx.cs">
       <DependentUpon>Menu.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="webServers\Power.asmx.cs">
+      <DependentUpon>Power.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="webServers\Role.asmx.cs">
+      <DependentUpon>Role.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="webServers\Users.asmx.cs">

@@ -6,13 +6,37 @@
     <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
     <script type="text/javascript">
-        function setPower(roleID) {
-            console.log(roleID);
-            $.showModalDialog("EditRolePower.htm?data=" + Math.random(), null, 600, 560, function(){
-                //...
+     
+		$(function () {
+
+
+			//拿到所有角色
+			$.myAjax("../webServers/Role.asmx/GetRoles", null, function (d) {
+				//alert(d);
+				$.each(d, function (key, value) {
+					var tr = $("<tr>");
+					$("<td>").text(value.ID).appendTo(tr);
+                    $("<td>").text(value.RoleName).appendTo(tr);
+                    $(" <td>  <a href='javascript:setPower("+value.ID+");'>设置权限</a></td>").appendTo(tr);
+                    $(".dataTable").append(tr);
+
+				});
+					
+			});
+
+
+
+		});
+
+		   function setPower(roleID) {
+			   console.log(roleID);
+			   $.showModalDialog("EditRolePower.htm?data=" + Math.random(), roleID, 600, 560, function () {
+                //...打开模式对话窗口，设置角色权限
             });
         }
+
     </script>
 </head>
 <body>
@@ -27,7 +51,7 @@
             <th>角色名</th>
             <th>操作</th>
         </tr>
-        <tr>
+        <!--<tr>
             <td>数据</td>
             <td>数据</td>
             <td>
@@ -47,7 +71,7 @@
             <td>
                 <a href="javascript:setPower(7);">设置权限</a>
             </td>
-        </tr>
+        </tr>-->
     </table>
     <div id="pageDiv">
         <div id="leftPage">共有120条记录，当前第1/10页</div>

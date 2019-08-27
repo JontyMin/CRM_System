@@ -16,7 +16,8 @@
             url:url,
             dataType: "JSON",
             contentType: "application/json;charset=utf-8",//
-            data: data == null ? "" : JSON.stringify(data),
+			data: data == null ? "" : JSON.stringify(data),
+			async: false,
             success: function (d) {
                 callBack(d.d);
             }
