@@ -40,6 +40,8 @@
 
 			//委派删除
 			$(document).on("click", "img[key]", function () {
+				if (confirm("是否删除？")) {
+
 				var id = $(this).attr("key");//得到用户id
 				//alert(id);
 				var row = $(this).parent().parent();//得到选中行
@@ -48,7 +50,8 @@
 					alert("删除成功");
 
 				});
-
+					
+				}
 			});
 
 			//委派修改

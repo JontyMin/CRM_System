@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -93,6 +94,21 @@ namespace CRM_System.webServers
 		public int UpdRole(Model.Role role) {
 
 			return DalBase.Updata(role);
+		}
+
+		/// <summary>
+		/// 判断是否存在角色
+		/// </summary>
+		/// <param name="User"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int ExisRole(string RoleName)
+		{
+			string sql = string.Format("select count(*) from Role where RoleName=@RoleName");
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@RoleName",RoleName)
+			};
+			return DalBase.SelectObj(sql, sp);
 		}
 		#region MyPage
 

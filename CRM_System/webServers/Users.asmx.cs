@@ -86,6 +86,9 @@ namespace CRM_System.webServers
 		[WebMethod]
 		public int AddUsers(Model.Users users){
 			int id = -1;
+			//string 
+			//int count = DalBase.SelectsByWhere<Model.Users>();
+
 			if (DalBase.Insert(users)>0)
 			{
 				id = Convert.ToInt32(DalBase.GetMax<Model.Users>());
@@ -118,6 +121,21 @@ namespace CRM_System.webServers
 		[WebMethod]
 		public int UpdUser(Model.Users users) {
 			return DalBase.Updata(users);
+		}
+
+
+		/// <summary>
+		/// 判断是否存在用户
+		/// </summary>
+		/// <param name="User"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int ExisUser(string User) {
+			string sql = string.Format("select count(*) from Users where UserLName=@UserLName");
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@UserLName",User)
+			};
+			return  DalBase.SelectObj(sql,sp);
 		}
 	}
 }

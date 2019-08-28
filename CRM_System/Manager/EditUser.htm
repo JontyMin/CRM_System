@@ -20,7 +20,7 @@
 
 			//判断两个值相等
 		function isEqual(obj1, controlObj) {
-				 if (obj1.length != 0 && controlObj.length != 0) {
+				if (obj1.length != 0 && controlObj.length != 0) {
 				 if (obj1 == controlObj)
 				 return true;
             else
@@ -42,18 +42,18 @@
 			}
 
 
-			//注释代码
-			if () {
-			//	//$("#ckPwd").focus(function () {
-			////	if ($("#UserLPWD").val() != $(this).val()) {
-			////		$("#ck").text("两次密码不一致");
-			////		return false;
-			////	} else {
-			////		$("#ck").text("密码通过");
-			////		return true;
-			////	}
-			////});
-			}
+			////注释代码
+			
+			////	//$("#ckPwd").focus(function () {
+			//////	if ($("#UserLPWD").val() != $(this).val()) {
+			//////		$("#ck").text("两次密码不一致");
+			//////		return false;
+			//////	} else {
+			//////		$("#ck").text("密码通过");
+			//////		return true;
+			//////	}
+			//////});
+			
 			
 
 			var UserID;
@@ -111,39 +111,53 @@
 			
 			//点击添加用户
 			$("#add").click(function () {
+				try {
+
 				if (isNotNull($("#UserLName").val()) && isNotNull($("#UserLPWD").val()) && isNotNull($("#ckPwd").val()) && isNotNull($("#UserName").val())) {
 
-				
-				//alert(1);
-				if (isEqual($("#UserLPWD").val(), $("#ckPwd").val)) {
-					var data = {
-						"UserLName": $("#UserLName").val(),
-						"UserLPWD": $("#UserLPWD").val(),
-						"UserName": $("#UserName").val(),
-						"RoleID": $("#RolsInfo option:selected").val(),
-					};
-					//alert(JSON.stringify(data));
-					$.myAjax("../webServers/Users.asmx/AddUsers", { "users": data }, function (d) {
-						if (d > 0) {
-							alert("新增成功");
+					$.myAjax("../webServers/Users.asmx/ExisUser", { "User": $("#UserLName").val() }, function (d) {
+						if (d ==0) {
 
-							var data1 = {
-								"UserID": d,
-								"UserLName": $("#UserLName").val(),
-								"UserLPWD": $("#UserLPWD").val(),
-								"UserName": $("#UserName").val(),
-								"RoleName": $("#RolsInfo option:selected").text(),
-							};
+							//alert(1);
+							if (isEqual($("#UserLPWD").val(), $("#ckPwd").val())) {
+								var data = {
+									"UserLName": $("#UserLName").val(),
+									"UserLPWD": $("#UserLPWD").val(),
+									"UserName": $("#UserName").val(),
+									"RoleID": $("#RolsInfo option:selected").val(),
+								};
+								//alert(JSON.stringify(data));
+								$.myAjax("../webServers/Users.asmx/AddUsers", { "users": data }, function (d) {
+									if (d > 0) {
+										alert("新增成功");
 
-							window.returnValue = data1;
-							window.close();
+										var data1 = {
+											"UserID": d,
+											"UserLName": $("#UserLName").val(),
+											"UserLPWD": $("#UserLPWD").val(),
+											"UserName": $("#UserName").val(),
+											"RoleName": $("#RolsInfo option:selected").text(),
+										};
+
+										window.returnValue = data1;
+										window.close();
+									}
+								});
+							} else {
+								alert("密码不一致");
+							}
+						} else {
+							alert("用户名已存在");
 						}
+
 					});
-				} else {
-					alert("密码不一致");
-					}
+
 				} else {
 					alert("请填写完整");
+					}
+					
+				} catch (e) {
+					alert("添加失败，请稍后重试");
 				}
 			});
 

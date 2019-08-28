@@ -25,6 +25,7 @@
 
 			//委派删除
 			$(document).on("click", "img[key]", function () {
+				if (confirm("是否删除？")) {
 
 				var id = $(this).attr("key");
 				//alert(id);
@@ -34,6 +35,8 @@
 					alert("删除成功");
 
 				});
+					
+				}
 			})
 
 			$("#add").click(function () {

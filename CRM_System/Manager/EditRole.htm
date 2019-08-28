@@ -35,23 +35,33 @@
 			$(":button:eq(0)").click(function () {
 				//alert("ok");
 				var RoleName = $("#RoleName").val();
+
 				if (RoleName != null && RoleName != "") {
 
-				var data = { "RoleName": $("#RoleName").val() };
-				$.myAjax("../webServers/Role.asmx/AddRole", { "role": data }, function (d) {
-				if (d > 0) {
-					alert("新增成功");
-					var data1 = {
-						"ID": d,
-						"RoleName":$("#RoleName").val()
-					};
-					//alert(JSON.stringify(data1))
-					window.returnValue = data1;
-					window.close();
-				}
+					$.myAjax("../webServers/Role.asmx/ExisRole", { "RoleName": RoleName }, function (d) {
+						if (d == 0) {
 
-				});
-					
+
+
+							var data = { "RoleName": $("#RoleName").val() };
+							$.myAjax("../webServers/Role.asmx/AddRole", { "role": data }, function (d) {
+								if (d > 0) {
+									alert("新增成功");
+									var data1 = {
+										"ID": d,
+										"RoleName": $("#RoleName").val()
+									};
+									//alert(JSON.stringify(data1))
+									window.returnValue = data1;
+									window.close();
+								}
+
+							});
+						} else {
+							alert("角色已存在");
+						}
+					})
+
 				} else {
 					alert("请填写角色名");
 				}
