@@ -22,11 +22,14 @@ body {
     <script src="js/MyJquery.js"></script>
     <script>
 		$(function () {
+
+			//时间显示
 			$.myAjax("../webServers/Main.asmx/GetDate", null, function (d) {
 				$("#dataDiv span:eq(0)").text(d);
 
 			});
-			$.myAjax("../webServers/Main.asmx/ClearSession", null, function (d) { });
+
+			//判断是否登录
             $.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
                 if(d.status)
                 {
@@ -38,7 +41,22 @@ body {
                     alert(d.UserLName);
                     window.location.href = "login.htm";
                 }
-            })
+			})
+
+
+			//点击清空缓存并跳转登录界面
+			$("#out").click(function () {
+				$.myAjax("../webServers/Main.asmx/ClearSession", null, function (d) {
+					//alert("已清空缓存退出");
+					if (d) {
+					
+					window.close();
+					window.location.href = "login.htm";
+					}
+					
+				});
+
+			});
         })
     </script>
 </head>
@@ -90,7 +108,7 @@ body {
      
    </div>
    <div style="float:right;font-size:12px;line-height:35px;margin-right:5px;margin-top:3px;">
-    <a href="login.htm" target="_top" ><img id="out" src="images/main_20.gif" style="border:solid 0px red"/></a>
+    <!--<a href="login.htm" target="_top" >--><img id="out" src="images/main_20.gif" style="border:solid 0px red"/><!--</a>-->
    </div>
     </td>
   </tr>

@@ -56,5 +56,68 @@ namespace CRM_System.webServers
 		#endregion
 
 
+		/// <summary>
+		/// 查询所有用户信息
+		/// </summary>
+		/// <returns></returns>
+		[WebMethod]
+		public List<Model.View_Users> GetUsers() {
+			return DalBase.SelectAll<Model.View_Users>();
+
+		}
+
+
+		/// <summary>
+		/// 根据id删除用户
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int DelUsersById(int id) {
+			return DalBase.Delete<Model.Users>(id);
+		}
+
+
+		/// <summary>
+		/// 添加用户
+		/// </summary>
+		/// <param name="users"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int AddUsers(Model.Users users){
+			int id = -1;
+			if (DalBase.Insert(users)>0)
+			{
+				id = Convert.ToInt32(DalBase.GetMax<Model.Users>());
+			}
+			return id;
+
+		}
+
+
+		/// <summary>
+		/// 根据id查询
+		/// </summary>
+		/// <param name="uid"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public List<Model.Users> GetUser(int uid) {
+			string sql = "select * from Users where UserID=@UserID";
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@UserID",uid)
+			};
+			return DalBase.SelectsByWhere<Model.Users>(sql,sp);
+		}
+
+
+		/// <summary>
+		/// 对象修改
+		/// </summary>
+		/// <param name="users"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int UpdUser(Model.Users users) {
+			return DalBase.Updata(users);
+		}
 	}
 }

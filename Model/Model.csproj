@@ -59,6 +59,7 @@
     <Compile Include="Role.cs" />
     <Compile Include="ServiceType.cs" />
     <Compile Include="Users.cs" />
+    <Compile Include="view_Users.cs" />
     <Compile Include="V_Chances.cs" />
     <Compile Include="V_Customers.cs" />
     <Compile Include="v_customlosts.cs" />

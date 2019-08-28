@@ -70,6 +70,7 @@
     <Content Include="CSS\bootstrap-grid.min.css" />
     <Content Include="CSS\htmleaf-demo.css" />
     <Content Include="CSS\left.css" />
+    <Content Include="CSS\style.css" />
     <Content Include="CSS\Style1.css" />
     <Content Include="CSS\style2.css" />
     <Content Include="CSS\style3.css" />
@@ -176,9 +177,14 @@
     <Content Include="Images\tab_19.gif" />
     <Content Include="Images\tab_20.gif" />
     <Content Include="Images\tb.gif" />
+    <Content Include="index.html" />
+    <Content Include="js\MyAjax.js" />
+    <Content Include="Manager\a.html" />
+    <Content Include="Manager\b.html" />
+    <Content Include="Manager\EditRole.htm" />
+    <Content Include="Manager\RoleManager.htm" />
     <Content Include="webServers\Power.asmx" />
     <Content Include="webServers\Role.asmx" />
-    <Content Include="welcome.htm" />
     <Content Include="js\jquery-1.10.2.js" />
     <Content Include="js\jquery-1.10.2.min.js" />
     <Content Include="js\jquery.showModalDialog.css" />
@@ -189,12 +195,12 @@
     <Content Include="left.htm" />
     <Content Include="login.htm" />
     <Content Include="main.htm" />
-    <Content Include="Manager\EditRole.htm" />
+    <Content Include="Manager\EditRole-1.htm" />
     <Content Include="Manager\EditRolePower.htm" />
     <Content Include="Manager\EditUser.htm" />
     <Content Include="Manager\PopedomDetail.htm" />
     <Content Include="Manager\PowerManager.htm" />
-    <Content Include="Manager\RoleManager.htm" />
+    <Content Include="Manager\RoleManager-1.htm" />
     <Content Include="Manager\UserManager.htm" />
     <Content Include="PublicPage\SelectCustomer.htm" />
     <Content Include="PublicPage\SelectEmp.htm" />
@@ -215,6 +221,7 @@
     <Content Include="webServers\Main.asmx" />
     <Content Include="webServers\Menu.asmx" />
     <Content Include="webServers\Users.asmx" />
+    <Content Include="welcome.htm" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,14 +3,13 @@
 <head>
 	<title></title>
 	<link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
-	
 	<script src="../js/jquery-1.10.2.js"></script>
-	<script src="../js/jquery.showModalDialog.js"></script>
-	<link href="../js/jquery.showModalDialog.css" rel="stylesheet" />
+	<script src="../js/json.js"></script>
 	<script src="../js/MyJquery.js"></script>
-	<script>
-		$(function () {
 
+	<!-- 错误界面 -->
+	<!--<script>
+		$(function () {
 			var RoleName;
 			var id;
 			var data = window.dialogArguments;
@@ -32,7 +31,7 @@
 			}
 
 			//点击添加数据
-			$(":button:eq(0)").click(function () {
+			$("#add").click(function () {
 				//alert("ok");
 				var RoleName = $("#RoleName").val();
 				if (RoleName != null && RoleName != "") {
@@ -58,7 +57,7 @@
 			});
 
 			//点击按钮修改数据
-			$(":button:eq(1)").click(function () {
+			$("#update").click(function () {
 				var aa = $("#RoleName").val();
 				if (aa != RoleName) {
 
@@ -95,8 +94,8 @@
 				});
 
 		});
-	</script>
 
+	</script>-->
 </head>
 <body>
     <table class="tableEdit">
@@ -107,7 +106,7 @@
         </thead>
         <tr>
             <th>角色名：</th>
-            <td colspan="3"><input type="text" style="width:300px" id="RoleName"/></td>
+            <td colspan="3"><input type="text" id="RoleName" style="width:300px" /></td>
         </tr>
         <tfoot>
             <tr>

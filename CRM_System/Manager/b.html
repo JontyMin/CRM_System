@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+
+	<script src="../js/jquery-1.10.2.js"></script>
+	<link href="../js/jquery.showModalDialog.css" rel="stylesheet" />
+	<script src="../js/jquery.showModalDialog.js"></script>
+	<script>
+		$(function () {
+		//模式对话窗口回调函数测试
+			$("#back").click(function () {
+			
+			window.returnValue = 123;
+			window.close();
+			//$.showModalDialog("b.html", 200, 200, function (d) {
+			//	alert(d);
+
+			//})
+		});
+		})
+		
+	</script>
+</head>
+<body>
+	<a href="#" id="back">返回</a>
+</body>
+</html>

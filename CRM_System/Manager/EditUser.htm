@@ -1,55 +1,198 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
-    <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<title></title>
+	<link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<script src="../js/jquery-1.10.2.js"></script>
+	<script src="../js/jquery.showModalDialog.js"></script>
+	<link href="../js/jquery.showModalDialog.css" rel="stylesheet" />
+	<script src="../js/MyJquery.js"></script>
+	<script>
+		$(function () {
+			//动态加载角色信息
+			$.myAjax("../webServers/Role.asmx/GetRoles", null, function (d) {
+				$.each(d, function (i, j) {
+					var option = $("<option>").val(j.ID).text(j.RoleName);
+					$("#RolsInfo").append(option);
+				});
+			});
+
+
+			//判断两个值相等
+		function isEqual(obj1, controlObj) {
+				 if (obj1.length != 0 && controlObj.length != 0) {
+				 if (obj1 == controlObj)
+				 return true;
+            else
+                return false;
+        }
+        else
+            return false;
+			}
+
+
+			//非空判断
+		function isNotNull(obj) {
+				obj = $.trim(obj);
+				if (obj.length != 0 && obj != null && obj != undefined) {
+				return true;
+			}
+        else
+			return false;
+			}
+
+
+			//注释代码
+			if () {
+			//	//$("#ckPwd").focus(function () {
+			////	if ($("#UserLPWD").val() != $(this).val()) {
+			////		$("#ck").text("两次密码不一致");
+			////		return false;
+			////	} else {
+			////		$("#ck").text("密码通过");
+			////		return true;
+			////	}
+			////});
+			}
+			
+
+			var UserID;
+			var data = window.dialogArguments;
+			if (data != null) {
+				$(":button:eq(0)").hide();
+				$("#dpTitle").text("修改用户");
+				UserID = data.key1;
+				$.myAjax("../webServers/Users.asmx/GetUser", { "uid": UserID }, function (d) {
+					//alert(JSON.stringify(d));
+					$.each(d, function (i, j) {
+						$("#UserLName").val(j.UserLName);
+						$("#UserLPWD").val(j.UserLPWD);
+						$("#ckPwd").val(j.UserLPWD);
+						$("#UserName").val(j.UserName);
+						$("#RolsInfo option[value='" + j.RoleID + "']").attr("selected", "selected");
+					});
+				});
+			} else {
+				$("#dpTitle").text("添加用户");
+				  $(":button:eq(1)").hide();
+			}
+
+
+			//点击修改数据
+			$("#update").click(function () {
+				var data = {
+				"UserID": UserID,
+					"UserLName": $("#UserLName").val(),
+					"UserLPWD": $("#UserLPWD").val(),
+					"UserName": $("#UserName").val(),
+					"RoleID": $("#RolsInfo option:selected").val(),
+				};
+				$.myAjax("../webServers/Users.asmx/UpdUser", { "users": data }, function (d) {
+					if (d > 0) {
+						alert("修改成功");
+
+						var data1 = {
+							"UserID": UserID,
+							"UserLName": $("#UserLName").val(),
+							"UserLPWD": $("#UserLPWD").val(),
+							"UserName": $("#UserName").val(),
+							"RoleName": $("#RolsInfo option:selected").text(),
+						};
+							window.returnValue = data1;
+							window.close();
+
+					}
+				})
+
+			});
+
+			
+				
+			
+			//点击添加用户
+			$("#add").click(function () {
+				if (isNotNull($("#UserLName").val()) && isNotNull($("#UserLPWD").val()) && isNotNull($("#ckPwd").val()) && isNotNull($("#UserName").val())) {
+
+				
+				//alert(1);
+				if (isEqual($("#UserLPWD").val(), $("#ckPwd").val)) {
+					var data = {
+						"UserLName": $("#UserLName").val(),
+						"UserLPWD": $("#UserLPWD").val(),
+						"UserName": $("#UserName").val(),
+						"RoleID": $("#RolsInfo option:selected").val(),
+					};
+					//alert(JSON.stringify(data));
+					$.myAjax("../webServers/Users.asmx/AddUsers", { "users": data }, function (d) {
+						if (d > 0) {
+							alert("新增成功");
+
+							var data1 = {
+								"UserID": d,
+								"UserLName": $("#UserLName").val(),
+								"UserLPWD": $("#UserLPWD").val(),
+								"UserName": $("#UserName").val(),
+								"RoleName": $("#RolsInfo option:selected").text(),
+							};
+
+							window.returnValue = data1;
+							window.close();
+						}
+					});
+				} else {
+					alert("密码不一致");
+					}
+				} else {
+					alert("请填写完整");
+				}
+			});
+
+
+
+
+		});
+
+	</script>
 </head>
 <body>
-    <table class="tableEdit">
-        <thead>
-            <tr>
-                <td colspan="4">添加用户</td>
-            </tr>
-        </thead>
-        <tr>
-            <th>登陆名：</th>
-            <td colspan="3"><input type="text" style="width:300px" /></td>
-        </tr>
-        <tr>
-            <th>密码：</th>
-            <td colspan="3"><input type="text" style="width:300px" /></td>
-        </tr>
-        <tr>
-            <th>确认密码：</th>
-            <td colspan="3"><input type="text" style="width:300px" /></td>
-        </tr>
-        <tr>
-            <th>真实姓名：</th>
-            <td colspan="3"><input type="text" style="width:300px" /></td>
-        </tr>
-        <tr>
-            <th>所属角色：</th>
-            <td colspan="3">
-                <select>
-                    <option>系统管理员</option>
-                    <option>总经理</option>
-                    <option>市场部经理</option>
-                    <option>业务代理</option>
-                    <option>售后部经理</option>
-                    <option>售后支持</option>
-                    <option>客服部经理</option>
-                    <option>客服人员</option>
-                </select>
-            </td>
-        </tr>
-        <tfoot>
-            <tr>
-                <td colspan="4">
-                    <input type="button" value="确定" />&nbsp;&nbsp;
-                    <input type="button" value="关闭" onclick="window.close()" />
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+		<table class="tableEdit">
+			<thead>
+				<tr>
+					<td colspan="4" id="dpTitle">添加用户</td>
+				</tr>
+			</thead>
+			<tr>
+				<th>登陆名：</th>
+				<td colspan="3"><input type="text"  style="width:300px" id="UserLName" /></td>
+			</tr>
+			<tr>
+				<th>密码：</th>
+				<td colspan="3"><input type="text"  maxlength="16" style="width:300px" id="UserLPWD"/></td>
+			</tr>
+			<tr>
+				<th>确认密码：</th>
+				<td colspan="3"><input type="text"   maxlength="16" style="width:300px" id="ckPwd" /><span id="ck"></span></td>
+			</tr>
+			<tr>
+				<th>真实姓名：</th>
+				<td colspan="3"><input type="text"  style="width:300px" id="UserName" /></td>
+			</tr>
+			<tr>
+				<th>所属角色：</th>
+				<td colspan="3">
+					<select id="RolsInfo">
+					</select>
+				</td>
+			</tr>
+			<tfoot>
+				<tr>
+					<td colspan="4">
+						<input type="button" value="确定" id="add"/>&nbsp;&nbsp;
+						<input type="button" value="确定" id="update"/>&nbsp;&nbsp;
+						<input type="button" value="关闭" onclick="window.close()" />
+					</td>
+				</tr>
+			</tfoot>
+		</table>
 </body>
 </html>
