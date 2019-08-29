@@ -1,83 +1,144 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
-    <link href="../CSS/Style1.css" rel="stylesheet" type="text/css" />
-    <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
-    <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
-    <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<title></title>
+	<link href="../CSS/Style1.css" rel="stylesheet" type="text/css" />
+	<link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
+	<script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
 	<script src="../js/MyJquery.js"></script>
-    <script type="text/javascript">
-		$(function () {
+	<script src="../js/MyAjax.js"></script>
+	<script type="text/javascript">
 
-			//页面加载查询所有用户信息
-			$.myAjax("../webServers/Users.asmx/GetUsers", null, function (d) {
-				//alert(JSON.stringify(d));
-				$.each(d, function (k,v) {
-					var tr = $("<tr>");
-					$("<td>").text(v.UserID).appendTo(tr);
-					$("<td>").text(v.UserLName).appendTo(tr);
-					$("<td>").text(v.UserName).appendTo(tr);
-					$("<td>").text(v.RoleName).appendTo(tr);
-					$("<td><img key1=" + v.UserID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key=" + v.UserID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
-					$(".dataTable").append(tr);
-				});
-			});
-
-
-			$("#add").click(function () {
-				$.showModalDialog("EditUser.htm?data=" + Math.random(), null, 600, 300, function (d) {
-					//alert(JSON.stringify(d))
-					var tr = $("<tr>");
-					$("<td>").text(d.UserID).appendTo(tr);
-					$("<td>").text(d.UserLName).appendTo(tr);
-					$("<td>").text(d.UserName).appendTo(tr);
-					$("<td>").text(d.RoleName).appendTo(tr);
-					$("<td><img key1=" + d.UserID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key=" + d.UserID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
-					$(".dataTable").append(tr);
-				});
-			});
-
-			//委派删除
-			$(document).on("click", "img[key]", function () {
-				if (confirm("是否删除？")) {
-
-				var id = $(this).attr("key");//得到用户id
-				//alert(id);
-				var row = $(this).parent().parent();//得到选中行
-				$.myAjax("../webServers/Users.asmx/DelUsersById", { "id": id }, function (d) {
-					$(row).remove();
-					alert("删除成功");
-
-				});
-					
+		function mypage(index) {
+			var tab = $(".dataTable");
+			$.cursomAjax("../webServers/Users.asmx/GetUsers", null, function (d) {
+				var str = {
+					cols: { "UserID": "用户编号", "UserLName": "登录名","UserName":"真实姓名","RoleName":"所属角色","aaa": "操作" },
+					data: d,
+					ops: [ {
+						title: "修改",
+						url: "EditUser.htm?data=" + Math.random(),
+						type: "<img  title='修改' src='../images/edt.gif' />"
+					},
+						{
+						title: "删除",
+						url: "../webServers/Users.asmx/DelUsersById",
+						type: "<img  title='删除' src='../images/del.gif' />"
+					}],
+					id: "UserID",
+					index: index,
+					size: 3
 				}
-			});
-
-			//委派修改
-			$(document).on("click", "img[key1]", function () {
-				var id = $(this).attr("key1");
-				//alert(id);
-				var row = $(this).parent().parent();
-				$.showModalDialog("EditUser.htm?data=" + Math.random(), { "key1": id }, 600, 300, function (d) {
-					//alert(JSON.stringify(d));
+				tab.AllModelPage(str, mypage, function (d, row) {
 					$(row).children().eq(1).text(d.UserLName);
 					$(row).children().eq(2).text(d.UserName);
 					$(row).children().eq(3).text(d.RoleName);
-					
-
-                //...
-            });
+				});
 			});
+		}
+		$(function () {
 
-		});
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					mypage(1);
 
-        //function showEdit() {
-        //    $.showModalDialog("EditUser.htm?data=" + Math.random(), null, 600, 300, function(){
-        //        //...
-        //    });
-        //}
-    </script>
+					$("#add").click(function () {
+						$.showModalDialog("EditUser.htm?data=" + Math.random(), { "id": null }, 600, 300, function (d) {
+							//alert(JSON.stringify(d))
+							var tr = $("<tr>");
+							$("<td>").text(d.UserID).appendTo(tr);
+							$("<td>").text(d.UserLName).appendTo(tr);
+							$("<td>").text(d.UserName).appendTo(tr);
+							$("<td>").text(d.RoleName).appendTo(tr);
+							$("<td><img up=" + d.UserID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img del=" + d.UserID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+							//$(".dataTable").append(tr);
+						});
+					});
+				}
+				else {
+
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
+				}
+			})
+		})
+
+
+			//$(function () {
+			//	  $.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+	  //              if(d.status)
+	  //              {
+
+			//	//页面加载查询所有用户信息
+			//	$.myAjax("../webServers/Users.asmx/GetUsers", null, function (d) {
+			//		//alert(JSON.stringify(d));
+			//		$.each(d, function (k,v) {
+			//			var tr = $("<tr>");
+			//			$("<td>").text(v.UserID).appendTo(tr);
+			//			$("<td>").text(v.UserLName).appendTo(tr);
+			//			$("<td>").text(v.UserName).appendTo(tr);
+			//			$("<td>").text(v.RoleName).appendTo(tr);
+			//			$("<td><img key1=" + v.UserID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key=" + v.UserID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+			//			$(".dataTable").append(tr);
+			//		});
+			//	});
+
+
+
+
+			//	//委派删除
+			//	$(document).on("click", "img[key]", function () {
+			//		if (confirm("是否删除？")) {
+
+			//		var id = $(this).attr("key");//得到用户id
+			//		//alert(id);
+			//		var row = $(this).parent().parent();//得到选中行
+			//		$.myAjax("../webServers/Users.asmx/DelUsersById", { "id": id }, function (d) {
+			//			$(row).remove();
+			//			alert("删除成功");
+
+			//		});
+
+			//		}
+			//	});
+
+			//	//委派修改
+			//	$(document).on("click", "img[key1]", function () {
+			//		var id = $(this).attr("key1");
+			//		//alert(id);
+			//		var row = $(this).parent().parent();
+			//		$.showModalDialog("EditUser.htm?data=" + Math.random(), { "key1": id }, 600, 300, function (d) {
+			//			//alert(JSON.stringify(d));
+			//			$(row).children().eq(1).text(d.UserLName);
+			//			$(row).children().eq(2).text(d.UserName);
+			//			$(row).children().eq(3).text(d.RoleName);
+
+
+	  //              //...
+	  //          });
+			//	});
+
+						 //}
+	      //          else
+	      //          {
+
+	      //              alert(d.UserLName);
+	      //              window.location.href = "../login.htm";
+	      //          }
+			//	})
+
+			//});
+
+			//function showEdit() {
+			//    $.showModalDialog("EditUser.htm?data=" + Math.random(), null, 600, 300, function(){
+			//        //...
+			//    });
+			//}
+
+
+
+	</script>
 </head>
 <body>
 <div id="desDiv">

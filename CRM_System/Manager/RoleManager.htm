@@ -7,67 +7,123 @@
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
 	<script src="../js/MyJquery.js"></script>
+	<script src="../js/MyAjax.js"></script>
     <script type="text/javascript">
-
-		$(function () {
-
-			$.myAjax("../webServers/Role.asmx/GetRoles", null, function (d) {
-				//alert(d);
-				$.each(d, function (key, value) {
-					var tr = $("<tr>");
-					$("<td>").text(value.ID).appendTo(tr);
-					$("<td>").text(value.RoleName).appendTo(tr);
-					$(" <td><img key1='" + value.ID + "' title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key='" + value.ID + "' title='删除' src='../images/del.gif' /></td>").appendTo(tr);
-					$(".dataTable").append(tr);
+		function mypage(index) {
+			var tab = $(".dataTable");
+			$.cursomAjax("../webServers/Role.asmx/GetRoles", null, function (d) {
+				var str = {
+					cols: { "ID": "角色编号", "RoleName": "角色名","aaa": "操作" },
+					data: d,
+					ops: [ {
+						title: "修改",
+						url: "EditRole.htm?data=" + Math.random(),
+						type: "<img  title='修改' src='../images/edt.gif' />"
+					},
+						{
+						title: "删除",
+						url: "../webServers/Role.asmx/DelRole",
+						type: "<img  title='删除' src='../images/del.gif' />"
+					}],
+					id: "ID",
+					index: index,
+					size: 3
+				}
+				tab.AllModelPage(str, mypage, function (d, row) {
+					$(row).children().eq(1).text(d.RoleName);
+					//$(row).children().eq(2).text(d.UserName);
+					//$(row).children().eq(3).text(d.RoleName);
 				});
-
 			});
+		}
+		$(function () {
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
 
-			//委派删除
-			$(document).on("click", "img[key]", function () {
-				if (confirm("是否删除？")) {
+					mypage(1);
 
-				var id = $(this).attr("key");
-				//alert(id);
-				var row = $(this).parent().parent();
-				$.myAjax("../webServers/Role.asmx/DelRole", { "id": id }, function (d) {
-					$(row).remove();
-					alert("删除成功");
+					$("#add").click(function () {
+						$.showModalDialog("EditRole.htm?data=" + Math.random(), { "id": null }, 600, 150, function (d) {
+							//$(row).children().eq(1).text(d.RoleName);
+							var tr = $("<tr>");
+							$("<td>").text(d.ID).appendTo(tr);
+							$("<td>").text(d.RoleName).appendTo(tr);
+							$(" <td><img key='" + d.ID + "' title='修改' src='../images/edt.gif' onclick='showEdit()' />&nbsp;&nbsp;<img key='" + d.ID + "' title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+							$(".dataTable").append(tr);
 
-				});
+
+						});
+
+					});
+				} else {
 					
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
 				}
 			})
 
-			$("#add").click(function () {
-				 $.showModalDialog("EditRole.htm?data=" + Math.random(), null, 600, 150, function(d){
-					//$(row).children().eq(1).text(d.RoleName);
-					var tr = $("<tr>");
-					 $("<td>").text(d.ID).appendTo(tr);
-					 $("<td>").text(d.RoleName).appendTo(tr);
-					 $(" <td><img key='" + d.ID + "' title='修改' src='../images/edt.gif' onclick='showEdit()' />&nbsp;&nbsp;<img key='" + d.ID + "' title='删除' src='../images/del.gif' /></td>").appendTo(tr);
-					 $(".dataTable").append(tr);
+		})
+
+
+		//$(function () {
+
+		//	$.myAjax("../webServers/Role.asmx/GetRoles", null, function (d) {
+		//		//alert(d);
+		//		$.each(d, function (key, value) {
+		//			var tr = $("<tr>");
+		//			$("<td>").text(value.ID).appendTo(tr);
+		//			$("<td>").text(value.RoleName).appendTo(tr);
+		//			$(" <td><img key1='" + value.ID + "' title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key='" + value.ID + "' title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+		//			$(".dataTable").append(tr);
+		//		});
+
+		//	});
+
+		//	//委派删除
+		//	$(document).on("click", "img[key]", function () {
+		//		if (confirm("是否删除？")) {
+
+		//		var id = $(this).attr("key");
+		//		//alert(id);
+		//		var row = $(this).parent().parent();
+		//		$.myAjax("../webServers/Role.asmx/DelRole", { "id": id }, function (d) {
+		//			$(row).remove();
+		//			alert("删除成功");
+
+		//		});
+					
+		//		}
+		//	})
+
+		//	$("#add").click(function () {
+		//		 $.showModalDialog("EditRole.htm?data=" + Math.random(), null, 600, 150, function(d){
+		//			//$(row).children().eq(1).text(d.RoleName);
+		//			var tr = $("<tr>");
+		//			 $("<td>").text(d.ID).appendTo(tr);
+		//			 $("<td>").text(d.RoleName).appendTo(tr);
+		//			 $(" <td><img key='" + d.ID + "' title='修改' src='../images/edt.gif' onclick='showEdit()' />&nbsp;&nbsp;<img key='" + d.ID + "' title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+		//			 $(".dataTable").append(tr);
 
 				
-            });
+  //          });
 
-			});
+		//	});
 
 
-			//委派修改
-			$(document).on("click", "img[key1]", function () {
-				var id = $(this).attr("key1");
-				var row = $(this).parent().parent();
+		//	//委派修改
+		//	$(document).on("click", "img[key1]", function () {
+		//		var id = $(this).attr("key1");
+		//		var row = $(this).parent().parent();
 
-				//alert(id);
-				$.showModalDialog("EditRole.htm?data=" + Math.random(), { "key1": id }, 600, 150, function (d) {
-					//alert(JSON.stringify(d));
-					$(row).children().eq(1).text(d.RoleName);
-                //...
-            });
+		//		//alert(id);
+		//		$.showModalDialog("EditRole.htm?data=" + Math.random(), { "key1": id }, 600, 150, function (d) {
+		//			//alert(JSON.stringify(d));
+		//			$(row).children().eq(1).text(d.RoleName);
+  //              //...
+  //          });
 
-			});
-		})
+		//	});
+		//})
     //    function showEdit() {
     //        $.showModalDialog("EditRole.htm?data=" + Math.random(), null, 600, 150, function(d){
     //            //...

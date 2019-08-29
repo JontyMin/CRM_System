@@ -1,5 +1,18 @@
 ﻿$.extend({
-    
+	cklogin: function () {
+		$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+			if (d.status) {
+				//$("#info").text(d.UserLName);
+				return true;
+			}
+			else {
+
+				alert(d.UserLName);
+				window.location.href = "login.htm";
+			}
+		})
+	},
+
     convertJonsTime: function (time) {
 
         if (time == "" || time == null)
