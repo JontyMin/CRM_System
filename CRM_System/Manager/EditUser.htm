@@ -57,11 +57,12 @@
 			
 
 			var UserID;
-			var data = window.dialogArguments;
+			var data = window.dialogArguments.id;
+			//alert(data);
 			if (data != null) {
 				$(":button:eq(0)").hide();
 				$("#dpTitle").text("修改用户");
-				UserID = data.key1;
+				UserID = data;
 				$.myAjax("../webServers/Users.asmx/GetUser", { "uid": UserID }, function (d) {
 					//alert(JSON.stringify(d));
 					$.each(d, function (i, j) {

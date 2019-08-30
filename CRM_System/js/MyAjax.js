@@ -173,7 +173,7 @@ $(function () {
                 }
                 //var tr = $("<tr>");
                 var td = $("<span>");     
-            $("<a>").text("首页").attr("href", "#").click(function () {
+			$("<input>").text("首页").src("../images/first.gif").attr("type", "image").click(function () {
                 $(this).parent().remove();
                 tab.setPage(size, 1);
             }).appendTo(td);
@@ -233,6 +233,7 @@ $(function () {
         //    ops: [{
         //        title: "删除",
         //        url: "../UserService/UsersService.asmx/GetUserAll",
+		//type:"<input type='button' value=''>"
         //        parms : "id"
         //    }, {
         //        title: "修改",

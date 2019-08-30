@@ -13,11 +13,11 @@
 
 			var RoleName;
 			var id;
-			var data = window.dialogArguments;
+			var data = window.dialogArguments.id;
 			if (data != null) {
 				$(":button:eq(0)").hide();
 				$("#dpTitle").text("修改角色");
-				id = data.key1;
+				id = data;
 				$.myAjax("../webServers/Role.asmx/GetRolesById", { "id": id }, function (d) {
 					$.each(d, function (k, v) {
 						RoleName = v.RoleName;

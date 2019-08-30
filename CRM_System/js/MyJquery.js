@@ -1,6 +1,17 @@
 ﻿$.extend({
+	cklogin: function () {
+		$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+			if (d.status) {
+				//$("#info").text(d.UserLName);
+				return true;
+			}
+			else {
 
-
+				alert(d.UserLName);
+				window.location.href = "login.htm";
+			}
+		})
+	},
 
     convertJonsTime: function (time) {
 
@@ -8,7 +19,7 @@
             return "";
         var str = parseFloat(time.substr(6));
         var t = new Date(str);
-        return t.getFullYear() + "年" + (t.getMonth() + 1) + "月" + t.getDate()+"日";
+        return t.getFullYear() + "-" + (t.getMonth() + 1) + "-" + t.getDate();
 
 
     },
