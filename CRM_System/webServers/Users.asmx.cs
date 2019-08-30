@@ -66,6 +66,12 @@ namespace CRM_System.webServers
 
 		}
 
+		[WebMethod]
+		public List<Model.Users> GetUsersID() {
+			string sql = string.Format(@"select UserID,UserName from Users where RoleID=3");
+			return DalBase.SelectsByWhere<Model.Users>(sql,null);
+
+		}
 
 		/// <summary>
 		/// 根据id删除用户

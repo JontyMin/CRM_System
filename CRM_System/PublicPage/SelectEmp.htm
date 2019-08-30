@@ -1,22 +1,32 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
-    <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
-    <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
-    <script type="text/javascript">
-    $(function(){
-        //双击选择
-        $("#select1").dblclick(function(){
-            //设置返回值
-            window.returnValue = {
-                id: $(this).val(),
-                name: $(this).find(":selected").text()
-            };
-            window.close();
-        });
-    });
-    </script>
+	<title></title>
+	<link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="../js/json.js"></script>
+	<script src="../js/MyJquery.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			//动态加载角色信息
+			$.myAjax("../webServers/Users.asmx/GetUsersID", null, function (d) {
+				$.each(d, function (i, j) {
+					var option = $("<option>").val(j.UserID).text(j.UserName);
+					$("#select1").append(option);
+				});
+			});
+			//双击选择
+			$("#select1").dblclick(function () {
+				//设置返回值
+				//alert($(this).val() + "" + $(this).find(":selected").text());
+				window.returnValue = {
+					id: $(this).val(),
+					name: $(this).find(":selected").text()
+				};
+				window.close();
+			});
+		});
+	</script>
 </head>
 <body>
     <table class="tableEdit">
@@ -29,10 +39,10 @@
         </thead>
         <tr>
             <td>
-                <select id="select1" size="10" style="width: 100px;">
-                    <option value="1">张三</option>
+                <select id="select1" size="10"  style="width: 100px;">
+                    <!--<option value="1">张三</option>
                     <option value="2">李四</option>
-                    <option value="3">王五</option>
+                    <option value="3">王五</option>-->
                 </select>
             </td>
         </tr>

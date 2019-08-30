@@ -249,7 +249,7 @@ $(function () {
         //ops 操作符
         //id 找到此表的id并根据id分页
         //index 页码
-        //parms 参数的名字 不写 默认对应方法种参数名为"id"
+        //parms 参数的名字 不写 默认对应方法种参数名为"id"（X）
         //size 大小
         //title操作符的文本值
         //url 页面的访问路径

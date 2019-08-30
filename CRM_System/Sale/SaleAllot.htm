@@ -11,8 +11,8 @@
         function showEmp(input, chanid) {
             $.showModalDialog("../publicPage/SelectEmp.htm?data="+Math.random(), null, 200, 220, function(emp){
                 //ajax处理返回的结果
-                //请使用 chanid、emp.id ....略....
-                 
+				//请使用 chanid、emp.id ....略....
+				
                 //显示结果
                 input.value = emp.name;
             });
