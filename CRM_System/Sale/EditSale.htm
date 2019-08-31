@@ -28,7 +28,7 @@
 			//var m=myDate.getMinutes();     //获取当前分钟数(0-59)
 			//var s=myDate.getSeconds();  
 
-			return year+'年'+getNow(month)+"月"+getNow(date)+"日";
+			return year+"年"+getNow(month)+"月"+getNow(date)+"日";
 		}
 
 
@@ -100,7 +100,6 @@
 					//先拿到添加人的id
 					$.myAjax("../webServers/Chances.asmx/GetUsersID", null, function (d) {
 
-
 						var data = {
 							"ChanName": $("#ChanName").val(),
 							"ChanRate": $("#ChanRate option:selected").val(),
@@ -117,27 +116,29 @@
 						};
 						//alert(JSON.stringify(data));
 
-						$.myAjax("../webServers/Chances.asmx/AddChance", { "chances": data }, function (d) {
-							if (d > 0) {
-								alert("新增成功");
-								var data1 = {
-									"ChanID":d,
-									"ChanName": $("#ChanName").val(),
-									"ChanLinkMan": $("#ChanLinkMan").val(),
-									"ChanLinkTel": $("#ChanLinkTel").val(),
-									"ChanTitle": $("#ChanTitle").val(),
-									"ChanCreateDate": GetTiem()
-								};
+							$.myAjax("../webServers/Chances.asmx/AddChance", { "chances": data }, function (d) {
+								if (d > 0) {
+									alert("新增成功");
+									var data1 = {
+										"ChanID": d,
+										"ChanName": $("#ChanName").val(),
+										"ChanLinkMan": $("#ChanLinkMan").val(),
+										"ChanLinkTel": $("#ChanLinkTel").val(),
+										"ChanTitle": $("#ChanTitle").val(),
+										"ChanCreateDate": GetTiem()
+									};
 
-								//alert(JSON.stringify(data1));
+									//alert(JSON.stringify(data1));
 
-								window.returnValue = data1;
-								window.close();
-							}
+									window.returnValue = data1;
+									window.close();
+								}
 
 
+							});
+			
 						});
-					});
+			
 				} catch (e) {
 					alert("添加失败，请稍后重试" + e);
 				}

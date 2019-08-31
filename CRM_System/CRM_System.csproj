@@ -183,6 +183,7 @@
     <Content Include="Manager\b.html" />
     <Content Include="Manager\EditRole.htm" />
     <Content Include="Manager\RoleManager.htm" />
+    <Content Include="webServers\Chances.asmx" />
     <Content Include="webServers\Jurisdiction.asmx" />
     <Content Include="webServers\Power.asmx" />
     <Content Include="webServers\Role.asmx" />
@@ -226,6 +227,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="webServers\Chances.asmx.cs">
+      <DependentUpon>Chances.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="webServers\Jurisdiction.asmx.cs">
       <DependentUpon>Jurisdiction.asmx</DependentUpon>
       <SubType>Component</SubType>
