@@ -69,7 +69,7 @@ namespace CRM_System.webServers
 		[WebMethod]
 		public int AddChance(Model.Chances chances) {
 
-			chances.ChanDueDate = DateTime.Now;
+			chances.ChanCreateDate = DateTime.Now;
 			int id = -1;
 			if (DalBase.Insert(chances)>0)
 			{
@@ -103,5 +103,90 @@ namespace CRM_System.webServers
 		public int UpdChance(Model.Chances chances) {
 			return DalBase.Updata(chances);
 		}
+
+
+
+		//机会指派界面
+
+
+		/// <summary>
+		/// 查询机会视图
+		/// </summary>
+		/// <returns></returns>
+		[WebMethod]
+		public List<Model.V_Chances> GetV_Chances() {
+			string sql = string.Format(@"select * from V_Chances");
+			return DalBase.SelectsByWhere<Model.V_Chances> (sql,null) ;
+
+		}
+		/// <summary>
+		/// 多条件判断查询
+		/// </summary>
+		/// <param name="ChanName"></param>
+		/// <param name="ChanLinkMan"></param>
+		/// <param name="ChanCreateMan"></param>
+		/// <param name="ChanDueMan"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public List<Model.V_Chances> GetV_ChancesBy(string ChanName,string ChanLinkMan,string ChanCreateManName, string ChanDueManName) {
+			//ChanName 客户名  ChanLinkMan 联系人  ChanCreateManName 创建人  ChanDueManName 指派人
+			string sql = string.Format(@"select * from V_Chances where 1=1 ");
+
+			if (ChanName!=null&& ChanName!="")
+			{
+				sql += " and ChanName like @ChanName";
+			}
+			if (ChanLinkMan!=null&& ChanLinkMan!="")
+			{
+				sql += " and ChanLinkMan like @ChanLinkMan";
+			}
+			if (ChanCreateManName != null&& ChanCreateManName != "")
+			{
+				sql += " and ChanCreateManName like @ChanCreateManName";
+			}
+			if (ChanDueManName != null&& ChanDueManName != "")
+			{
+				sql += " and ChanDueManName like @ChanDueManName";
+			}
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@ChanName","%"+ChanName+"%"),
+				new SqlParameter("@ChanLinkMan","%"+ChanLinkMan+"%"),
+				new SqlParameter("@ChanCreateManName","%"+ChanCreateManName+"%"),
+				new SqlParameter("@ChanDueManName","%"+ChanDueManName+"%"),
+			};
+			return DalBase.SelectsByWhere<Model.V_Chances>(sql,sp);
+		}
+
+
+		/// <summary>
+		/// 指派销售机会
+		/// </summary>
+		/// <param name="chance"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int UpdChanDue(Model.Chances chance) {
+			chance.ChanDueDate = DateTime.Now;
+			return DalBase.Updata(chance);
+
+		}
+
+
+
+
+
+		//客户开发计划界面
+
+
+			/// <summary>
+			/// 查询已指派的客户机会
+			/// </summary>
+			/// <returns></returns>
+		[WebMethod]
+		public List<Model.V_Chances> GetChanDue() {
+			string sql = string.Format(@"select * from V_Chances where ChanState>1");
+			return DalBase.SelectsByWhere<Model.V_Chances>(sql,null) ;
+
+		}
+
 	}
 }

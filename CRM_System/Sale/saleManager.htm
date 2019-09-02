@@ -6,28 +6,49 @@
     <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
     <script type="text/javascript">
         //查看开发成功的项目
-        function showOK() {
-            $.showModalDialog("SaleOk.htm?data=" + Math.random(), "参数", 600, 400, function(){
+		function showOK(ChanID) {
+			$.showModalDialog("SaleOk.htm?data=" + Math.random(), { "ChanID": ChanID }, 600, 400, function () {
                 //...
             });
         }
         //查看开发失败的项目
         function showNo() {
-            $.showModalDialog("SaleNo.htm?data=" + Math.random(), "参数", 600, 400, function(){
+            $.showModalDialog("SaleNo.htm?data=" + Math.random(), { "ChanID": ChanID }, 600, 400, function(){
                 //...
             });
         }
         //查看开发中的项目
         function showOpen() {
-            $.showModalDialog("SaleOpen.htm?data=" + Math.random(), "参数", 600, 400, function(result){
+            $.showModalDialog("SaleOpen.htm?data=" + Math.random(), { "ChanID": ChanID }, 600, 400, function(result){
                 //当前返1(开发成功)和2(开发失败)时，需要刷新列表
                 if(result==1||result==2){
                     //...略...
                 }
             });
-        }
+		}
+
+
+		$(function () {
+			//加载查询数据
+			$.myAjax("../webServers/Chances.asmx/GetChanDue", null, function (d) {
+				$.each(d, function (k, v) {
+					var tr = $("<tr>");
+					$("<td>").text(v.ChanName).appendTo(tr);
+					$("<td>").text(v.ChanTitle).appendTo(tr);
+					$("<td>").text(v.ChanLinkMan).appendTo(tr);
+					$("<td>").text(v.ChanLinkTel).appendTo(tr);
+					$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+					$("<td>").text(v.ChanStateText).appendTo(tr);
+					$("<td><img title='" + (v.ChanState == 2 ? '修改' : '查看') + "' src='" + (v.ChanState==2?'../images/bt_feedback.gif':'../images/bt_detail.gif') + "' onclick='"+(v.ChanState==2?'showOpen('+v.ChanID+')':v.ChanState==3?'showOK('+v.ChanID+')':'showNo('+v.ChanID+')')+"' /></td>").appendTo(tr);
+					$(".dataTable").append(tr);
+				});
+
+			});
+
+		});
     </script>
 </head>
 <body>
@@ -48,7 +69,7 @@
             <th>状态</th>
             <th>操作</th>
         </tr>
-        <tr>
+        <!--<tr>
             <td>睿智数码</td>
             <td>采购笔记本意向</td>
             <td>张经理</td>
@@ -74,7 +95,7 @@
             <td>2011年3月2日</td>
             <td>开发失败</td>
             <td><img title="查看" src="../images/bt_detail.gif" onclick="showNo()"/></td>
-        </tr>
+        </tr>-->
     </table>
     <div id="pageDiv">
         <div id="leftPage">共有120条记录，当前第1/10页</div>

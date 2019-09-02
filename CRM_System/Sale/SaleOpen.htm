@@ -7,7 +7,34 @@
         .tableEdit th,.tableEdit td { width:270px;}
     </style>
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
     <script type="text/javascript">
+		$(function () {
+			var ChanID = window.dialogArguments;
+			$.myAjax("../webServers/Plans.asmx/GetPlansByChanID", { "ChanID": ChanID.ChanID }, function (d) {
+				$.each(d, function (k, v) {
+					
+					var tr1 = $("<tr>");
+					var tr2 = $("<tr>");
+					$("<th>").text("计划:"+$.JonsTime(v.PlanDate)).appendTo(tr1);
+					$("<th>").text("执行：" + $.JonsTime(v.PlanResultDate)).appendTo(tr1);
+					$("<td>").text(v.PlanContent).appendTo(tr2);
+					if (v.PlanResult == null) {
+						$("<td><a href='#' onclick='showEnter(" + v.PlanID + ")'>输入执行结果</a></td>").appendTo(tr2);
+					} else {
+						$("<td>").text(v.PlanResult).appendTo(tr2);
+					}
+					$(".tableEdit").eq(0).append(tr1).append(tr2);
+					//$(".tableEdit").append(tr2);
+				});
+				//$(".tableEdit tfoot").empty();
+
+			});
+
+
+		});
+
+
     //开发成功
     function showSuccess(){
         if(!confirm("开发成功后，系统会记录该项目的客户资料，确认已开发成功吗？"))return;
@@ -26,7 +53,9 @@
     function saveNew(){
         $(".tb_new").hide();
         //...略...
-        //刷新计划列表...
+		//刷新计划列表...
+		var PlanContent = $("#newPlan").val();
+
     }
 
     //显示执行结果
@@ -52,7 +81,7 @@
         if(!confirm("确认要终止开发吗？"))return;
         //服务器处理...   ...略...
         //返回值
-        window.returnValue = 2; //开发失败
+        window.returnValue = 4; //开发失败
         window.close();
     }
     </script>
@@ -71,7 +100,7 @@
 
     <!-- 开发计划列表 -->
     <table class="tableEdit" style="width:540px;">
-        <tr>
+        <!--<tr>
             <th>计划： 2011-5-16</th><th>执行：2011-5-22</th>
         </tr>
         <tr>
@@ -84,7 +113,7 @@
         <tr>
             <td>电话联系，初步接触</td>
             <td><a href="#" onclick="showEnter(123);">输入执行结果</a></td>
-        </tr>
+        </tr>-->
         <tfoot>
             <tr>
                 <td colspan="2">
@@ -98,7 +127,7 @@
     <table class="tableEdit tb_new" style="width:540px;display:none;">
         <tr>
             <th>新建计划： <a href="#" onclick="saveNew();">保存</a><br /></th>
-            <td><textarea>请在这里输入新计划...</textarea></td>
+            <td><textarea id="newPlan">请在这里输入新计划...</textarea></td>
         </tr>
     </table>
 

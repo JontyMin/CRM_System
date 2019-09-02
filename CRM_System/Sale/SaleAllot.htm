@@ -7,16 +7,99 @@
     <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
     <script type="text/javascript">
         function showEmp(input, chanid) {
-            $.showModalDialog("../publicPage/SelectEmp.htm?data="+Math.random(), null, 200, 220, function(emp){
-                //ajax处理返回的结果
+			$.showModalDialog("../publicPage/SelectEmp.htm?data=" + Math.random(), null, 200, 220, function (emp) {
+				//ajax处理返回的结果
 				//请使用 chanid、emp.id ....略....
-				
-                //显示结果
-                input.value = emp.name;
-            });
-        }
+
+				//显示结果
+				input.value = emp.name;
+				var data = {
+					"ChanID": chanid,
+					"ChanState": 2,
+					"ChanDueMan": emp.id,
+
+				};
+
+				$.myAjax("../webServers/Chances.asmx/UpdChanDue", { "chance": data }, function (d) {
+					if (d > 0) {
+						alert("指派成功");
+					}
+				});
+			});
+		}
+
+		
+			$(function () {
+				//加载查询
+				$.myAjax("../webServers/Chances.asmx/GetV_Chances", null, function (d) {
+					//alert(JSON.stringify(d));
+						$.each(d, function (k, v) {
+							var tr = $("<tr>");
+							$("<td>").text(v.ChanName).appendTo(tr);
+							$("<td>").text(v.ChanTitle).appendTo(tr);
+							$("<td>").text(v.ChanLinkMan).appendTo(tr);
+							$("<td>").text(v.ChanLinkTel).appendTo(tr);
+							$("<td>").text(v.ChanCreateManName).appendTo(tr);
+							$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+							$("<td><input type='text' value='"+(v.ChanDueManName==""?"未指派":v.ChanDueManName)+"'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
+							$(".dataTable tbody").append(tr);
+
+						});
+
+
+				});
+
+				$(":button:first").click(function () {
+
+					//alert(1);
+					$.myAjax("../webServers/Chances.asmx/GetV_ChancesBy", { "ChanName": $("#ChanName").val(), "ChanLinkMan": $("#ChanLinkMan").val(), "UserName": $("#UserName").val(), "ChanDueMan": $("#ChanDueMan").val() }, function (d) {
+						$(".dataTable tbody").empty();
+						$.each(d, function (k, v) {
+							var tr = $("<tr>");
+							$("<td>").text(v.ChanName).appendTo(tr);
+							$("<td>").text(v.ChanTitle).appendTo(tr);
+							$("<td>").text(v.ChanLinkMan).appendTo(tr);
+							$("<td>").text(v.ChanLinkTel).appendTo(tr);
+							$("<td>").text(v.ChanCreateManName).appendTo(tr);
+							$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+							$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
+							$(".dataTable tbody").append(tr);
+
+						});
+					});
+				});
+
+				$(".up").keyup(function () {
+					//alert(1);
+					$.myAjax("../webServers/Chances.asmx/GetV_ChancesBy", { "ChanName": $("#ChanName").val(), "ChanLinkMan": $("#ChanLinkMan").val(), "ChanCreateManName": $("#ChanCreateManName").val(), "ChanDueManName": $("#ChanDueManName").val() }, function (d) {
+						$(".dataTable tbody").empty();
+						$.each(d, function (k, v) {
+							var tr = $("<tr>");
+							$("<td>").text(v.ChanName).appendTo(tr);
+							$("<td>").text(v.ChanTitle).appendTo(tr);
+							$("<td>").text(v.ChanLinkMan).appendTo(tr);
+							$("<td>").text(v.ChanLinkTel).appendTo(tr);
+							$("<td>").text(v.ChanCreateManName).appendTo(tr);
+							$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+							$("<td><input type='text' value='"+(v.ChanDueManName==""?"未指派":v.ChanDueManName)+"'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
+							$(".dataTable tbody").append(tr);
+
+						});
+					});
+				});
+
+				//$(document).on("change", "input type[text] value", function () {
+
+				//	var id = $(this).attr("value");
+				//	//alert(id);
+				//	console.log(id);
+				//});
+
+			});
+			
     </script>
 </head>
 <body>
@@ -27,33 +110,39 @@
 <table class="tableEdit">
     <tr>
         <th>客户名称：</th>
-        <td><input type="text" /></td>
+        <td><input type="text" id="ChanName" class="up"/></td>
         <th>联系人：</th>
-        <td><input type="text" /></td>
+        <td><input type="text" id="ChanLinkMan" class="up"/></td>
          <th>创建人：</th>
-        <td><input type="text" /></td>
+        <td><input type="text" id="ChanCreateManName" class="up"/></td>
         <th>分配人：</th>
-        <td><input type="text" /></td>
+        <td><input type="text" id="ChanDueManName" class="up"/></td>
     </tr>
     <tfoot>
         <tr>
-            <td colspan="8"><input type="button" value="查询" /></td>
+            <td colspan="8"><input type="button" value="查询"/></td>
         </tr>
     </tfoot>
 </table>
 <br />
 <div id="dataDiv">
     <table class="dataTable">
-        <tr>
-            <th>客户名称</th>
-            <th>概要</th>
-            <th>联系人</th>
-            <th>联系电话</th>
-            <th>创建人</th>
-            <th>创建时间</th>
-            <th>分配人</th>
-        </tr>
-        <tr>
+		<thead>
+			<tr>
+				<th>客户名称</th>
+				<th>概要</th>
+				<th>联系人</th>
+				<th>联系电话</th>
+				<th>创建人</th>
+				<th>创建时间</th>
+				<th>分配人</th>
+			</tr>
+		</thead>
+		<tbody>
+
+
+		</tbody>
+        <!--<tr>
             <td>睿智数码</td>
             <td>采购笔记本意向</td>
             <td>张经理</td>
@@ -79,7 +168,7 @@
              <td>李四</td>
             <td>2011年3月2日</td>
              <td><input type="text" readonly="readonly" ondblclick="showEmp(this, 125)"/></td>
-        </tr>
+        </tr>-->
     </table>
     <div id="pageDiv">
         <div id="leftPage">共有120条记录，当前第1/10页</div>

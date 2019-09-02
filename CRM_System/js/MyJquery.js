@@ -7,9 +7,18 @@
         var str = parseFloat(time.substr(6));
         var t = new Date(str);
         return t.getFullYear() + "年" + (t.getMonth() + 1) + "月" + t.getDate()+"日";
+	},
 
 
-    },
+	JonsTime: function (time) {
+
+		if (time == "" || time == null)
+			return "";
+		var str = parseFloat(time.substr(6));
+		var t = new Date(str);
+		return t.getFullYear() + "-" + (t.getMonth() + 1) + "-" + t.getDate();
+	},
+
     myAjax: function (url,data,callBack) {
         $.ajax({
             type: "POST",

@@ -6,6 +6,7 @@
 	<link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
 	<script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
 	<script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/json.js"></script>
 	<script src="../js/MyJquery.js"></script>
 	<script type="text/javascript">
 
@@ -27,22 +28,22 @@
 				});
 			});
 
-			//点击添加 
+			//点击添加
 			$("#addChance").click(function () {
 
-				    $.showModalDialog("EditSale.htm?data=" + Math.random(), null, 600, 300, function(d){
-						//...
-						//alert(d);
-						var tr = $("<tr>");
-						$("<td>").text(d.ChanName).appendTo(tr);
-						$("<td>").text(d.ChanTitle).appendTo(tr);
-						$("<td>").text(d.ChanLinkMan).appendTo(tr);
-						$("<td>").text(d.ChanLinkTel).appendTo(tr);
-						$("<td>").text(d.ChanCreateDate).appendTo(tr);
-						$(" <td><img key=" + d.ChanID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key1=" + d.ChanID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
-						$(".dataTable").append(tr);
+				$.showModalDialog("EditSale.htm?data=" + Math.random(), null, 600, 300, function (d) {
+					//...
+					//alert(d);
+					var tr = $("<tr>");
+					$("<td>").text(d.ChanName).appendTo(tr);
+					$("<td>").text(d.ChanTitle).appendTo(tr);
+					$("<td>").text(d.ChanLinkMan).appendTo(tr);
+					$("<td>").text(d.ChanLinkTel).appendTo(tr);
+					$("<td>").text(d.ChanCreateDate).appendTo(tr);
+					$(" <td><img key=" + d.ChanID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key1=" + d.ChanID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+					$(".dataTable").append(tr);
 
-			    });
+				});
 			});
 
 			//事件委派删除
@@ -70,20 +71,20 @@
 					$(row).children().eq(3).text(d.ChanLinkTel);
 					//$(row).children().eq(4).text(d.ChanCreateDate);
 
-			    });
+				});
 
 			});
 
-			
 
-			
+
+
 		});
 
-			//function showEdit() {
-			//    $.showModalDialog("EditSale.htm?data=" + Math.random(), null, 600, 300, function(){
-			//        //...
-			//    });
-			//}
+				//function showEdit() {
+				//    $.showModalDialog("EditSale.htm?data=" + Math.random(), null, 600, 300, function(){
+				//        //...
+				//    });
+				//}
 	</script>
 </head>
 <body>
