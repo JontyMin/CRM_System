@@ -1,9 +1,60 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
-    <link href="../CSS/style3.css" rel="stylesheet" type="text/css" />
+	<title></title>
+	<link href="../CSS/style3.css" rel="stylesheet" type="text/css" />
+	<script src="../js/jquery-1.10.2.js"></script>
+	<script src="../js/json.js"></script>
+	<script src="../js/MyJquery.js"></script>
+	<script>
+		//系统时间
+		function getNow(s) {
+		 return s < 10 ?  + s: s;
+		}
+		function GetTiem() {
+			var myDate = new Date();
+			
+			//获取当前年
+			var year=myDate.getFullYear();
+			//获取当前月
+			var month=myDate.getMonth()+1;
+			//获取当前日
+			var date=myDate.getDate(); 
+			//var h=myDate.getHours();       //获取当前小时数(0-23)
+			//var m=myDate.getMinutes();     //获取当前分钟数(0-59)
+			//var s=myDate.getSeconds();  
+
+			return year+"-"+getNow(month)+"-"+getNow(date);
+		}
+
+		var Data = window.dialogArguments;
+
+		$(function () {
+			$.myAjax("../webServers/Plans.asmx/GetPlansByChanID", { "ChanID": Data.ChanID }, function (d) {
+				//alert(Data.ChanID + JSON.stringify(d))
+
+				$.each(d, function (k, v) {
+					
+					var tr1 = $("<tr>");
+					var tr2 = $("<tr>");
+					$("<th>").text("计划:"+$.JonsTime(v.PlanDate)).appendTo(tr1);
+					$("<th>").text("执行：" + $.JonsTime(v.PlanResultDate)).appendTo(tr1);
+					$("<td>").text(v.PlanContent).appendTo(tr2);
+					$("<td>").text(v.PlanResult).appendTo(tr2);
+					$(".tableEdit").eq(0).append(tr1).append(tr2);
+					//$(".tableEdit").append(tr2);
+				});
+				//$(".tableEdit tfoot").empty();
+
+			});
+
+
+
+		});
+
+	</script>
 </head>
+
 <body>
 <table class="tableEdit">
         <thead>
@@ -11,7 +62,7 @@
                 <td colspan="2">开发计划查看（<span style="color:red">状态：开发失败</span>）</td>
             </tr>
         </thead>
-        <tr>
+        <!--<tr>
             <th colspan="2">失败原因： <br />
             已购买其他公司产品
             </th>
@@ -36,7 +87,7 @@
         <tr>
             <td>电话联系，初步接触</td>
             <td>已电话联系，有购买意向，进一步接触</td>
-        </tr>
+        </tr>-->
         <tfoot>
             <tr>
                 <td colspan="2">

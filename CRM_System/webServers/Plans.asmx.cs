@@ -25,6 +25,12 @@ namespace CRM_System.webServers
 			return "Hello World";
 		}
 
+
+		/// <summary>
+		/// 根据计划id查询
+		/// </summary>
+		/// <param name="ChanID"></param>
+		/// <returns></returns>
 		[WebMethod]
 		public List<Model.Plans> GetPlansByChanID(int ChanID) {
 			string sql = string.Format(@"select * from Plans where ChanID=@ChanID");
@@ -33,6 +39,35 @@ namespace CRM_System.webServers
 			};
 			return DalBase.SelectsByWhere<Model.Plans>(sql,sp);
 
+		}
+
+
+		/// <summary>
+		/// 新增计划
+		/// </summary>
+		/// <param name="plan"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int InsertNewPlan(Model.Plans plan) {
+			plan.PlanDate = DateTime.Now;
+			int id = -1;
+			if (DalBase.Insert(plan)>0)
+			{
+				id = DalBase.GetMax<Model.Plans>();
+			}
+			return id;
+		 }
+
+
+		/// <summary>
+		/// 计划结果
+		/// </summary>
+		/// <param name="plan"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int UpdPlan(Model.Plans plan) {
+			plan.PlanResultDate = DateTime.Now;
+			return DalBase.Updata(plan);
 		}
 	}
 }

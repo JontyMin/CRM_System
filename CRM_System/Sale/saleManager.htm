@@ -15,18 +15,25 @@
             });
         }
         //查看开发失败的项目
-        function showNo() {
+        function showNo(ChanID) {
             $.showModalDialog("SaleNo.htm?data=" + Math.random(), { "ChanID": ChanID }, 600, 400, function(){
                 //...
             });
         }
         //查看开发中的项目
-        function showOpen() {
+		function showOpen(obj, ChanID) {
+			var row = $(obj).parent().parent();
             $.showModalDialog("SaleOpen.htm?data=" + Math.random(), { "ChanID": ChanID }, 600, 400, function(result){
                 //当前返1(开发成功)和2(开发失败)时，需要刷新列表
-                if(result==1||result==2){
-                    //...略...
-                }
+				if (result == 1) {
+					//...略...
+					$(row).children().eq(5).text("开发成功");
+					$(row).children().eq(6).attr({ "src":"../images/bt_detail.gif","title":"查看"});
+				}
+				if (result == 2) {
+					$(row).children().eq(5).text("开发失败");
+					$(row).children().eq(6).attr({ "src":"../images/bt_detail.gif","title":"查看"});
+				}
             });
 		}
 
@@ -35,6 +42,7 @@
 			//加载查询数据
 			$.myAjax("../webServers/Chances.asmx/GetChanDue", null, function (d) {
 				$.each(d, function (k, v) {
+					//alert(v.ChanState);
 					var tr = $("<tr>");
 					$("<td>").text(v.ChanName).appendTo(tr);
 					$("<td>").text(v.ChanTitle).appendTo(tr);
@@ -42,7 +50,7 @@
 					$("<td>").text(v.ChanLinkTel).appendTo(tr);
 					$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
 					$("<td>").text(v.ChanStateText).appendTo(tr);
-					$("<td><img title='" + (v.ChanState == 2 ? '修改' : '查看') + "' src='" + (v.ChanState==2?'../images/bt_feedback.gif':'../images/bt_detail.gif') + "' onclick='"+(v.ChanState==2?'showOpen('+v.ChanID+')':v.ChanState==3?'showOK('+v.ChanID+')':'showNo('+v.ChanID+')')+"' /></td>").appendTo(tr);
+					$("<td><img title='" + (v.ChanState == 2 ? '修改' : '查看') + "' src='" + (v.ChanState==2?'../images/bt_feedback.gif':'../images/bt_detail.gif') + "' onclick='"+(v.ChanState==2?'showOpen(this,'+v.ChanID+')':v.ChanState==3?'showOK('+v.ChanID+')':'showNo('+v.ChanID+')')+"' /></td>").appendTo(tr);
 					$(".dataTable").append(tr);
 				});
 
