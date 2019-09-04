@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Model
 {
-		[KeyInfo("CLID")]
+		[KeyInfo("CusID")]
 		public class V_Customers :ModelBase
 		{
 			public System.Int32 ? CusID {get; set;}

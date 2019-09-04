@@ -7,6 +7,7 @@
     <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
     <style>
         #dataLeft .dataTable tr.selected 
         {
@@ -30,34 +31,189 @@
                 $(".contentDiv div").hide();
                 $(".contentDiv div:eq(" + $(this).index() + ")").show();
             });
-            
+			var id;
             //客户表格行点击事件
             $("#dataLeft .dataTable").on("click", "tr:gt(0)", function() {
                 $("#dataLeft .selected").removeClass("selected");
                 $(this).addClass("selected");
                 if(!$(".menuDiv div.selected").length) {
                     $(".menuDiv div:eq(0)").addClass("selected");
-                    $(".contentDiv div:eq(0)").show();
-                }
+					$(".contentDiv div:eq(0)").show();
+				}
+				 id = $(this).children(0).eq(0).text();
+				//alert(id);
+				//根据客户id查询联系人
+				$.myAjax("../webServers/LinkMans.asmx/GetLinkManBy", { "CusID": id }, function (d) {
+					$("#dataRight .dataTable tbody").eq(0).empty();
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						$("<td>").text(j.LMName).appendTo(tr);
+						$("<td>").text(j.LMSex).appendTo(tr);
+						$("<td>").text(j.LMDuty).appendTo(tr);
+						$("<td>").text(j.LMMobileNo).appendTo(tr);
+						$("<td>").text(j.LMOfficeNo).appendTo(tr);
+						$("<td><img title='编辑' src='../images/33.gif' onclick='showLinkMan(this," + j.LMID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key='" + j.LMID + "'/></td>").appendTo(tr);
+						$("#dataRight .dataTable tbody").eq(0).append(tr);
+					});
 
-            });
+				})
+				$.myAjax("../webServers/Activitys.asmx/GetActivitys", { "CusID": id }, function (d) {
+					$("#dataRight .dataTable tbody").eq(1).empty();
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						$("<td>").text($.JonsTime(j.ActDate)).appendTo(tr);
+						$("<td>").text(j.ActAdd).appendTo(tr);
+						$("<td>").text(j.ActTitle).appendTo(tr);
+						$("<td>").text(j.ActDesc).appendTo(tr);
+						$("<td><img title='编辑' src='../images/33.gif' onclick='showActivitys(this," + j.ActID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key1='" + j.ActID + "'/></td>").appendTo(tr);
+						$("#dataRight .dataTable tbody").eq(1).append(tr);
+					});
+				});
+			});
+
+
+			//查询客户信息
+			$.myAjax("../webServers/Customers.asmx/GetCustomers", null, function (d) {
+
+				$.each(d, function (i, j) {
+					var tr = $("<tr>");
+					$("<td>").text(j.CusID).appendTo(tr);
+					$("<td>").text(j.CusName).appendTo(tr);
+					$("<td>").text($. convertJonsTime(j.CusDate)).appendTo(tr);
+					$("<td>").text(j.UserName).appendTo(tr);
+					$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(1)' /></td>").appendTo(tr);
+					$("#dataLeft .dataTable").append(tr);
+				});
+
+			});
+
+
+			//点击查询
+			$(":button:first").click(function () {
+				$("#dataLeft .dataTable").empty();
+				$.myAjax("../webServers/Customers.asmx/GetVsBy", { "CusName": $("#cusName").val(), "CusID": $("#cusID").val() }, function (d) {
+
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						$("<td>").text(j.CusID).appendTo(tr);
+						$("<td>").text(j.CusName).appendTo(tr);
+						$("<td>").text($.convertJonsTime(j.CusDate)).appendTo(tr);
+						$("<td>").text(j.UserName).appendTo(tr);
+						$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(" + j.CusID + ")' /></td>").appendTo(tr);
+						$("#dataLeft .dataTable").append(tr);
+					});
+				});
+			});
+			//查询
+			$(".up").keyup(function () {
+				$("#dataLeft .dataTable").empty();
+				$.myAjax("../webServers/Customers.asmx/GetVsBy", { "CusName": $("#cusName").val(), "CusID": $("#cusID").val() }, function (d) {
+
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						$("<td>").text(j.CusID).appendTo(tr);
+						$("<td>").text(j.CusName).appendTo(tr);
+						$("<td>").text($.convertJonsTime(j.CusDate)).appendTo(tr);
+						$("<td>").text(j.UserName).appendTo(tr);
+						$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(" + j.CusID + ")' /></td>").appendTo(tr);
+						$("#dataLeft .dataTable").append(tr);
+					});
+				});
+
+			});
+
+			//新增联系人
+			$("#newLink").click(function () {
+				$.showModalDialog("LinkManEdit.htm?data=" + Math.random(), { "CusID": id }, 600, 300, function (d) {
+						
+							var tr = $("<tr>");
+						$("<td>").text(d.LMName).appendTo(tr);
+						$("<td>").text(d.LMSex).appendTo(tr);
+						$("<td>").text(d.LMDuty).appendTo(tr);
+						$("<td>").text(d.LMMobileNo).appendTo(tr);
+						$("<td>").text(d.LMOfficeNo).appendTo(tr);
+						$("<td><img title='编辑' src='../images/33.gif' onclick='showLinkMan(this," + d.LMID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key='" + d.LMID + "'/></td>").appendTo(tr);
+						$("#dataRight .dataTable tbody").eq(0).append(tr);
+				
+
+				});
+
+			});
+			//委派删除联系人
+			$(document).on("click", "img[key]", function () {
+				if (confirm("是否确认删除")) {
+					var id = $(this).attr("key");//得到选中行id
+					var row = $(this).parent().parent();
+					//alert(id);
+					$.myAjax("../webServers/LinkMans.asmx/delLink", { "id": id }, function (d) {
+						$(row).remove();
+						//alert();
+					});
+				}
+
+			});
+
+
+			//新增交往记录
+			$("#newAct").click(function () {
+				$.showModalDialog("ActivitysEdit.htm?data=" + Math.random(), {"CusID": id }, 600, 300, function (d) {
+						var tr = $("<tr>");
+						$("<td>").text($.JonsTime(d.ActDate)).appendTo(tr);
+						$("<td>").text(d.ActAdd).appendTo(tr);
+						$("<td>").text(d.ActTitle).appendTo(tr);
+						$("<td>").text(d.ActDesc).appendTo(tr);
+						$("<td><img title='编辑' src='../images/33.gif' onclick='showActivitys(this," + d.ActID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key1='" + d.ActID + "'/></td>").appendTo(tr);
+						$("#dataRight .dataTable tbody").eq(1).append(tr);
+
+
+				});
+			});
+
+				$(document).on("click", "img[key1]", function () {
+				if (confirm("是否确认删除")) {
+					var id = $(this).attr("key1");//得到选中行id
+					var row = $(this).parent().parent();
+					//alert(id);
+					$.myAjax("../webServers/Activitys.asmx/delAct", { "id": id }, function (d) {
+						$(row).remove();
+						//alert();
+					});
+				}
+
+			});
+
         });
 
         //编辑客户信息
-        function showCustomer(bh) {
-            console.log(bh); //打印编号
-            $.showModalDialog("CustomerEdit.htm?data=" + Math.random(), "参数", 600, 400);
+		function showCustomer(bh) {
+			//alert(bh); //打印编号
+			$.showModalDialog("CustomerEdit.htm?data=" + Math.random(), { "CusID": bh }, 600, 400);
         }
         //修改联系人
-        function showLinkMan(id) {
-            console.log(id); //打印联系人ID
-            $.showModalDialog("LinkManEdit.htm?data=" + Math.random(), "参数", 600, 300);
+		function showLinkMan(obj, id) {
+			var row = $(obj).parent().parent();
+			/*alert(id);*/ //打印联系人ID
+			$.showModalDialog("LinkManEdit.htm?data=" + Math.random(), { "LMID": id }, 600, 300, function (d) {
+				$(row).children().eq(0).text(d.LMName);
+				$(row).children().eq(1).text(d.LMSex);
+				$(row).children().eq(2).text(d.LMDuty);
+				$(row).children().eq(3).text(d.LMOfficeNo);
+				$(row).children().eq(4).text(d.LMMobileNo);
+			});
         }
         //修改交往信息
-        function showActivitys(id) {
-            console.log(id); //打印交往记录ID
-            $.showModalDialog("ActivitysEdit.htm?data=" + Math.random(), "参数", 600, 300);
-        }
+		function showActivitys(obj, id) {
+			var row = $(obj).parent().parent();
+			/* console.log(id); *///打印交往记录ID
+			$.showModalDialog("ActivitysEdit.htm?data=" + Math.random(), { "ActID": id }, 600, 300, function (d) {
+				$(row).children().eq(0).text($.JonsTime(d.ActDate));
+				$(row).children().eq(1).text(d.ActAdd);
+				$(row).children().eq(2).text(d.ActTitle);
+				$(row).children().eq(3).text(d.ActDesc);
+
+			});
+		}
+
     </script>
 </head>
 <body>
@@ -71,13 +227,13 @@
                 客户名称：
             </th>
             <td>
-                <input type="text" />
+                <input type="text" id="cusName" class="up"/>
             </td>
             <th>
                 客户编号：
             </th>
             <td>
-                <input type="text" />
+                <input type="text" id="cusID" class="up"/>
             </td>
         </tr>
         <tfoot>
@@ -109,7 +265,7 @@
                         操作
                     </th>
                 </tr>
-                <tr>
+                <!--<tr>
                     <td>
                         KH100101
                     </td>
@@ -157,7 +313,7 @@
                     </td>
                     <td><img src="../images/33.gif" title="编辑" onclick="showCustomer('KH090123')" />
                     </td>
-                </tr>
+                </tr>-->
             </table>
             <div id="pageDiv">
                 <div id="leftPage">
@@ -173,36 +329,42 @@
         </div>
         <div id="dataRight">
             <div class="menuDiv">
-                <div>联系人
+                <div id="LinkMans">联系人
                 </div>
-                <div>交往信息
+                <div id="Activitys">交往信息
                 </div>
             </div>
             <div class="contentDiv">
                 <div>
-                    <a href="javascript:showLinkMan()">新建联系人</a>
-                    <table class="dataTable">
-                        <tr>
-                            <th>
-                                姓名
-                            </th>
-                            <th>
-                                性别
-                            </th>
-                            <th>
-                                职位
-                            </th>
-                            <th>
-                                固定电话
-                            </th>
-                            <th>
-                                手机号码
-                            </th>
-                            <th>
-                                操作
-                            </th>
-                        </tr>
-                        <tr>
+                    <a href="#" id="newLink">新建联系人</a>
+                    <table class="dataTable" id="link">
+						<thead>
+							<tr>
+								<th>
+									姓名
+								</th>
+								<th>
+									性别
+								</th>
+								<th>
+									职位
+								</th>
+								<th>
+									固定电话
+								</th>
+								<th>
+									手机号码
+								</th>
+								<th>
+									操作
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+
+
+						</tbody>
+                        <!--<tr>
                             <td>
                                 张大山
                             </td>
@@ -221,29 +383,33 @@
                             <td><img title="编辑" src="../images/33.gif" onclick="showLinkMan(67)" />&nbsp;&nbsp;
                                 <img title="删除" src="../images/11.gif" />
                             </td>
-                        </tr>
+                        </tr>-->
                     </table>
                 </div>
-                <div><a href="javascript:showActivitys()">新建交往记录</a>
+                <div><a href="#" id="newAct">新建交往记录</a>
                     <table class="dataTable">
-                        <tr>
-                            <th>
-                                时间
-                            </th>
-                            <th>
-                                地点
-                            </th>
-                            <th>
-                                概要
-                            </th>
-                            <th>
-                                描述
-                            </th>
-                            <th>
-                                操作
-                            </th>
-                        </tr>
-                        <tr>
+						<thead>
+							<tr>
+								<th>
+									时间
+								</th>
+								<th>
+									地点
+								</th>
+								<th>
+									概要
+								</th>
+								<th>
+									描述
+								</th>
+								<th>
+									操作
+								</th>
+							</tr>
+						</thead>
+
+					<tbody></tbody>
+                        <!--<tr>
                             <td>
                                 2011-6-3
                             </td>
@@ -277,7 +443,7 @@
                             <td><img title="编辑" src="../images/33.gif" onclick="showActivitys(320)" />&nbsp;
                                 <img title="删除" src="../images/11.gif" />
                             </td>
-                        </tr>
+                        </tr>-->
                     </table></div>
             </div>
         </div>

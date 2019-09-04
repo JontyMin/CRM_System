@@ -3,6 +3,63 @@
 <head>
     <title></title>
     <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<script src="../js/jquery-1.10.2.js"></script>
+	<script src="../js/json.js"></script>
+	<script src="../js/MyJquery.js"></script>
+	<script>
+		var data = window.dialogArguments;
+		$(function () {
+			$("#CusID").text(data.CusID);
+			$.myAjax("../webServers/Customers.asmx/GetCustomerBy", { "CusID": data.CusID }, function (d) {
+				$.each(d, function (k, v) {
+					$("#UserName").text(v.UserName);
+					$("#CusDate").text($.JonsTime(v.CusDate));
+					$("#CusName").val(v.CusName);
+					$("#CusAddress").val(v.CusAddress);
+					$("#CusZip").val(v.CusZip);
+					$("#CusFax").val(v.CusFax);
+					$("#CusWebsite").val(v.CusWebsite);
+					$("#CusLicenceNo").val(v.CusLicenceNo);
+					$("#CusChieftain").val(v.CusChieftain);
+					$("#CusBankroll").val(v.CusBankroll);
+					$("#CusTurnover").val(v.CusTurnover);
+					$("#CusBank").val(v.CusBank);
+					$("#CusBankNo").val(v.CusBankNo);
+					$("#CusLocalTaxNo").val(v.CusLocalTaxNo);
+					$("#CusNationalTaxNo").val(v.CusNationalTaxNo);
+				})
+			});
+
+			$("#upCus").click(function () {
+				var d1 = {
+					"CusID":data.CusID,
+					"CusName": $("#CusName").val(),
+					"CusAddress": $("#CusAddress").val(),
+					"CusZip": $("#CusZip").val(),
+					"CusFax": $("#CusFax").val(),
+					"CusWebsite": $("#CusWebsite").val(),
+					//"CusEmail": $("#CusEmail").val(),
+					"CusLicenceNo": $("#CusLicenceNo").val(),
+					"CusChieftain": $("#CusChieftain").val(),
+					"CusBankroll": $("#CusBankroll").val(),
+					"CusTurnover": $("#CusTurnover").val(),
+					"CusBank": $("#CusBank").val(),
+					"CusBankNo": $("#CusBankNo").val(),
+					"CusLocalTaxNo": $("#CusLocalTaxNo").val(),
+					"CusNationalTaxNo": $("#CusNationalTaxNo").val(),
+				};
+				$.myAjax("../webServers/Customers.asmx/UpdCus", { "customer": d1 }, function (d) {
+					if (d > 0) {
+						alert("已保存");
+						window.close();
+					}
+			});
+
+			});
+		});
+		
+
+	</script>
 </head>
 <body>
 <table class="tableEdit">
@@ -13,75 +70,75 @@
         </thead>
         <tr>
             <th>客户编号：</th>
-            <td>
+            <td id="CusID">
                 HK201002120003</td>
             <th>客户经理：</th>
-            <td>张三
+            <td id="UserName">张三
             </td>
         </tr>
         <tr>
             <th>客户名称：</th>
             <td>
-                <input type="text" />
+                <input type="text" id="CusName"/>
              </td>
             <th>邮政编码：</th>
-            <td><input type="text" />
+            <td><input type="text" id="CusZip"/>
             </td>
         </tr>
         <tr>
             <th>地址：</th>
             <td colspan="3">
-                <input type="text" style="width:90%"/>
+                <input type="text" style="width:90%" id="CusAddress"/>
              </td>
         </tr>
         <tr>
             <th>传真：</th>
             <td>
-                <input type="text" />
+                <input type="text" id="CusFax"/>
              </td>
-            <th>Email：</th>
-            <td><input type="text" />
+            <th>网站：</th>
+            <td><input type="text" id="CusWebsite"/>
             </td>
         </tr>
          <tr>
             <th>营业执照注册号：</th>
             <td>
-                <input type="text" />
+                <input type="text" id="CusLicenceNo"/>
              </td>
             <th>法人：</th>
-            <td><input type="text" />
+            <td><input type="text" id="CusChieftain"/>
             </td>
         </tr>
         <tr>
             <th>注册资金：</th>
             <td>
-                <input type="text" />
+                <input type="text" id="CusBankroll"/>
              </td>
             <th>年营业额：</th>
-            <td><input type="text" />
+            <td><input type="text" id="CusTurnover"/>
             </td>
         </tr>
         <tr>
             <th>开户银行：</th>
             <td>
-                <input type="text" />
+                <input type="text" id="CusBank"/>
              </td>
             <th>银行账号：</th>
-            <td><input type="text" />
+            <td><input type="text" id="CusBankNo"/>
             </td>
         </tr>
         <tr>
             <th>地税登记号：</th>
             <td>
-                <input type="text" />
+                <input type="text" id="CusLocalTaxNo"/>
              </td>
             <th>国税登记号：</th>
-            <td><input type="text" />
+            <td><input type="text" id="CusNationalTaxNo"/>
             </td>
         </tr>
         <tr>
             <th>创建时间：</th>
-            <td>
+            <td id="CusDate">
                 2011-2-11
              </td>
             <th></th>
@@ -91,7 +148,7 @@
         <tfoot>
             <tr>
                 <td colspan="4">
-                    <input type="button" value="确定" />&nbsp;&nbsp;
+                    <input type="button" value="确定" id="upCus">&nbsp;&nbsp;
                     <input type="button" value="关闭" onclick="window.close()" />
                 </td>
             </tr>

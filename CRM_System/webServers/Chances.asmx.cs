@@ -6,6 +6,8 @@ using System.Web.Services;
 using Model;
 using Dal;
 using System.Data.SqlClient;
+using System.Web.Script.Serialization;
+
 namespace CRM_System.webServers
 {
 	/// <summary>
@@ -33,6 +35,23 @@ namespace CRM_System.webServers
 		[WebMethod]
 		public List<Model.Chances> GetChances() {
 			return DalBase.SelectAll<Model.Chances>();
+		}
+
+		/// <summary>
+		/// 分页查询
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="size"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public string Paging_Chances(int index, int size)
+		{
+			int count = DalBase.GetCount<Model.Chances>();
+			return new JavaScriptSerializer().Serialize(new
+			{
+				PagingData = DalBase.Paging<Model.Chances>(index, size),
+				PageCount = count % size == 0 ? count / size : count / size + 1
+			});
 		}
 
 

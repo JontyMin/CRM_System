@@ -86,6 +86,57 @@ namespace Dal
 		#endregion
 		#endregion
 
+		/// <summary>
+		/// 分页
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="index"></param>
+		/// <param name="size"></param>
+		/// <returns></returns>
+		public static List<T> Paging<T>(int index, int size) where T : ModelBase
+		{
+			Type type = typeof(T);
+			string TableName = type.Name;
+			string KeyName = "";
+
+			object[] co = type.GetCustomAttributes(true);
+			if (co.Length > 0)
+			{
+				KeyName = (co[0] as KeyInfoAttribute).KeyName;
+			}
+			string sql = string.Format(@"select top {0} * from {1} where {2} not in (select top {3} {2} from {1})", size, TableName, KeyName, (index - 1) * size);
+			List<T> models = new List<T>();
+			using (SqlDataReader sqlDataReader = ExecuteSqlDataReader(sql, null))
+			{
+				while (sqlDataReader.Read())
+				{
+					T model = Activator.CreateInstance<T>();
+					PropertyInfo[] propertyInfos = model.GetType().GetProperties();
+					for (int i = 0; i < sqlDataReader.FieldCount; i++)
+					{
+						string colName = sqlDataReader.GetName(i);
+						foreach (PropertyInfo item in propertyInfos)
+						{
+							if (item.Name.ToLower() == colName.ToLower())
+							{
+								if (sqlDataReader[colName] != DBNull.Value)
+								{
+									item.SetValue(model, sqlDataReader[colName], null);
+								}
+								else
+								{
+									item.SetValue(model, null, null);
+								}
+								break;
+							}
+						}
+					}
+					models.Add(model);
+				}
+			}
+			return models;
+		}
+
 
 
 		/// <summary>

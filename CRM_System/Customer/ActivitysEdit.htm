@@ -1,42 +1,131 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
-    <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="../DatePicker/WdatePicker.js"></script>
+	<title></title>
+	<link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../DatePicker/WdatePicker.js"></script>
+	<script src="../js/jquery-1.10.2.js"></script>
+	<script src="../js/json.js"></script>
+	<script src="../js/MyJquery.js"></script>
+
+	<script>
+		var data= window.dialogArguments;
+
+		$(function () {
+			if (data.CusID != null) {
+				$("#dpTitle").text("新增客户来往记录");
+				$(":button").eq(1).hide();
+					$(":button").eq(0).click(function () {
+					var d3 = {
+						"CusID": data.CusID,
+						"ActDate": $("#ActDate").val(),
+						"ActAdd": $("#ActAdd").val(),
+						"ActTitle": $("#ActTitle").val(),
+						"ActMemo": $("#ActMemo").val(),
+						"ActDesc": $("#ActDesc").val(),
+					};
+					//alert(JSON.stringify(d3));
+					$.myAjax("../webServers/Activitys.asmx/InsertAct", { "activity": d3 }, function (d) {
+
+						if (d != -1) {
+							var d3 = {
+
+								"ActID": d,
+								"ActDate": $("#ActDate").val(),
+								"ActAdd": $("#ActAdd").val(),
+								"ActTitle": $("#ActTitle").val(),
+								"ActMemo": $("#ActMemo").val(),
+								"ActDesc": $("#ActDesc").val(),
+							};
+							alert("新建完成");
+							window.returnValue = d3;
+							window.close();
+
+						}
+
+
+					});
+				})
+			} else {
+				$(":button").eq(0).hide();
+				$.myAjax("../webServers/Activitys.asmx/GetActivityBy", { "ActID": data.ActID }, function (d) {
+					$.each(d, function (i, j) {
+						$("#ActDate").val($.JonsTime(j.ActDate));
+						$("#ActAdd").val(j.ActAdd);
+						$("#ActTitle").val(j.ActTitle);
+						$("#ActMemo").val(j.ActMemo);
+						$("#ActDesc").val(j.ActDesc);
+					});
+				});
+
+				$(":button").eq(1).click(function () {
+					//alert(1);
+					var d1 = {
+						"ActID": data.ActID,
+						"ActDate": $("#ActDate").val(),
+						"ActAdd": $("#ActAdd").val(),
+						"ActTitle": $("#ActTitle").val(),
+						"ActMemo": $("#ActMemo").val(),
+						"ActDesc": $("#ActDesc").val(),
+					};
+
+					//alert(JSON.stringify(d1));
+					$.myAjax("../webServers/Activitys.asmx/UpdAct", { "activity": d1 }, function (d) {
+						if (d > 0) {
+							var d2 = {
+								"ActDate": $("#ActDate").val(),
+								"ActAdd": $("#ActAdd").val(),
+								"ActTitle": $("#ActTitle").val(),
+								"ActDesc": $("#ActDesc").val(),
+							};
+
+							alert("已保存");
+							window.returnValue = d2;
+							window.close();
+						}
+
+					});
+				});
+			}
+
+
+
+		});
+	</script>
 </head>
 <body>
 <table class="tableEdit">
         <thead>
             <tr>
-                <td colspan="4">编辑客户来往记录</td>
+                <td colspan="4" id="dpTitle">编辑客户来往记录</td>
             </tr>
         </thead>
         <tr>
             <th>交往时间：</th>
             <td>
-                <input type="text" onclick="WdatePicker()" /></td>
+                <input type="text" onclick="WdatePicker()" id="ActDate"/></td>
             <th>交往地点：</th>
             <td>
-                <input type="text" />
+                <input type="text" id="ActAdd"/>
             </td>
         </tr>
         <tr>
             <th>概要：</th>
-            <td><input type="text" /></td>
+            <td><input type="text" id="ActTitle"/></td>
             <th>备注：</th>
-            <td><input type="text" /></td>
+            <td><input type="text" id="ActMemo"/></td>
         </tr>
         <tr>
             <th>详细描述：</th>
-            <td colspan="3"><textarea></textarea></td>
+            <td colspan="3"><textarea id="ActDesc"></textarea></td>
         </tr>
         <tfoot>
             <tr>
-                <td colspan="4">
-                    <input type="button" value="确定" />&nbsp;&nbsp;
-                    <input type="button" value="关闭" onclick="window.close()" />
-                </td>
+				<td colspan="4">
+					<input type="button" value="确定" />&nbsp;&nbsp;
+					<input type="button" value="确定" />&nbsp;&nbsp;
+					<input type="button" value="关闭" onclick="window.close()" />
+				</td>
             </tr>
         </tfoot>
     </table>
