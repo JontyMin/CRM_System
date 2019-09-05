@@ -1,8 +1,25 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
-    <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<title></title>
+	<link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<script src="../js/jquery-1.10.2.js"></script>
+	<script src="../js/jquery.showModalDialog.js"></script>
+	<link href="../js/jquery.showModalDialog.css" rel="stylesheet" />
+	<script src="../js/MyJquery.js"></script>
+	<script>
+		var data = window.dialogArguments;
+		$(function () {
+			$.myAjax("../webServers/CustomLosts.asmx/GetLostBy", { "CLID": data.CLID }, function (d) {
+				$.each(d, function (i, j) {
+
+					$("#CLReason").text(j.CLReason);
+				});
+			});
+
+		});
+
+	</script>
 </head>
 <body>
 <table class="tableEdit">
@@ -14,7 +31,7 @@
                         <tr>
                         <th>流失原因：</th>
                             <td>
-                                <textarea style="width:90%" readonly="readonly">客户已从其他渠道购买</textarea>
+                                <textarea style="width:90%" readonly="readonly" id="CLReason"></textarea>
                             </td>
                            </tr>
                            <tfoot>

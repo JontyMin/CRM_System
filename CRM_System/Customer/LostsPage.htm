@@ -7,6 +7,7 @@
     <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
     <style>
     #dataLeft .dataTable tr.selected 
     {
@@ -14,7 +15,32 @@
     }
     </style>
     <script type="text/javascript">
-        $(function() {
+
+				//系统时间
+		function getNow(s) {
+		 return s < 10 ?  + s: s;
+		}
+		function GetTiem() {
+			var myDate = new Date();
+			
+			//获取当前年
+			var year=myDate.getFullYear();
+			//获取当前月
+			var month=myDate.getMonth()+1;
+			//获取当前日
+			var date=myDate.getDate(); 
+			//var h=myDate.getHours();       //获取当前小时数(0-23)
+			//var m=myDate.getMinutes();     //获取当前分钟数(0-59)
+			//var s=myDate.getSeconds();  
+
+			return year+"-"+getNow(month)+"-"+getNow(date);
+		}
+
+		var id;
+		var row;
+		$(function () {
+
+			
             //点击行显示暂缓措施界面
             $("#dataLeft .dataTable").on("click", "tr:gt(0)", function() {
                 //添加选中样式
@@ -29,24 +55,93 @@
                     $("#MeasuresAdd").hide();
                 }else{
                     $("#MeasuresAdd").show();
-                }
-            });
+				}
+				id = $(this).children(0).eq(0).text();
+				
+
+				row = $(this);
+			//	console.log($(row).get(0).innerHTML);
+				
+				//alert(id);
+				$.myAjax("../webServers/Measures.asmx/GetMeasureBy", { "CLID": id }, function (d) {
+					$(".contentDiv .dataTable").empty();
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						var tr1 = $("<tr>");
+						$("<th>").text("时间："+($.JonsTime(j.MeDate))).appendTo(tr);
+						$("<td>").text(j.MeDesc).appendTo(tr1);
+						$(".contentDiv .dataTable").append(tr).append(tr1);
+					});
+
+					
+				});
+
+
+			});
+			$.myAjax("../webServers/CustomLosts.asmx/GetLosts", null, function (d) {
+				$.each(d, function (i, j) {
+					var tr = $("<tr data-state='" + j.CLState + "'>");
+					$("<td>").text(j.CLID).appendTo(tr).hide();
+					$("<td>").text(j.CusID).appendTo(tr);
+					$("<td>").text(j.CusName).appendTo(tr);
+					$("<td>").text($.JonsTime(j.CLOrderDate)).appendTo(tr);
+					$("<td>").text($.JonsTime(j.CLDate)).appendTo(tr);
+					$("<td>").text($.JonsTime(j.CLEnterDate)).appendTo(tr);
+					$("<td>").text((j.CLState == 1 ? "流失报警" : j.CLState == 2 ? "暂缓流失" : "确认流失")).appendTo(tr);
+					$("<td><img src='../images/bt_confirm.gif' title='流失确认' onclick='"+(j.CLState<=2?'showLostEnter(this,'+j.CLID+')':'showLostInfo('+j.CLID+')')+"' /></td>").appendTo(tr);
+					$("#dataLeft .dataTable").append(tr);
+				});
+
+			});
+
+
         });
 
         //确认流失
-        function showLostEnter() {
+		function showLostEnter(obj, CLID) {
+			var row = $(obj).parent().parent();
             //显示确认流失对话框
-            $.showModalDialog("LostEnter.htm?data=" + Math.random(), "参数", 500, 200);
+			$.showModalDialog("LostEnter.htm?data=" + Math.random(), { "CLID": CLID }, 500, 200, function (d) {
+				if (d>0) {
+					$(row).children().eq(6).text("确认流失");
+					$(row).children().eq(5).text(GetTiem());
+					$(row).data("state") == 3;
+
+				}
+
+			});
         }
         //打开流失信息
-        function showLostInfo(){
+        function showLostInfo(CLID){
             //显示流失信息界面
-            $.showModalDialog("LostInfo.htm?data=" + Math.random(), "参数", 500, 200);
+			$.showModalDialog("LostInfo.htm?data=" + Math.random(), { "CLID": CLID }, 500, 200, function (d) {
+
+
+			});
         }
 
         //添加暂缓措施
-        function addMeasures(){
-            alert("添加暂缓措施成功，报警状态变为暂缓流失。");
+		function addMeasures() {
+			var d1 = {
+				"CLID": id,
+				"MeDesc": $("#MeDesc").val()
+			};
+
+			$.myAjax("../webServers/Measures.asmx/InsertMea", { "measure": d1 }, function (d) {
+				if (d > 0) {
+					var tr = $("<tr>");
+					var tr1 = $("<tr>");
+					$("<th>").text("时间：" + GetTiem()).appendTo(tr);
+					$("<td>").text($("#MeDesc").val()).appendTo(tr1);
+					$(".contentDiv .dataTable").append(tr).append(tr1);
+					$(row).children().eq(6).text("暂缓流失");
+					alert("添加暂缓措施成功，报警状态变为暂缓流失。");
+					$("#MeDesc").val("");
+					//console.log($(row).get(0).innerHTML);
+				}
+				      
+			});
+     
         }
     </script>
 </head>
@@ -81,7 +176,7 @@
                         操作
                     </th>
                 </tr>
-                <tr data-state="1">
+                <!--<tr data-state="1">
                     <td>
                         KH100101
                     </td>
@@ -145,7 +240,7 @@
                     </td>
                     <td><img src="../images/bt_orders.gif" title="流失确认" onclick="showLostInfo()" />
                     </td>
-                </tr>
+                </tr>-->
             </table>
             <div id="pageDiv">
                 <div id="leftPage">
@@ -181,7 +276,7 @@
                                 暂缓措施细节：
                             </th>
                             <td>
-                                <textarea style="width: 90%"></textarea>
+                                <textarea style="width: 90%" id="MeDesc"></textarea>
                             </td>
                         </tr>
                         <tfoot>
@@ -194,7 +289,7 @@
                     </table>
                     
                     <table class="dataTable">
-                        <tr>
+                        <!--<tr>
                             <th>
                                 时间：2010-5-2
                             </th>
@@ -213,7 +308,7 @@
                             <td>
                                价格偏高，再次进行协商
                             </td>
-                        </tr>
+                        </tr>-->
                     </table>
                 </div>
             </div>

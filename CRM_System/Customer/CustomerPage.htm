@@ -81,7 +81,7 @@
 					$("<td>").text(j.CusName).appendTo(tr);
 					$("<td>").text($. convertJonsTime(j.CusDate)).appendTo(tr);
 					$("<td>").text(j.UserName).appendTo(tr);
-					$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(1)' /></td>").appendTo(tr);
+					$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(" + j.CusID + ")' /></td>").appendTo(tr);
 					$("#dataLeft .dataTable").append(tr);
 				});
 

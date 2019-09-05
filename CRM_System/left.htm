@@ -21,7 +21,7 @@
                         var p_child1 =$("<div class='contentDiv'>").appendTo(div2);
                         $.each(d, function (a,b) {
 
-                            console.log(v.ID + ":" + b.ParentID);
+                            //console.log(v.ID + ":" + b.ParentID);
                             if (v.ID == b.ParentID)
                             {
                                 $("<div><img src='images/left.gif' /><a href='"+b.Url+"' target='main'>" + b.MenuName + "</a></div>").appendTo(p_child1);

@@ -186,8 +186,10 @@
     <Content Include="webServers\Activitys.asmx" />
     <Content Include="webServers\Chances.asmx" />
     <Content Include="webServers\Customers.asmx" />
+    <Content Include="webServers\CustomLosts.asmx" />
     <Content Include="webServers\Jurisdiction.asmx" />
     <Content Include="webServers\LinkMans.asmx" />
+    <Content Include="webServers\Measures.asmx" />
     <Content Include="webServers\Plans.asmx" />
     <Content Include="webServers\Power.asmx" />
     <Content Include="webServers\Role.asmx" />
@@ -243,6 +245,10 @@
       <DependentUpon>Customers.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="webServers\CustomLosts.asmx.cs">
+      <DependentUpon>CustomLosts.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="webServers\Jurisdiction.asmx.cs">
       <DependentUpon>Jurisdiction.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -253,6 +259,10 @@
     </Compile>
     <Compile Include="webServers\Main.asmx.cs">
       <DependentUpon>Main.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="webServers\Measures.asmx.cs">
+      <DependentUpon>Measures.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="webServers\Menu.asmx.cs">

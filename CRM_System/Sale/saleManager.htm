@@ -23,16 +23,17 @@
         //查看开发中的项目
 		function showOpen(obj, ChanID) {
 			var row = $(obj).parent().parent();
+			console.log(row);
             $.showModalDialog("SaleOpen.htm?data=" + Math.random(), { "ChanID": ChanID }, 600, 400, function(result){
                 //当前返1(开发成功)和2(开发失败)时，需要刷新列表
 				if (result == 1) {
 					//...略...
 					$(row).children().eq(5).text("开发成功");
-					$(row).children().eq(6).attr({ "src":"../images/bt_detail.gif","title":"查看"});
+					$(row).children().eq(6).children().eq(0).attr({ "src": "../images/bt_detail.gif", "title": "查看", "onclick": "showOK(" + ChanID + ")" });
 				}
 				if (result == 2) {
 					$(row).children().eq(5).text("开发失败");
-					$(row).children().eq(6).attr({ "src":"../images/bt_detail.gif","title":"查看"});
+					$(row).children().eq(6).children().eq(0).attr({ "src": "../images/bt_detail.gif", "title": "查看","onclick": "showNo(" + ChanID + ")" });
 				}
             });
 		}
