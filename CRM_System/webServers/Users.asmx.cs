@@ -66,6 +66,11 @@ namespace CRM_System.webServers
 
 		}
 
+
+		/// <summary>
+		/// 查询客户经理
+		/// </summary>
+		/// <returns></returns>
 		[WebMethod]
 		public List<Model.Users> GetUsersID() {
 			string sql = string.Format(@"select UserID,UserName from Users where RoleID=3");
@@ -143,5 +148,22 @@ namespace CRM_System.webServers
 			};
 			return  DalBase.SelectObj(sql,sp);
 		}
+
+
+		/// <summary>
+		/// 根据登录用户查询id
+		/// </summary>
+		/// <returns></returns>
+		[WebMethod(EnableSession = true)]
+		public int GetUID()
+		{
+			string UserLName = Session["UserLName"].ToString();
+			string sql = string.Format(@"select UserID from Users where UserLName=@UserLName");
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			return DalBase.SelectObj(sql, sp);
+		}
+
 	}
 }

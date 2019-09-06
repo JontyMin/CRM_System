@@ -1,23 +1,54 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
-    <link href="../CSS/Style1.css" rel="stylesheet" type="text/css" />
-    <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
-    <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
-    <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        function showEmp(input, ServiceID) {
-            $.showModalDialog("../publicPage/SelectEmp.htm?data="+Math.random(), 200, 220, function(emp){
-                //进行服务端处理
-                //alert(ServiceID + "," + emp.id);
-                //...略...
+	<title></title>
+	<link href="../CSS/Style1.css" rel="stylesheet" type="text/css" />
+	<link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
+	<script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
+	<script type="text/javascript">
+		function showEmp(input, ServiceID) {
+			$.showModalDialog("../publicPage/SelectEmp.htm?data=" + Math.random(), 200, 220, function (emp) {
+				//进行服务端处理
+				//alert(ServiceID + "," + emp.id);
+				//...略...
 
-                //显示选择的名字
-                input.value = emp.name;
-            });
-        }
-    </script>
+				//显示选择的名字
+				input.value = emp.name;
+				var data = {
+					"CSID": ServiceID,
+					"CSState": 2,
+					"CSDueID": emp.id,
+				};
+				//alert(JSON.stringify(data));
+				$.myAjax("../webServers/CustomServices.asmx/UpdSer", { "service": data }, function (d) {
+					if (d > 0) {
+						alert("已指派");
+					}
+				});
+			});
+		}
+
+		$(function () {
+			$.myAjax("../webServers/CustomServices.asmx/GetCustomServices", null, function (d) {
+				$.each(d, function (i, j) {
+					var tr = $("<tr>");
+					$("<td>").text(j.CusName).appendTo(tr);
+					$("<td>").text(j.CSTitle).appendTo(tr);
+					$("<td>").text(j.TypeName).appendTo(tr);
+					$("<td>").text(j.CSCreateName).appendTo(tr);
+					$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+					$(" <td><input type='text' value='" + (j.CSDueName == "" ? "未指派" : j.CSDueName) + "' readonly='readonly' ondblclick='showEmp(this, " + j.CSID + ");' /></td>").appendTo(tr);
+					$(".dataTable").append(tr);
+
+				});
+
+			});
+
+
+		})
+	</script>
 </head>
 <body>
 <div id="desDiv">
@@ -36,14 +67,14 @@
             <th>创建时间</th>
             <th>服务分配</th>
         </tr>
-        <tr>
+        <!--<tr>
             <td>睿智数码</td>
             <td>询问收音机订单运费承担方式</td>
             <td>咨询</td>
             <td>张三</td>
             <td>2011年5月2日</td>
             <td><input type="text" value="张三" readonly="readonly" ondblclick="showEmp(this, 123);" /></td>
-        </tr>
+        </tr>-->
     </table>
     <div id="pageDiv">
         <div id="leftPage">共有120条记录，当前第1/10页</div>

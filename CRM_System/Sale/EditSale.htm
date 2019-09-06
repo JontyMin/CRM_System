@@ -98,7 +98,7 @@
 			$("#addChance").click(function () {
 				try {
 					//先拿到添加人的id
-					$.myAjax("../webServers/Chances.asmx/GetUsersID", null, function (d) {
+					$.myAjax("../webServers/Users.asmx/GetUID", null, function (d) {
 
 						var data = {
 							"ChanName": $("#ChanName").val(),

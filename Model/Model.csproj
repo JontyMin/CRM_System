@@ -64,6 +64,7 @@
     <Compile Include="V_Chances.cs" />
     <Compile Include="V_Customers.cs" />
     <Compile Include="v_customlosts.cs" />
+    <Compile Include="v_CustomServices.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

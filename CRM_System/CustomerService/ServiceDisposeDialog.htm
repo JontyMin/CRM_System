@@ -1,8 +1,45 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
-    <link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<title></title>
+	<link href="../CSS/style2.css" rel="stylesheet" type="text/css" />
+	<link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
+	<script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
+	<script>
+		var id = window.dialogArguments;
+		//alert(id.CSID)
+		$(function () {
+			$.myAjax("../webServers/CustomServices.asmx/GetServicesByID", { "CSID": id.CSID }, function (d) {
+				$.each(d, function (i, j) {
+					$("#CusID").text(j.CusID);
+					$("#TypeName").text(j.TypeName);
+					$("#CSCreateDate").text($.JonsTime(j.CSCreateDate));
+					$("#CSCreateName").text(j.CSCreateName);
+					$("#CSTitle").text(j.CSTitle);
+					$("#CSDesc").text(j.CSDesc);
+				});
+			});
+
+
+			$(":button").eq(0).click(function () {
+
+				var d1 = {
+					"CSID": id.CSID,
+					"CSDeal": $("#CSDeal").val(),
+				};
+				$.myAjax("../webServers/CustomServices.asmx/UpdDeal", { "service": d1 }, function (d) {
+
+					if (d > 0) {
+						alert("处理完成");
+						window.close();
+					}
+				});
+			});
+		});
+
+	</script>
 </head>
 
 <body>
@@ -14,32 +51,32 @@
         </thead>
         <tr>
             <th>客户编号：</th>
-            <td>
-               HK201111110001</td>
+            <td id="CusID">
+               </td>
             <th>服务类型：</th>
-            <td>
-                投诉
+            <td id="TypeName">
+               
             </td>
         </tr>
         <tr>
-            <th>创建时候：</th>
-            <td>2011-5-2
+            <th>创建时间：</th>
+            <td id="CSCreateDate">
                </td>
             <th>创建人：</th>
-            <td>
-                张三
+            <td id="CSCreateName">
+                
             </td>
         </tr>
         <tr>
             <th>服务概要：</th>
-            <td colspan="3">
-               质量问题
+            <td colspan="3" id="CSTitle">
+               
              </td>
         </tr>
         <tr>
             <th>详细信息：</th>
-            <td colspan="3">
-                购买的商品出现质量问题
+            <td colspan="3" id="CSDesc">
+                
              </td>
         </tr>
     </table>
@@ -52,13 +89,13 @@
         <tr>
             <th>服务处理：</th>
             <td colspan="3">
-               <textarea></textarea>
+               <textarea id="CSDeal"></textarea>
              </td>
         </tr>
          <tfoot>
             <tr>
                 <td colspan="4">
-                     <input type="button" value="确定" onclick="window.close()"  />&nbsp;&nbsp;
+                     <input type="button" value="确定" />&nbsp;&nbsp;
                      <input type="button" value="关闭" onclick="window.close()" />
                 </td>
             </tr>

@@ -65,19 +65,6 @@ namespace CRM_System.webServers
 			return DalBase.Delete<Model.Chances>(id);
 		}
 
-		/// <summary>
-		/// 根据登录用户查询id
-		/// </summary>
-		/// <returns></returns>
-		[WebMethod(EnableSession =true)]
-		public int GetUsersID(){
-			string UserLName = Session["UserLName"].ToString();
-			string sql = string.Format(@"select UserID from Users where UserLName=@UserLName");
-			SqlParameter[] sp = new SqlParameter[] {
-				new SqlParameter("@UserLName",UserLName)
-			};
-			return DalBase.SelectObj(sql,sp) ;
-		}
 
 
 		/// <summary>

@@ -187,6 +187,7 @@
     <Content Include="webServers\Chances.asmx" />
     <Content Include="webServers\Customers.asmx" />
     <Content Include="webServers\CustomLosts.asmx" />
+    <Content Include="webServers\CustomServices.asmx" />
     <Content Include="webServers\Jurisdiction.asmx" />
     <Content Include="webServers\LinkMans.asmx" />
     <Content Include="webServers\Measures.asmx" />
@@ -228,6 +229,7 @@
     <Content Include="Web.config" />
     <Content Include="webServers\Main.asmx" />
     <Content Include="webServers\Menu.asmx" />
+    <Content Include="webServers\ServiceType.asmx" />
     <Content Include="webServers\Users.asmx" />
     <Content Include="welcome.htm" />
   </ItemGroup>
@@ -247,6 +249,10 @@
     </Compile>
     <Compile Include="webServers\CustomLosts.asmx.cs">
       <DependentUpon>CustomLosts.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="webServers\CustomServices.asmx.cs">
+      <DependentUpon>CustomServices.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="webServers\Jurisdiction.asmx.cs">
@@ -279,6 +285,10 @@
     </Compile>
     <Compile Include="webServers\Role.asmx.cs">
       <DependentUpon>Role.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="webServers\ServiceType.asmx.cs">
+      <DependentUpon>ServiceType.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="webServers\Users.asmx.cs">
