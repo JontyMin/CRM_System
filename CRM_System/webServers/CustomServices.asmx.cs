@@ -63,15 +63,20 @@ namespace CRM_System.webServers
 		}
 
 
+
+
 		/// <summary>
-		/// 查询已指派服务
-		/// </summary>
+		/// 根据状态查询
+		/// </summary>后期加入登录用户id，查询分配给登录用户的服务
 		/// <returns></returns>
 		[WebMethod]
-		public List<Model.V_CustomServices> GetServicesBy()
+		public List<Model.V_CustomServices> GetServicesBy(int CSState)
 		{
-			string sql = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = 2");
-			return DalBase.SelectsByWhere<Model.V_CustomServices>(sql,null);
+			string sql = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = @CSState");
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@CSState",CSState)
+			};
+			return DalBase.SelectsByWhere<Model.V_CustomServices>(sql,sp);
 		}
 
 
@@ -101,6 +106,45 @@ namespace CRM_System.webServers
 			service.CSDealDate = DateTime.Now;
 			return DalBase.Updata(service);
 
+		}
+
+		/// <summary>
+		/// 服务反馈
+		/// </summary>
+		/// <param name="service"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public int UpdResult(Model.CustomServices service)
+		{
+			service.CSState = 4;
+			return DalBase.Updata(service);
+
+		}
+
+
+		/// <summary>
+		/// 条件查询
+		/// </summary>
+		/// <param name="CusName"></param>
+		/// <param name="STID"></param>
+		/// <returns></returns>
+		[WebMethod]
+		public List<Model.V_CustomServices> GetV_CustomServicesBy(string CusName,string STID) {
+
+			string sql = string.Format(@"select * from v_CustomServices where CSState=4");
+			if (CusName!=null && CusName!="")
+			{
+				sql += " and CusName like @CusName";
+			}
+			if (STID!=null && STID!="")
+			{
+				sql += " and STID=@STID";
+			}
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@CusName",CusName),
+				new SqlParameter("@STID",STID)
+			};
+			return DalBase.SelectsByWhere<Model.V_CustomServices>(sql,sp);
 		}
 	}
 }

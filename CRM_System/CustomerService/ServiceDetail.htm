@@ -7,10 +7,92 @@
     <link href="../Scripts/jquery.showModalDialog.css" rel="stylesheet" type="text/css" />
     <script src="../Scripts/jquery-1.10.2.js" type="text/javascript"></script>
     <script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
+	<script src="../js/MyJquery.js"></script>
     <script type="text/javascript">
-        function showDetail() {
-            $.showModalDialog("ServiceDetailDialog.htm?data="+Math.random(), "参数", 550, 400);
-        }
+        function showDetail(CSID) {
+			$.showModalDialog("ServiceDetailDialog.htm?data=" + Math.random(), {"CSID":CSID}, 550, 400);
+		}
+
+		$(function () {
+			$.myAjax("../webServers/ServiceType.asmx/GetServiceTypes", null, function (d) {
+				$.each(d, function (i, j) {
+					var option = $("<option>").val(j.STID).text(j.STName);
+					$("#Select1").append(option);
+				});
+			});
+
+				$.myAjax("../webServers/CustomServices.asmx/GetServicesBy", {"CSState":4}, function (d) {
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						$("<td>").text(j.CusName).appendTo(tr);
+						$("<td>").text(j.CSTitle).appendTo(tr);
+						$("<td>").text(j.TypeName).appendTo(tr);
+						$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+						$("<td>").text(j.CSCreateName).appendTo(tr);
+						$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
+						$("<td>").text(j.CSDueName).appendTo(tr);
+						$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
+						$(".dataTable").append(tr);
+					});
+				});
+
+			$(":button").eq(0).click(function () {
+				//alert(1)
+				$(".dataTable").empty();
+				$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						$("<td>").text(j.CusName).appendTo(tr);
+						$("<td>").text(j.CSTitle).appendTo(tr);
+						$("<td>").text(j.TypeName).appendTo(tr);
+						$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+						$("<td>").text(j.CSCreateName).appendTo(tr);
+						$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
+						$("<td>").text(j.CSDueName).appendTo(tr);
+						$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
+						$(".dataTable").append(tr);
+					});
+				});
+
+			});
+
+			$("#Select1").change(function () {
+				$(".dataTable").empty();
+				$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						$("<td>").text(j.CusName).appendTo(tr);
+						$("<td>").text(j.CSTitle).appendTo(tr);
+						$("<td>").text(j.TypeName).appendTo(tr);
+						$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+						$("<td>").text(j.CSCreateName).appendTo(tr);
+						$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
+						$("<td>").text(j.CSDueName).appendTo(tr);
+						$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
+						$(".dataTable").append(tr);
+					});
+				});
+
+			});
+
+			$("#name").keyup(function () {
+				$(".dataTable").empty();
+				$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
+					$.each(d, function (i, j) {
+						var tr = $("<tr>");
+						$("<td>").text(j.CusName).appendTo(tr);
+						$("<td>").text(j.CSTitle).appendTo(tr);
+						$("<td>").text(j.TypeName).appendTo(tr);
+						$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+						$("<td>").text(j.CSCreateName).appendTo(tr);
+						$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
+						$("<td>").text(j.CSDueName).appendTo(tr);
+						$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
+						$(".dataTable").append(tr);
+					});
+				});
+			});
+		});
  </script>
 </head>
 <body>
@@ -24,16 +106,16 @@
                 客户名称：
             </th>
             <td>
-                <input type="text" />
+                <input type="text" id="name"/>
             </td>
             <th>
                 服务类型：
             </th>
             <td>
                 <select id="Select1" style="width:80px">
-                    <option>咨询</option>
+                    <!--<option>咨询</option>
                     <option>建议</option>
-                    <option>投诉</option>
+                    <option>投诉</option>-->
                 </select>
             </td>
         </tr>
@@ -59,7 +141,7 @@
             <th>处理人</th>
             <th>查看</th>
         </tr>
-        <tr>
+        <!--<tr>
             <td>睿智数码</td>
             <td>询问收音机订单运费承担方式</td>
             <td>咨询</td>
@@ -68,7 +150,7 @@
             <td>2011年5月2日</td>
             <td>张三</td>
             <td><input type="image" src="../images/bt_detail.gif" onclick="showDetail()" /></td>
-        </tr>
+        </tr>-->
     </table>
     <div id="pageDiv">
         <div id="leftPage">共有120条记录，当前第1/10页</div>

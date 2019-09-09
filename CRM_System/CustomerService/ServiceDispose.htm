@@ -13,7 +13,7 @@
 
 		}
 		$(function () {
-			$.myAjax("../webServers/CustomServices.asmx/GetServicesBy", null, function (d) {
+			$.myAjax("../webServers/CustomServices.asmx/GetServicesBy", {"CSState":2}, function (d) {
 				$.each(d, function (i, j) {
 					var tr = $("<tr>");
 					$("<td>").text(j.CusName).appendTo(tr);
