@@ -12,71 +12,87 @@
 	<script type="text/javascript">
 
 		$(function () {
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					//加载查询数据
+					$.myAjax("../webServers/Chances.asmx/GetChances", null, function (d) {
 
-			//加载查询数据
-			$.myAjax("../webServers/Chances.asmx/GetChances", null, function (d) {
+						$.each(d, function (k, v) {
 
-				$.each(d, function (k, v) {
-
-					var tr = $("<tr>");
-					$("<td>").text(v.ChanName).appendTo(tr);
-					$("<td>").text(v.ChanTitle).appendTo(tr);
-					$("<td>").text(v.ChanLinkMan).appendTo(tr);
-					$("<td>").text(v.ChanLinkTel).appendTo(tr);
-					$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
-					$(" <td><img key=" + v.ChanID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key1=" + v.ChanID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
-					$(".dataTable").append(tr);
-				});
-			});
-
-			//点击添加
-			$("#addChance").click(function () {
-
-				$.showModalDialog("EditSale.htm?data=" + Math.random(), null, 600, 300, function (d) {
-					//...
-					//alert(d);
-					var tr = $("<tr>");
-					$("<td>").text(d.ChanName).appendTo(tr);
-					$("<td>").text(d.ChanTitle).appendTo(tr);
-					$("<td>").text(d.ChanLinkMan).appendTo(tr);
-					$("<td>").text(d.ChanLinkTel).appendTo(tr);
-					$("<td>").text(d.ChanCreateDate).appendTo(tr);
-					$(" <td><img key=" + d.ChanID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key1=" + d.ChanID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
-					$(".dataTable").append(tr);
-
-				});
-			});
-
-			//事件委派删除
-			$(document).on("click", "img[key1]", function () {
-				if (confirm("是否确认删除")) {
-					var id = $(this).attr("key1");//得到选中行id
-					var row = $(this).parent().parent();
-					//alert(id);
-					$.myAjax("../webServers/Chances.asmx/DelChance", { "id": id }, function (d) {
-						$(row).remove();
-						//alert();
+							var tr = $("<tr>");
+							$("<td>").text(v.ChanName).appendTo(tr);
+							$("<td>").text(v.ChanTitle).appendTo(tr);
+							$("<td>").text(v.ChanLinkMan).appendTo(tr);
+							$("<td>").text(v.ChanLinkTel).appendTo(tr);
+							$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+							$(" <td><img key=" + v.ChanID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key1=" + v.ChanID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+							$(".dataTable").append(tr);
+						});
 					});
+
+					//点击添加
+					$("#addChance").click(function () {
+
+						$.showModalDialog("EditSale.htm?data=" + Math.random(), null, 600, 300, function (d) {
+							//...
+							//alert(d);
+							var tr = $("<tr>");
+							$("<td>").text(d.ChanName).appendTo(tr);
+							$("<td>").text(d.ChanTitle).appendTo(tr);
+							$("<td>").text(d.ChanLinkMan).appendTo(tr);
+							$("<td>").text(d.ChanLinkTel).appendTo(tr);
+							$("<td>").text(d.ChanCreateDate).appendTo(tr);
+							$(" <td><img key=" + d.ChanID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key1=" + d.ChanID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+							$(".dataTable").append(tr);
+
+						});
+					});
+
+					//事件委派删除
+					$(document).on("click", "img[key1]", function () {
+						var id = $(this).attr("key1");//得到选中行id
+						var row = $(this).parent().parent();
+						//alert(id);
+					
+								if (confirm("是否确认删除")) {
+									$.myAjax("../webServers/Chances.asmx/DelChance", { "id": id }, function (d) {
+										if (d == -1) {
+											alert("无删除权限")
+										} else if (d == 1) {
+											$(row).remove();
+											alert("删除成功");
+										}
+									});
+								}
+						
+
+						
+
+
+					});
+
+					//事件委派修改
+					$(document).on("click", "img[key]", function () {
+						var id = $(this).attr("key");
+						var row = $(this).parent().parent();
+						$.showModalDialog("EditSale.htm?data=" + Math.random(), { "key": id }, 600, 300, function (d) {
+							$(row).children().eq(0).text(d.ChanName);
+							$(row).children().eq(1).text(d.ChanTitle);
+							$(row).children().eq(2).text(d.ChanLinkMan);
+							$(row).children().eq(3).text(d.ChanLinkTel);
+							//$(row).children().eq(4).text(d.ChanCreateDate);
+
+						});
+
+					});
+
 				}
+				else {
 
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
+				}
 			});
-
-			//事件委派修改
-			$(document).on("click", "img[key]", function () {
-				var id = $(this).attr("key");
-				var row = $(this).parent().parent();
-				$.showModalDialog("EditSale.htm?data=" + Math.random(), { "key": id }, 600, 300, function (d) {
-					$(row).children().eq(0).text(d.ChanName);
-					$(row).children().eq(1).text(d.ChanTitle);
-					$(row).children().eq(2).text(d.ChanLinkMan);
-					$(row).children().eq(3).text(d.ChanLinkTel);
-					//$(row).children().eq(4).text(d.ChanCreateDate);
-
-				});
-
-			});
-
-
 		});
 
 						//function showEdit() {
@@ -85,7 +101,7 @@
 						//    });
 						//}
 		$(document).ready(function display() {
-			var pageSize = 3;    //每页显示的记录条数
+			var pageSize = 5;    //每页显示的记录条数
 			var curPage = 0;        //当前页
 			var lastPage;        //最后页
 			var direct = 0;        //方向
@@ -142,11 +158,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 

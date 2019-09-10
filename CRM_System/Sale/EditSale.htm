@@ -32,13 +32,19 @@
 		}
 
 
+
+
+
 		//加载时
 		$(function () {
 
+			//模式对话窗体传值
 			var data = window.dialogArguments;
 			var ChanID;
+			//判断非空？添加：修改
+			//修改则根据id查询
 			if (data != null) {
-				$(":button:eq(0)").hide();
+				$("#addChance").hide();
 				$("#dpTitle").text("修改销售机会");
 				 ChanID = data.key;
 				$.myAjax("../webServers/Chances.asmx/GetChance", { "ChanID": ChanID }, function (d) {
@@ -54,7 +60,7 @@
 				});
 			} else {
 				$("#dpTitle").text("销售机会添加");
-				  $(":button:eq(1)").hide();
+				  $("#UpdChance").hide();
 			}
 
 			//点击修改
@@ -73,7 +79,7 @@
 				};
 				//alert(JSON.stringify(data));
 				$.myAjax("../webServers/Chances.asmx/UpdChance", { "chances": data }, function (d) {
-					if (d > 0) {
+					if (d ==1) {
 						alert("修改成功");
 						var data1 = {
 								"ChanName": $("#ChanName").val(),
@@ -84,6 +90,8 @@
 						};
 						window.returnValue = data1;
 						window.close();
+					} else if (d = -1) {
+						alert("无修改权限");
 					}
 
 				});
@@ -93,52 +101,67 @@
 				}
 			});
 
-
+			function isNotNull(obj) {
+				obj = $.trim(obj);
+				if (obj.length != 0 && obj != null && obj != undefined) {
+					return true;
+				}
+				else
+					return false;
+			}
 			
 			$("#addChance").click(function () {
 				try {
-					//先拿到添加人的id
-					$.myAjax("../webServers/Users.asmx/GetUID", null, function (d) {
 
-						var data = {
-							"ChanName": $("#ChanName").val(),
-							"ChanRate": $("#ChanRate option:selected").val(),
-							"ChanLinkMan": $("#ChanLinkMan").val(),
-							"ChanLinkTel": $("#ChanLinkTel").val(),
-							"ChanTitle": $("#ChanTitle").val(),
-							"ChanDesc": $("#ChanDesc").val(),
-							"ChanCreateMan": d,//拿到添加人的id、注释调的回调函数d
-							//"ChanCreateDate": GetTiem(),
-							//"ChanDueMan": null,
-							//"ChanDueDate": null,
-							"ChanState": 1,
-							//"ChanError": null,
-						};
-						//alert(JSON.stringify(data));
+					if (isNotNull($("#ChanName").val()) && isNotNull($("#ChanLinkMan").val()) && isNotNull($("#ChanLinkTel").val()) && isNotNull($("#ChanTitle").val()) && isNotNull($("#ChanDesc").val())) {
+						//先拿到添加人的id
+						$.myAjax("../webServers/Users.asmx/GetUID", null, function (d) {
+							if (d != -1) {
 
-							$.myAjax("../webServers/Chances.asmx/AddChance", { "chances": data }, function (d) {
-								if (d > 0) {
-									alert("新增成功");
-									var data1 = {
-										"ChanID": d,
-										"ChanName": $("#ChanName").val(),
-										"ChanLinkMan": $("#ChanLinkMan").val(),
-										"ChanLinkTel": $("#ChanLinkTel").val(),
-										"ChanTitle": $("#ChanTitle").val(),
-										"ChanCreateDate": GetTiem()
-									};
+								var data = {
+									"ChanName": $("#ChanName").val(),
+									"ChanRate": $("#ChanRate option:selected").val(),
+									"ChanLinkMan": $("#ChanLinkMan").val(),
+									"ChanLinkTel": $("#ChanLinkTel").val(),
+									"ChanTitle": $("#ChanTitle").val(),
+									"ChanDesc": $("#ChanDesc").val(),
+									"ChanCreateMan": d,//拿到添加人的id、注释调的回调函数d
+									//"ChanCreateDate": GetTiem(),
+									//"ChanDueMan": null,
+									//"ChanDueDate": null,
+									"ChanState": 1,
+									//"ChanError": null,
+								};
+								//alert(JSON.stringify(data));
 
-									//alert(JSON.stringify(data1));
+								$.myAjax("../webServers/Chances.asmx/AddChance", { "chances": data }, function (d) {
+									if (d > 0) {
+										alert("新增成功");
+										var data1 = {
+											"ChanID": d,
+											"ChanName": $("#ChanName").val(),
+											"ChanLinkMan": $("#ChanLinkMan").val(),
+											"ChanLinkTel": $("#ChanLinkTel").val(),
+											"ChanTitle": $("#ChanTitle").val(),
+											"ChanCreateDate": GetTiem()
+										};
 
-									window.returnValue = data1;
-									window.close();
-								}
+										//alert(JSON.stringify(data1));
+
+										window.returnValue = data1;
+										window.close();
+									}
 
 
-							});
-			
+								});
+							} else {
+								alert("");
+							}
 						});
-			
+					} else {
+						$("input[type='text'], textarea").css("border", "1px solid red");
+						alert("请将数据填写完整");
+					}
 				} catch (e) {
 					alert("添加失败，请稍后重试" + e);
 				}
@@ -149,55 +172,59 @@
 	</script>
 </head>
 <body>
-    <table class="tableEdit">
-        <thead>
-            <tr>
-                <td colspan="4" id="dpTitle">销售机会添加</td>
-            </tr>
-        </thead>
-        <tr>
-            <th>客户名称：</th>
-            <td>
-                <input type="text" id="ChanName"/></td>
-            <th>成功几率：</th>
-            <td>
-                <select id="ChanRate">
-                    <option value="100">100%</option>
-                    <option value="90">90%</option>
-                    <option value="80">80%</option>
-                    <option value="70">70%</option>
-                    <option value="60">60%</option>
-                    <option value="50">50%</option>
-                    <option value="40">40%</option>
-                    <option value="30">30%</option>
-                    <option value="20">20%</option>
-                    <option value="10">10%</option>
-                    <option value="0">0%</option>
-                </select></td>
-        </tr>
-        <tr>
-            <th>联系人：</th>
-            <td><input type="text" id="ChanLinkMan"/></td>
-            <th>联系电话：</th>
-            <td><input type="text" id="ChanLinkTel"/></td>
-        </tr>
-        <tr>
-            <th>概要：</th>
-            <td colspan="3"><input type="text" style="width:300px" id="ChanTitle"/></td>
-        </tr>
-        <tr>
-            <th>机会描述：</th>
-            <td colspan="3"><textarea id="ChanDesc"></textarea></td>
-        </tr>
-        <tfoot>
-            <tr>
-				<td colspan="4">
-					<input type="button" value="确定" id="addChance"/>&nbsp;&nbsp;
-					<input type="button" value="确定" id="UpdChance" />&nbsp;&nbsp;
-					<input type="button" value="关闭" onclick="window.close()" />
+	<form>
+		<table class="tableEdit">
+			<thead>
+				<tr>
+					<td colspan="4" id="dpTitle">销售机会添加</td>
+				</tr>
+			</thead>
+			<tr>
+				<th>客户名称：</th>
+				<td>
+					<input type="text" id="ChanName" maxlength="15"/>
 				</td>
-            </tr>
-        </tfoot>
-    </table>
+				<th>成功几率：</th>
+				<td>
+					<select id="ChanRate">
+						<option value="100">100%</option>
+						<option value="90">90%</option>
+						<option value="80">80%</option>
+						<option value="70">70%</option>
+						<option value="60">60%</option>
+						<option value="50">50%</option>
+						<option value="40">40%</option>
+						<option value="30">30%</option>
+						<option value="20">20%</option>
+						<option value="10">10%</option>
+						<option value="0">0%</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>联系人：</th>
+				<td><input type="text" id="ChanLinkMan" max="6"/></td>
+				<th>联系电话：</th>
+				<td><input type="text" id="ChanLinkTel" maxlength="11" onkeyup="value=value.replace(/[^\d]/g,'')"/></td>
+			</tr>
+			<tr>
+				<th>概要：</th>
+				<td colspan="3"><input type="text" style="width:300px" id="ChanTitle" /></td>
+			</tr>
+			<tr>
+				<th>机会描述：</th>
+				<td colspan="3"><textarea id="ChanDesc"></textarea></td>
+			</tr>
+			<tfoot>
+				<tr>
+					<td colspan="4">
+						<input type="button" value="确定" id="addChance" />&nbsp;&nbsp;
+						<input type="button" value="确定" id="UpdChance" />&nbsp;&nbsp;
+						<input type="button" value="关闭" onclick="window.close()" />
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
 </body>
 </html>

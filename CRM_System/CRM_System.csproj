@@ -180,6 +180,7 @@
     <Content Include="js\bootstrap-table.js" />
     <Content Include="js\jquery-3.4.1.min.js" />
     <Content Include="js\JqueryExtend.js" />
+    <Content Include="js\mvalimin.js" />
     <Content Include="js\MyAjax.js" />
     <Content Include="Manager\a.html" />
     <Content Include="Manager\b.html" />

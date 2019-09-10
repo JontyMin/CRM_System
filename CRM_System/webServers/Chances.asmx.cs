@@ -34,11 +34,12 @@ namespace CRM_System.webServers
 		/// <returns></returns>
 		[WebMethod]
 		public List<Model.Chances> GetChances() {
-			return DalBase.SelectAll<Model.Chances>();
+			string sql = string.Format(@"select * from Chances where ChanState=1  order by ChanID desc");
+			return DalBase.SelectsByWhere<Model.Chances>(sql,null);
 		}
 
 		/// <summary>
-		/// 分页查询
+		///// 分页查询
 		/// </summary>
 		/// <param name="index"></param>
 		/// <param name="size"></param>
@@ -55,16 +56,63 @@ namespace CRM_System.webServers
 		}
 
 
+
 		/// <summary>
 		/// 根据id删除
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		public int DelChance(int id) {
-			return DalBase.Delete<Model.Chances>(id);
-		}
 
+
+			//1.根据 session里面的用户名去得到这个人的角色ID 和角色名
+
+			//2.判断如果角色名if（==销售 主管 ）{直接删除} eles if（==销售经理）{ 机会的创建人ID==登录人的ID } else {没有权限删除}
+
+			//机会创建人id
+			string sql = string.Format(@"select ChanCreateMan from Chances where ChanID=@ChanID");
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@ChanID",id)
+			};
+			int crid = DalBase.SelectObj(sql,sp);
+
+			//当前登录人id
+			string UserLName = Session["UserLName"].ToString();
+			string sql1 = string.Format(@"select UserID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int uid = DalBase.SelectObj(sql1,sp1);
+
+			//当前登录人角色id
+			string sql2 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
+			SqlParameter[] sp3 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int rid = DalBase.SelectObj(sql2, sp3);
+
+			if (rid<=2)
+			{
+			   DalBase.Delete<Model.Chances>(id);
+			}
+			else if(rid==3)
+			{
+				if (crid==uid)
+				{
+					DalBase.Delete<Model.Chances>(id);
+				}
+				else
+				{
+					return -1;
+				}
+
+			}
+			
+			return 1;
+			
+			
+		}
 
 
 		/// <summary>
@@ -105,9 +153,50 @@ namespace CRM_System.webServers
 		/// </summary>
 		/// <param name="chances"></param>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		public int UpdChance(Model.Chances chances) {
-			return DalBase.Updata(chances);
+			//机会创建人id
+			string sql = string.Format(@"select ChanCreateMan from Chances where ChanID=@ChanID");
+			SqlParameter[] sp = new SqlParameter[] {
+				new SqlParameter("@ChanID",chances.ChanID)
+			};
+			int crid = DalBase.SelectObj(sql, sp);
+
+			//当前登录人id
+			string UserLName = Session["UserLName"].ToString();
+			string sql1 = string.Format(@"select UserID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int uid = DalBase.SelectObj(sql1, sp1);
+
+			//当前登录人角色id
+			string sql2 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
+			SqlParameter[] sp3 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int rid = DalBase.SelectObj(sql2, sp3);
+
+			if (rid <= 2)
+			{
+				DalBase.Updata(chances);
+			}
+			else if (rid == 3)
+			{
+				if (crid == uid)
+				{
+					DalBase.Updata(chances);
+				}
+				else
+				{
+					return -1;
+				}
+
+			}
+
+			return 1;
+
+			
 		}
 
 
@@ -121,7 +210,7 @@ namespace CRM_System.webServers
 		/// <returns></returns>
 		[WebMethod]
 		public List<Model.V_Chances> GetV_Chances() {
-			string sql = string.Format(@"select * from V_Chances");
+			string sql = string.Format(@"select * from V_Chances order by ChanID desc");
 			return DalBase.SelectsByWhere<Model.V_Chances> (sql,null) ;
 
 		}
@@ -154,6 +243,7 @@ namespace CRM_System.webServers
 			{
 				sql += " and ChanDueManName like @ChanDueManName";
 			}
+			sql += " order by ChanID desc";
 			SqlParameter[] sp = new SqlParameter[] {
 				new SqlParameter("@ChanName","%"+ChanName+"%"),
 				new SqlParameter("@ChanLinkMan","%"+ChanLinkMan+"%"),
@@ -172,6 +262,7 @@ namespace CRM_System.webServers
 		[WebMethod]
 		public int UpdChanDue(Model.Chances chance) {
 			chance.ChanDueDate = DateTime.Now;
+
 			return DalBase.Updata(chance);
 
 		}
@@ -189,7 +280,7 @@ namespace CRM_System.webServers
 			/// <returns></returns>
 		[WebMethod]
 		public List<Model.V_Chances> GetChanDue() {
-			string sql = string.Format(@"select * from V_Chances where ChanState>1");
+			string sql = string.Format(@"select * from V_Chances where ChanState>1 order by ChanID desc");
 			return DalBase.SelectsByWhere<Model.V_Chances>(sql,null) ;
 
 		}

@@ -34,75 +34,76 @@
 
 
 		$(function () {
-			//加载查询
-			$.myAjax("../webServers/Chances.asmx/GetV_Chances", null, function (d) {
-				//alert(JSON.stringify(d));
-				$.each(d, function (k, v) {
-					var tr = $("<tr>");
-					$("<td>").text(v.ChanName).appendTo(tr);
-					$("<td>").text(v.ChanTitle).appendTo(tr);
-					$("<td>").text(v.ChanLinkMan).appendTo(tr);
-					$("<td>").text(v.ChanLinkTel).appendTo(tr);
-					$("<td>").text(v.ChanCreateManName).appendTo(tr);
-					$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
-					$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
-					$(".dataTable tbody").append(tr);
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					//加载查询
+					$.myAjax("../webServers/Chances.asmx/GetV_Chances", null, function (d) {
+						//alert(JSON.stringify(d));
+						$.each(d, function (k, v) {
+							var tr = $("<tr>");
+							$("<td>").text(v.ChanName).appendTo(tr);
+							$("<td>").text(v.ChanTitle).appendTo(tr);
+							$("<td>").text(v.ChanLinkMan).appendTo(tr);
+							$("<td>").text(v.ChanLinkTel).appendTo(tr);
+							$("<td>").text(v.ChanCreateManName).appendTo(tr);
+							$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+							$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
+							$(".dataTable tbody").append(tr);
 
-				});
+						});
 
-
-			});
-
-			$(":button:first").click(function () {
-
-				//alert(1);
-				$.myAjax("../webServers/Chances.asmx/GetV_ChancesBy", { "ChanName": $("#ChanName").val(), "ChanLinkMan": $("#ChanLinkMan").val(), "UserName": $("#UserName").val(), "ChanDueMan": $("#ChanDueMan").val() }, function (d) {
-					$(".dataTable tbody").empty();
-					$.each(d, function (k, v) {
-						var tr = $("<tr>");
-						$("<td>").text(v.ChanName).appendTo(tr);
-						$("<td>").text(v.ChanTitle).appendTo(tr);
-						$("<td>").text(v.ChanLinkMan).appendTo(tr);
-						$("<td>").text(v.ChanLinkTel).appendTo(tr);
-						$("<td>").text(v.ChanCreateManName).appendTo(tr);
-						$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
-						$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
-						$(".dataTable tbody").append(tr);
 
 					});
-				});
-			});
 
-			$(".up").keyup(function () {
-				//alert(1);
-				$.myAjax("../webServers/Chances.asmx/GetV_ChancesBy", { "ChanName": $("#ChanName").val(), "ChanLinkMan": $("#ChanLinkMan").val(), "ChanCreateManName": $("#ChanCreateManName").val(), "ChanDueManName": $("#ChanDueManName").val() }, function (d) {
-					$(".dataTable tbody").empty();
-					$.each(d, function (k, v) {
-						var tr = $("<tr>");
-						$("<td>").text(v.ChanName).appendTo(tr);
-						$("<td>").text(v.ChanTitle).appendTo(tr);
-						$("<td>").text(v.ChanLinkMan).appendTo(tr);
-						$("<td>").text(v.ChanLinkTel).appendTo(tr);
-						$("<td>").text(v.ChanCreateManName).appendTo(tr);
-						$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
-						$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
-						$(".dataTable tbody").append(tr);
+					$(":button:first").click(function () {
 
+						//alert(1);
+						$.myAjax("../webServers/Chances.asmx/GetV_ChancesBy", { "ChanName": $("#ChanName").val(), "ChanLinkMan": $("#ChanLinkMan").val(), "UserName": $("#UserName").val(), "ChanDueMan": $("#ChanDueMan").val() }, function (d) {
+							$(".dataTable tbody").empty();
+							$.each(d, function (k, v) {
+								var tr = $("<tr>");
+								$("<td>").text(v.ChanName).appendTo(tr);
+								$("<td>").text(v.ChanTitle).appendTo(tr);
+								$("<td>").text(v.ChanLinkMan).appendTo(tr);
+								$("<td>").text(v.ChanLinkTel).appendTo(tr);
+								$("<td>").text(v.ChanCreateManName).appendTo(tr);
+								$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+								$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
+								$(".dataTable tbody").append(tr);
+
+							});
+						});
 					});
-				});
-			});
 
-			//$(document).on("change", "input type[text] value", function () {
+					$(".up").keyup(function () {
+						//alert(1);
+						$.myAjax("../webServers/Chances.asmx/GetV_ChancesBy", { "ChanName": $("#ChanName").val(), "ChanLinkMan": $("#ChanLinkMan").val(), "ChanCreateManName": $("#ChanCreateManName").val(), "ChanDueManName": $("#ChanDueManName").val() }, function (d) {
+							$(".dataTable tbody").empty();
+							$.each(d, function (k, v) {
+								var tr = $("<tr>");
+								$("<td>").text(v.ChanName).appendTo(tr);
+								$("<td>").text(v.ChanTitle).appendTo(tr);
+								$("<td>").text(v.ChanLinkMan).appendTo(tr);
+								$("<td>").text(v.ChanLinkTel).appendTo(tr);
+								$("<td>").text(v.ChanCreateManName).appendTo(tr);
+								$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+								$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
+								$(".dataTable tbody").append(tr);
 
-			//	var id = $(this).attr("value");
-			//	//alert(id);
-			//	console.log(id);
-			//});
+							});
+						});
+					});
+				}
+				else {
 
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
+				}
+			})
 		});
 
 		$(document).ready(function display() {
-			var pageSize = 3;    //每页显示的记录条数
+			var pageSize = 5;    //每页显示的记录条数
 			var curPage = 0;        //当前页
 			var lastPage;        //最后页
 			var direct = 0;        //方向
@@ -159,11 +160,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 

@@ -40,26 +40,35 @@
 
 
 		$(function () {
-			//加载查询数据
-			$.myAjax("../webServers/Chances.asmx/GetChanDue", null, function (d) {
-				$.each(d, function (k, v) {
-					//alert(v.ChanState);
-					var tr = $("<tr>");
-					$("<td>").text(v.ChanName).appendTo(tr);
-					$("<td>").text(v.ChanTitle).appendTo(tr);
-					$("<td>").text(v.ChanLinkMan).appendTo(tr);
-					$("<td>").text(v.ChanLinkTel).appendTo(tr);
-					$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
-					$("<td>").text(v.ChanStateText).appendTo(tr);
-					$("<td><img title='" + (v.ChanState == 2 ? '修改' : '查看') + "' src='" + (v.ChanState==2?'../images/bt_feedback.gif':'../images/bt_detail.gif') + "' onclick='"+(v.ChanState==2?'showOpen(this,'+v.ChanID+')':v.ChanState==3?'showOK('+v.ChanID+')':'showNo('+v.ChanID+')')+"' /></td>").appendTo(tr);
-					$(".dataTable").append(tr);
-				});
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					//加载查询数据
+					$.myAjax("../webServers/Chances.asmx/GetChanDue", null, function (d) {
+						$.each(d, function (k, v) {
+							//alert(v.ChanState);
+							var tr = $("<tr>");
+							$("<td>").text(v.ChanName).appendTo(tr);
+							$("<td>").text(v.ChanTitle).appendTo(tr);
+							$("<td>").text(v.ChanLinkMan).appendTo(tr);
+							$("<td>").text(v.ChanLinkTel).appendTo(tr);
+							$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+							$("<td>").text(v.ChanStateText).appendTo(tr);
+							$("<td><img title='" + (v.ChanState == 2 ? '修改' : '查看') + "' src='" + (v.ChanState == 2 ? '../images/bt_feedback.gif' : '../images/bt_detail.gif') + "' onclick='" + (v.ChanState == 2 ? 'showOpen(this,' + v.ChanID + ')' : v.ChanState == 3 ? 'showOK(' + v.ChanID + ')' : 'showNo(' + v.ChanID + ')') + "' /></td>").appendTo(tr);
+							$(".dataTable").append(tr);
+						});
 
+					});
+				}
+				else {
+
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
+				}
 			});
 
 		});
 		$(document).ready(function display() {
-			var pageSize = 3;    //每页显示的记录条数
+			var pageSize = 5;    //每页显示的记录条数
 			var curPage = 0;        //当前页
 			var lastPage;        //最后页
 			var direct = 0;        //方向
@@ -116,11 +125,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 
