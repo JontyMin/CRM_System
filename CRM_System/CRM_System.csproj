@@ -176,6 +176,8 @@
     <Content Include="Images\tab_20.gif" />
     <Content Include="Images\tb.gif" />
     <Content Include="index.html" />
+    <Content Include="js\bootstrap-table.css" />
+    <Content Include="js\bootstrap-table.js" />
     <Content Include="js\jquery-3.4.1.min.js" />
     <Content Include="js\JqueryExtend.js" />
     <Content Include="js\MyAjax.js" />

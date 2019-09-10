@@ -63,7 +63,6 @@ namespace CRM_System.webServers
 		[WebMethod]
 		public List<Model.View_Users> GetUsers() {
 			return DalBase.SelectAll<Model.View_Users>();
-
 		}
 
 

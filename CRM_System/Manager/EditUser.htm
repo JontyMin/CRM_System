@@ -42,27 +42,17 @@
 			}
 
 
-			////注释代码
-			
-			////	//$("#ckPwd").focus(function () {
-			//////	if ($("#UserLPWD").val() != $(this).val()) {
-			//////		$("#ck").text("两次密码不一致");
-			//////		return false;
-			//////	} else {
-			//////		$("#ck").text("密码通过");
-			//////		return true;
-			//////	}
-			//////});
+
 			
 			
 
 			var UserID;
-			var data = window.dialogArguments.id;
-			//alert(data);
+			var data = window.dialogArguments;
+			//alert(data.key1);
 			if (data != null) {
 				$(":button:eq(0)").hide();
 				$("#dpTitle").text("修改用户");
-				UserID = data;
+				UserID = data.key1;
 				$.myAjax("../webServers/Users.asmx/GetUser", { "uid": UserID }, function (d) {
 					//alert(JSON.stringify(d));
 					$.each(d, function (i, j) {
@@ -158,7 +148,7 @@
 					}
 					
 				} catch (e) {
-					alert("添加失败，请稍后重试");
+					alert("添加失败，请稍后重试" + e);
 				}
 			});
 

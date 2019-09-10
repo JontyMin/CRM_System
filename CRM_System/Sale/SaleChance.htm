@@ -8,6 +8,7 @@
 	<script src="../Scripts/jquery.showModalDialog.js" type="text/javascript"></script>
 	<script src="../js/json.js"></script>
 	<script src="../js/MyJquery.js"></script>
+
 	<script type="text/javascript">
 
 		$(function () {
@@ -76,15 +77,102 @@
 			});
 
 
-
-
 		});
 
-				//function showEdit() {
-				//    $.showModalDialog("EditSale.htm?data=" + Math.random(), null, 600, 300, function(){
-				//        //...
-				//    });
-				//}
+						//function showEdit() {
+						//    $.showModalDialog("EditSale.htm?data=" + Math.random(), null, 600, 300, function(){
+						//        //...
+						//    });
+						//}
+		$(document).ready(function display() {
+			var pageSize = 3;    //每页显示的记录条数
+			var curPage = 0;        //当前页
+			var lastPage;        //最后页
+			var direct = 0;        //方向
+			var len;            //总行数
+			var page;            //总页数
+			var begin;
+			var end;
+
+			len = $("#mytable tr").length - 1;    // 求这个表的总行数，剔除第一行介绍
+			page = len % pageSize == 0 ? len / pageSize : Math.floor(len / pageSize) + 1;//根据记录条数，计算页数
+
+			curPage = 1;    // 设置当前为第一页
+			displayPage(1);//显示第一页
+			$("#current").text(curPage + "/" + page);
+			$("#sjzl").text(len);
+
+			$("#btn1").click(function firstPage() {    // 首页
+				curPage = 1;
+				direct = 0;
+				//alert("direct"+direct);
+				displayPage();
+			});
+			$("#btn2").click(function frontPage() {    // 上一页
+				direct = -1;
+				displayPage();
+				//alert("direct"+direct);
+			});
+			$("#btn3").click(function nextPage() {    // 下一页
+				direct = 1;
+				displayPage();
+				//alert("direct"+direct);
+			});
+			$("#btn4").click(function lastPage() {    // 尾页
+				curPage = page;
+				direct = 0;
+				// alert("direct"+direct);
+				displayPage();
+			});
+
+			$("#btn5").click(function changePage() {    // 转页
+				curPage = document.getElementById("changePage").value * 1;
+				if (!/^[1-9]\d*$/.test(curPage)) {
+					alert("请输入正整数");
+					return;
+				}
+				if (curPage > page) {
+					alert("超出数据页面");
+					return;
+				}
+				direct = 0;
+				displayPage();
+			});
+
+			function displayPage() {
+				if (curPage <= 1 && direct == -1) {
+					direct = 0;
+					alert("已经是第一页了");
+					return;
+				} else if (curPage >= page && direct == 1) {
+					direct = 0;
+					alert("已经是最后一页了");
+					return;
+				}
+
+				lastPage = curPage;
+
+				// 修复当len=1时，curPage计算得0的bug
+				if (len > pageSize) {
+					curPage = ((curPage + direct + len) % len);
+				} else {
+					curPage = 1;
+				}
+
+				$("#current").val(curPage + "/" + page);
+				begin = (curPage - 1) * pageSize + 1;// 起始记录号
+				end = begin + 1 * pageSize - 1;    // 末尾记录号
+
+
+				if (end > len) end = len;
+				$("#mytable tr").hide();    // 首先，设置这行为隐藏
+				$("#mytable tr").each(function (i) {    // 然后，通过条件判断决定本行是否恢复显示
+					if ((i >= begin && i <= end) || i == 0)//显示begin<=x<=end的记录
+						$(this).show();
+				});
+			}
+
+		});
 	</script>
 </head>
 <body>
@@ -96,7 +184,7 @@
     <div id="headDiv">
         <img src="../images/22.gif" />&nbsp;&nbsp;<a href="#" id="addChance">新建</a>
     </div>
-    <table class="dataTable">
+    <table class="dataTable" id="mytable">
         <tr>
             <th>客户名称</th>
             <th>概要</th>
@@ -131,13 +219,13 @@
         </tr>-->
     </table>
     <div id="pageDiv">
-        <div id="leftPage">共有120条记录，当前第1/10页</div>
+        <div id="leftPage">共有<span id="sjzl"></span>条记录，当前第<span id="current"></span></div>
         <div id="rightPage">
-            <input type="image" src="../images/first.gif" />&nbsp;&nbsp;
-            <input type="image" src="../images/back.gif" />&nbsp;&nbsp;
-            <input type="image" src="../images/next.gif" />&nbsp;&nbsp;
-            <input type="image" src="../images/last.gif" />&nbsp;&nbsp;
-            转到第<input type="text" size="1" />&nbsp;&nbsp;<input type="image" src="../images/go.gif" />
+            <input type="image" src="../images/first.gif" id="btn1"/>&nbsp;&nbsp;
+            <input type="image" src="../images/back.gif" id="btn2"/>&nbsp;&nbsp;
+            <input type="image" src="../images/next.gif" id="btn3"/>&nbsp;&nbsp;
+            <input type="image" src="../images/last.gif" id="btn4"/>&nbsp;&nbsp;
+            转到第<input type="text" size="1" id="changePage" maxlength="4"/>&nbsp;&nbsp;<input type="image" src="../images/go.gif" id="btn5"/>
         </div>
     </div>
 </div>
