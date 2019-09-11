@@ -15,36 +15,41 @@
 			if (data.CusID != null) {
 				$("#dpTitle").text("新增客户来往记录");
 				$(":button").eq(1).hide();
-					$(":button").eq(0).click(function () {
-					var d3 = {
-						"CusID": data.CusID,
-						"ActDate": $("#ActDate").val(),
-						"ActAdd": $("#ActAdd").val(),
-						"ActTitle": $("#ActTitle").val(),
-						"ActMemo": $("#ActMemo").val(),
-						"ActDesc": $("#ActDesc").val(),
-					};
-					//alert(JSON.stringify(d3));
-					$.myAjax("../webServers/Activitys.asmx/InsertAct", { "activity": d3 }, function (d) {
+				$(":button").eq(0).click(function () {
+					if ($.trim($("#ActDate").val()).length != 0 && $.trim($("#ActAdd").val()).length != 0 && $.trim($("#ActTitle").val()).length != 0 && $.trim($("#ActMemo").val()).length != 0 && $.trim($("#ActDesc").val()).length != 0) {
+						var d3 = {
+							"CusID": data.CusID,
+							"ActDate": $("#ActDate").val(),
+							"ActAdd": $("#ActAdd").val(),
+							"ActTitle": $("#ActTitle").val(),
+							"ActMemo": $("#ActMemo").val(),
+							"ActDesc": $("#ActDesc").val(),
+						};
+						//alert(JSON.stringify(d3));
+						$.myAjax("../webServers/Activitys.asmx/InsertAct", { "activity": d3 }, function (d) {
 
-						if (d != -1) {
-							var d3 = {
+							if (d != -1) {
+								var d3 = {
 
-								"ActID": d,
-								"ActDate": $("#ActDate").val(),
-								"ActAdd": $("#ActAdd").val(),
-								"ActTitle": $("#ActTitle").val(),
-								"ActMemo": $("#ActMemo").val(),
-								"ActDesc": $("#ActDesc").val(),
-							};
-							alert("新建完成");
-							window.returnValue = d3;
-							window.close();
+									"ActID": d,
+									"ActDate": $("#ActDate").val(),
+									"ActAdd": $("#ActAdd").val(),
+									"ActTitle": $("#ActTitle").val(),
+									"ActMemo": $("#ActMemo").val(),
+									"ActDesc": $("#ActDesc").val(),
+								};
+								alert("新建完成");
+								window.returnValue = d3;
+								window.close();
 
-						}
+							}
 
 
-					});
+						});
+					} else {
+						alert("请将交往信息填写完整");
+					}
+
 				})
 			} else {
 				$(":button").eq(0).hide();

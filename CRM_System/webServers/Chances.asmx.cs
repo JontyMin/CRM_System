@@ -32,10 +32,23 @@ namespace CRM_System.webServers
 		/// 查询所有销售机会
 		/// </summary>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod (EnableSession =true)]
 		public List<Model.Chances> GetChances() {
-			string sql = string.Format(@"select * from Chances where ChanState=1  order by ChanID desc");
-			return DalBase.SelectsByWhere<Model.Chances>(sql,null);
+
+			string UserLName = Session["UserLName"].ToString();
+			//当前登录人角色id
+			string sql1 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int rid = DalBase.SelectObj(sql1, sp1);
+			if (rid<=3)
+			{
+				string sql = string.Format(@"select * from Chances where ChanState=1  order by ChanID desc");
+				return DalBase.SelectsByWhere<Model.Chances>(sql, null);
+			}
+			return null;
+			
 		}
 
 		/// <summary>
@@ -87,10 +100,10 @@ namespace CRM_System.webServers
 
 			//当前登录人角色id
 			string sql2 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
-			SqlParameter[] sp3 = new SqlParameter[] {
+			SqlParameter[] sp2 = new SqlParameter[] {
 				new SqlParameter("@UserLName",UserLName)
 			};
-			int rid = DalBase.SelectObj(sql2, sp3);
+			int rid = DalBase.SelectObj(sql2, sp2);
 
 			if (rid<=2)
 			{
@@ -172,10 +185,10 @@ namespace CRM_System.webServers
 
 			//当前登录人角色id
 			string sql2 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
-			SqlParameter[] sp3 = new SqlParameter[] {
+			SqlParameter[] sp2 = new SqlParameter[] {
 				new SqlParameter("@UserLName",UserLName)
 			};
-			int rid = DalBase.SelectObj(sql2, sp3);
+			int rid = DalBase.SelectObj(sql2, sp2);
 
 			if (rid <= 2)
 			{
@@ -208,10 +221,45 @@ namespace CRM_System.webServers
 		/// 查询机会视图
 		/// </summary>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		public List<Model.V_Chances> GetV_Chances() {
-			string sql = string.Format(@"select * from V_Chances order by ChanID desc");
-			return DalBase.SelectsByWhere<Model.V_Chances> (sql,null) ;
+
+			//当前登录人id
+			string UserLName = Session["UserLName"].ToString();
+			string sql1 = string.Format(@"select UserID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int uid = DalBase.SelectObj(sql1, sp1);
+
+			//当前登录人角色id
+			string sql2 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
+			SqlParameter[] sp2 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int rid = DalBase.SelectObj(sql2, sp2);
+
+			string sql = string.Format(@"select * from V_Chances  order by ChanID desc");
+			if (rid<=2)
+			{
+				
+				return DalBase.SelectsByWhere<Model.V_Chances>(sql,null);
+			}
+			else if (rid==3)
+			{
+				string sql3 = string.Format(@"select * from V_Chances where ChanCreateMan=@ChanCreateMan order by ChanID desc");
+				SqlParameter[] sp3 = new SqlParameter[] {
+					new SqlParameter("@ChanCreateMan",uid)
+				};
+				return DalBase.SelectsByWhere<Model.V_Chances>(sql3, sp3);
+			}
+			else if (rid>3)
+			{
+				return null;
+			}
+
+			return DalBase.SelectsByWhere<Model.V_Chances>(sql, null);
+
 
 		}
 		/// <summary>
@@ -278,11 +326,43 @@ namespace CRM_System.webServers
 			/// 查询已指派的客户机会
 			/// </summary>
 			/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		public List<Model.V_Chances> GetChanDue() {
-			string sql = string.Format(@"select * from V_Chances where ChanState>1 order by ChanID desc");
-			return DalBase.SelectsByWhere<Model.V_Chances>(sql,null) ;
+			//当前登录人id
+			string UserLName = Session["UserLName"].ToString();
+			string sql1 = string.Format(@"select UserID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int uid = DalBase.SelectObj(sql1, sp1);
 
+			//当前登录人角色id
+			string sql2 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
+			SqlParameter[] sp2 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int rid = DalBase.SelectObj(sql2, sp2);
+
+			string sql = string.Format(@"select * from V_Chances where ChanState>1 order by ChanID desc");
+
+			if (rid<=2)
+			{
+				return DalBase.SelectsByWhere<Model.V_Chances>(sql, null);
+			}
+			else if (rid==3)
+			{
+				string sql3 = string.Format(@"select * from V_Chances where ChanState>1 and ChanDueMan=@ChanDueMan order by ChanID desc");
+				SqlParameter[] sp3 = new SqlParameter[] {
+					new SqlParameter("@ChanDueMan",uid)
+				};
+				return DalBase.SelectsByWhere<Model.V_Chances>(sql3,sp3);
+			}
+			else if (rid>3)
+			{
+				return null;
+			}
+
+			return DalBase.SelectsByWhere<Model.V_Chances>(sql, null);
 		}
 
 	}

@@ -42,18 +42,24 @@
 			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
 				if (d.status) {
 					//拿到所有角色
-					$.myAjax("../webServers/Role.asmx/GetRoles", null, function (d) {
-						//alert(d);
-						$.each(d, function (key, value) {
-							var tr = $("<tr>");
-							$("<td>").text(value.ID).appendTo(tr);
-							$("<td>").text(value.RoleName).appendTo(tr);
-							$(" <td>  <a href='javascript:setPower(" + value.ID + ");'>设置权限</a></td>").appendTo(tr);
-							$(".dataTable").append(tr);
+					try {
+						$.myAjax("../webServers/Role.asmx/GetRoles", null, function (d) {
+							//alert(d);
+							$.each(d, function (key, value) {
+								var tr = $("<tr>");
+								$("<td>").text(value.ID).appendTo(tr);
+								$("<td>").text(value.RoleName).appendTo(tr);
+								$(" <td>  <a href='javascript:setPower(" + value.ID + ");'>设置权限</a></td>").appendTo(tr);
+								$(".dataTable").append(tr);
+
+							});
 
 						});
-
-					});
+						
+					} catch (e) {
+						alert("无访问权限，错误信息：" + e);
+						window.location = "../main.htm";
+					}
 				} else {
 					alert(d.UserLName);
 					window.location.href = "../login.htm";
@@ -88,22 +94,26 @@
 			$("#sjzl").text(len);
 
 			$("#btn1").click(function firstPage() {    // 首页
+				$("#current").text(1 + "/" + page);
 				curPage = 1;
 				direct = 0;
 				//alert("direct"+direct);
 				displayPage();
 			});
 			$("#btn2").click(function frontPage() {    // 上一页
+				$("#current").text(curPage-1 + "/" + page);
 				direct = -1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn3").click(function nextPage() {    // 下一页
+				$("#current").text(curPage+1 + "/" + page);
 				direct = 1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn4").click(function lastPage() {    // 尾页
+				$("#current").text(page + "/" + page);
 				curPage = page;
 				direct = 0;
 				// alert("direct"+direct);
@@ -127,11 +137,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 

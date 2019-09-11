@@ -48,7 +48,8 @@
 				//alert(JSON.stringify(d1));
 					$.myAjax("../webServers/CustomServices.asmx/UpdResult", { "service": d1 }, function (d) {
 
-					if (d > 0) {
+						if (d > 0) {
+						window.returnValue = 1;
 						alert("已反馈");
 						window.close();
 					}

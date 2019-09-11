@@ -36,24 +36,31 @@
 		$(function () {
 			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
 				if (d.status) {
+					try {
+
 					//加载查询
-					$.myAjax("../webServers/Chances.asmx/GetV_Chances", null, function (d) {
-						//alert(JSON.stringify(d));
-						$.each(d, function (k, v) {
-							var tr = $("<tr>");
-							$("<td>").text(v.ChanName).appendTo(tr);
-							$("<td>").text(v.ChanTitle).appendTo(tr);
-							$("<td>").text(v.ChanLinkMan).appendTo(tr);
-							$("<td>").text(v.ChanLinkTel).appendTo(tr);
-							$("<td>").text(v.ChanCreateManName).appendTo(tr);
-							$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
-							$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
-							$(".dataTable tbody").append(tr);
+						$.myAjax("../webServers/Chances.asmx/GetV_Chances", null, function (d) {
+							//alert(JSON.stringify(d));
+							$.each(d, function (k, v) {
+								var tr = $("<tr>");
+								$("<td>").text(v.ChanName).appendTo(tr);
+								$("<td>").text(v.ChanTitle).appendTo(tr);
+								$("<td>").text(v.ChanLinkMan).appendTo(tr);
+								$("<td>").text(v.ChanLinkTel).appendTo(tr);
+								$("<td>").text(v.ChanCreateManName).appendTo(tr);
+								$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+								$("<td><input type='text' value='" + (v.ChanDueManName == "" ? "未指派" : v.ChanDueManName) + "'  readonly='readonly' ondblclick='showEmp(this, " + v.ChanID + ")' /></td>").appendTo(tr);
+								$(".dataTable tbody").append(tr);
+
+							});
+
 
 						});
-
-
-					});
+						
+					} catch (e) {
+						alert("无访问权限，错误信息：" + e);
+						window.location = "../main.htm";
+					}
 
 					$(":button:first").click(function () {
 
@@ -101,7 +108,7 @@
 				}
 			})
 		});
-
+		//表分页
 		$(document).ready(function display() {
 			var pageSize = 5;    //每页显示的记录条数
 			var curPage = 0;        //当前页
@@ -121,22 +128,26 @@
 			$("#sjzl").text(len);
 
 			$("#btn1").click(function firstPage() {    // 首页
+				$("#current").text(1 + "/" + page);
 				curPage = 1;
 				direct = 0;
 				//alert("direct"+direct);
 				displayPage();
 			});
 			$("#btn2").click(function frontPage() {    // 上一页
+				$("#current").text(curPage-1 + "/" + page);
 				direct = -1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn3").click(function nextPage() {    // 下一页
+				$("#current").text(curPage+1 + "/" + page);
 				direct = 1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn4").click(function lastPage() {    // 尾页
+				$("#current").text(page + "/" + page);
 				curPage = page;
 				direct = 0;
 				// alert("direct"+direct);

@@ -31,9 +31,20 @@ namespace CRM_System.webServers
 		/// 查询客户信息
 		/// </summary>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		public List<Model.V_Customers> GetCustomers() {
-			return DalBase.SelectAll<Model.V_Customers>();
+			string UserLName = Session["UserLName"].ToString();
+			//当前登录人角色id
+			string sql1 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int rid = DalBase.SelectObj(sql1, sp1);
+			if (rid<=3)
+			{
+				return DalBase.SelectAll<Model.V_Customers>();
+			}
+			return null;
 		}
 
 

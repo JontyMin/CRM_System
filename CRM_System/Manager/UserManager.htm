@@ -15,19 +15,25 @@
 
 			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
 				if (d.status) {
-					$.myAjax("../webServers/Users.asmx/GetUsers", null, function (d) {
-						//alert(JSON.stringify(d));
-						$.each(d, function (k, v) {
-							var tr = $("<tr>");
-							$("<td>").text(v.UserID).appendTo(tr);
-							$("<td>").text(v.UserLName).appendTo(tr);
-							$("<td>").text(v.UserName).appendTo(tr);
-							$("<td>").text(v.RoleName).appendTo(tr);
-							$("<td><img key1=" + v.UserID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key=" + v.UserID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
-							$(".dataTable").append(tr);
-						});
-					});
+					try {
 
+						$.myAjax("../webServers/Users.asmx/GetUsers", null, function (d) {
+							//alert(JSON.stringify(d));
+							$.each(d, function (k, v) {
+								var tr = $("<tr>");
+								$("<td>").text(v.UserID).appendTo(tr);
+								$("<td>").text(v.UserLName).appendTo(tr);
+								$("<td>").text(v.UserName).appendTo(tr);
+								$("<td>").text(v.RoleName).appendTo(tr);
+								$("<td><img key1=" + v.UserID + " title='修改' src='../images/edt.gif' />&nbsp;&nbsp;<img key=" + v.UserID + " title='删除' src='../images/del.gif' /></td>").appendTo(tr);
+								$(".dataTable").append(tr);
+							});
+						});
+						
+					} catch (e) {
+						alert("无访问权限，错误信息：" + e);
+						window.location = "../main.htm";
+					}
 					$("#add").click(function () {
 						$.showModalDialog("EditUser.htm?data=" + Math.random(), null, 600, 300, function (d) {
 							//alert(JSON.stringify(d))
@@ -101,22 +107,26 @@
 			$("#sjzl").text(len);
 
 			$("#btn1").click(function firstPage() {    // 首页
+				$("#current").text(1 + "/" + page);
 				curPage = 1;
 				direct = 0;
 				//alert("direct"+direct);
 				displayPage();
 			});
 			$("#btn2").click(function frontPage() {    // 上一页
+				$("#current").text(curPage-1 + "/" + page);
 				direct = -1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn3").click(function nextPage() {    // 下一页
+				$("#current").text(curPage+1 + "/" + page);
 				direct = 1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn4").click(function lastPage() {    // 尾页
+				$("#current").text(page + "/" + page);
 				curPage = page;
 				direct = 0;
 				// alert("direct"+direct);
@@ -140,11 +150,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 

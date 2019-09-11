@@ -32,10 +32,20 @@ namespace CRM_System.webServers
 		/// 拿到所有角色
 		/// </summary>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession =true)]
 		public List<Model.Role> GetRoles() {
-
-			return DalBase.SelectAll<Model.Role>();
+			string UserLName = Session["UserLName"].ToString();
+			//当前登录人角色id
+			string sql1 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int rid = DalBase.SelectObj(sql1, sp1);
+			if (rid==1)
+			{
+				return DalBase.SelectAll<Model.Role>();
+			}
+			return null;
 		}
 
 		/// <summary>

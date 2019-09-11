@@ -45,7 +45,7 @@
 					$("<th>").text("执行：" + $.JonsTime(v.PlanResultDate)).appendTo(tr1);
 					$("<td>").text(v.PlanContent).appendTo(tr2);
 					if (v.PlanResult == null) {
-						$("<td><a href='#' onclick='showEnter(" + v.PlanID + ")'>输入执行结果</a></td>").appendTo(tr2);
+						$("<td><a href='#' onclick='showEnter(this," + v.PlanID + ")'>输入执行结果</a></td>").appendTo(tr2);
 					} else {
 						$("<td>").text(v.PlanResult).appendTo(tr2);
 					}
@@ -92,11 +92,13 @@
     }
     //保存新建计划 
     function saveNew(){
-        $(".tb_new").hide();
+       
         //...略...
 		//刷新计划列表...
 		var PlanContent = $("#newPlan").val();
 		var ChanID = Data.ChanID;
+		if (PlanContent != null&& PlanContent!=""&& PlanContent!="请在这里输入新计划...") {
+		$(".tb_new").hide();
 		var data = {
 			"ChanID": ChanID,
 			"PlanContent": PlanContent,
@@ -113,6 +115,11 @@
 			}
 
 		});
+			
+		} else {
+			alert("请输入开发计划");
+			$("#newPlan").css("border","1px solid red");
+		}
 		}
 
 
@@ -129,18 +136,23 @@
 		row = $(obj).parent().parent();
 		row1 = row.prev();
 		//alert(JSON.stringify(row) + JSON.stringify(row1));
+		//alert(Planid);
 		}
 
 
     //保存执行结果
     function saveEnter(){
-        $(".tb_enter").hide();
+		
+		var planre = $("#planre").val();
+		if (planre != null && planre != "" && planre!="请在这里输入执行结果...") {
+		$(".tb_enter").hide();
         //...略...
         //刷新计划列表...
 		var d1 = {
 			"PlanID": Planid,
 			"PlanResult": $("#planre").val(),
 		};
+		//alert(JSON.stringify(d1));
 		$.myAjax("../webServers/Plans.asmx/UpdPlan", { "plan": d1 }, function (d) {
 
 			//alert($(row1).html());
@@ -153,6 +165,11 @@
 			}
 
 		});
+			
+		} else {
+			alert("请输入执行结果");
+			$("#planre").css("border","1px solid red");
+		}
     }
 
     //显示开发失败

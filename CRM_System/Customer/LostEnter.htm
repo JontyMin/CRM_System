@@ -11,19 +11,23 @@
 		var data = window.dialogArguments;
 		$(function () {
 			$(":button").eq(0).click(function () {
+				if ($.trim($("#CLReason").val()).length != 0) {
 
-				var d1 = {
-					"CLID": data.CLID,
-					"CLReason": $("#CLReason").val()
-				};
-				$.myAjax("../webServers/CustomLosts.asmx/UpdLost", { "lost": d1 }, function (d) {
-					if (d > 0) {
-						
+					var d1 = {
+						"CLID": data.CLID,
+						"CLReason": $("#CLReason").val()
+					};
+					$.myAjax("../webServers/CustomLosts.asmx/UpdLost", { "lost": d1 }, function (d) {
+						if (d > 0) {
+
 							window.returnValue = 1;
 							window.close();
-					}
+						}
 
-				});
+					});
+				} else {
+					alert("请填写流失原因");
+				}
 			});
 
 		});

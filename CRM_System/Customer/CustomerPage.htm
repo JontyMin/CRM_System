@@ -19,175 +19,196 @@
         }
     </style>
     <script type="text/javascript">
-        $(function() {
-            //联系人和交往信息切换
-            $(".menuDiv div").click(function() {
-                if(!$("#dataLeft .selected").length) {
-                    alert("请先选择客户");
-                    return;
-                }
-                $(".menuDiv div.selected").removeClass("selected");
-                $(this).addClass("selected");
-                $(".contentDiv div").hide();
-                $(".contentDiv div:eq(" + $(this).index() + ")").show();
-            });
-			var id;
-            //客户表格行点击事件
-            $("#dataLeft .dataTable").on("click", "tr:gt(0)", function() {
-                $("#dataLeft .selected").removeClass("selected");
-                $(this).addClass("selected");
-                if(!$(".menuDiv div.selected").length) {
-                    $(".menuDiv div:eq(0)").addClass("selected");
-					$(".contentDiv div:eq(0)").show();
-				}
-				 id = $(this).children(0).eq(0).text();
-				//alert(id);
-				//根据客户id查询联系人
-				$.myAjax("../webServers/LinkMans.asmx/GetLinkManBy", { "CusID": id }, function (d) {
-					$("#dataRight .dataTable tbody").eq(0).empty();
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						$("<td>").text(j.LMName).appendTo(tr);
-						$("<td>").text(j.LMSex).appendTo(tr);
-						$("<td>").text(j.LMDuty).appendTo(tr);
-						$("<td>").text(j.LMMobileNo).appendTo(tr);
-						$("<td>").text(j.LMOfficeNo).appendTo(tr);
-						$("<td><img title='编辑' src='../images/33.gif' onclick='showLinkMan(this," + j.LMID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key='" + j.LMID + "'/></td>").appendTo(tr);
-						$("#dataRight .dataTable tbody").eq(0).append(tr);
+		$(function () {
+
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					//联系人和交往信息切换
+					$(".menuDiv div").click(function () {
+						if (!$("#dataLeft .selected").length) {
+							alert("请先选择客户");
+							return;
+						}
+						$(".menuDiv div.selected").removeClass("selected");
+						$(this).addClass("selected");
+						$(".contentDiv div").hide();
+						$(".contentDiv div:eq(" + $(this).index() + ")").show();
+					});
+					var id;
+					//客户表格行点击事件
+					$("#dataLeft .dataTable").on("click", "tr:gt(0)", function () {
+						$("#dataLeft .selected").removeClass("selected");
+						$(this).addClass("selected");
+						if (!$(".menuDiv div.selected").length) {
+							$(".menuDiv div:eq(0)").addClass("selected");
+							$(".contentDiv div:eq(0)").show();
+						}
+						id = $(this).children(0).eq(0).text();
+						//alert(id);
+						//根据客户id查询联系人
+						$.myAjax("../webServers/LinkMans.asmx/GetLinkManBy", { "CusID": id }, function (d) {
+							$("#dataRight .dataTable tbody").eq(0).empty();
+							$.each(d, function (i, j) {
+								var tr = $("<tr>");
+								$("<td>").text(j.LMName).appendTo(tr);
+								$("<td>").text(j.LMSex).appendTo(tr);
+								$("<td>").text(j.LMDuty).appendTo(tr);
+								$("<td>").text(j.LMMobileNo).appendTo(tr);
+								$("<td>").text(j.LMOfficeNo).appendTo(tr);
+								$("<td><img title='编辑' src='../images/33.gif' onclick='showLinkMan(this," + j.LMID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key='" + j.LMID + "'/></td>").appendTo(tr);
+								$("#dataRight .dataTable tbody").eq(0).append(tr);
+							});
+
+						})
+						$.myAjax("../webServers/Activitys.asmx/GetActivitys", { "CusID": id }, function (d) {
+							$("#dataRight .dataTable tbody").eq(1).empty();
+							$.each(d, function (i, j) {
+								var tr = $("<tr>");
+								$("<td>").text($.JonsTime(j.ActDate)).appendTo(tr);
+								$("<td>").text(j.ActAdd).appendTo(tr);
+								$("<td>").text(j.ActTitle).appendTo(tr);
+								$("<td>").text(j.ActDesc).appendTo(tr);
+								$("<td><img title='编辑' src='../images/33.gif' onclick='showActivitys(this," + j.ActID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key1='" + j.ActID + "'/></td>").appendTo(tr);
+								$("#dataRight .dataTable tbody").eq(1).append(tr);
+							});
+						});
 					});
 
-				})
-				$.myAjax("../webServers/Activitys.asmx/GetActivitys", { "CusID": id }, function (d) {
-					$("#dataRight .dataTable tbody").eq(1).empty();
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						$("<td>").text($.JonsTime(j.ActDate)).appendTo(tr);
-						$("<td>").text(j.ActAdd).appendTo(tr);
-						$("<td>").text(j.ActTitle).appendTo(tr);
-						$("<td>").text(j.ActDesc).appendTo(tr);
-						$("<td><img title='编辑' src='../images/33.gif' onclick='showActivitys(this," + j.ActID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key1='" + j.ActID + "'/></td>").appendTo(tr);
-						$("#dataRight .dataTable tbody").eq(1).append(tr);
-					});
-				});
-			});
 
+					//查询客户信息
+					$.myAjax("../webServers/Customers.asmx/GetCustomers", null, function (d) {
 
-			//查询客户信息
-			$.myAjax("../webServers/Customers.asmx/GetCustomers", null, function (d) {
+						//if (d == "null") {
+						//	alert(1);
+						//}
+						try {
 
-				$.each(d, function (i, j) {
-					var tr = $("<tr>");
-					$("<td>").text(j.CusID).appendTo(tr);
-					$("<td>").text(j.CusName).appendTo(tr);
-					$("<td>").text($. convertJonsTime(j.CusDate)).appendTo(tr);
-					$("<td>").text(j.UserName).appendTo(tr);
-					$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(" + j.CusID + ")' /></td>").appendTo(tr);
-					$("#dataLeft .dataTable").append(tr);
-				});
-
-			});
-
-
-			//点击查询
-			$(":button:first").click(function () {
-				$("#dataLeft .dataTable").empty();
-				$.myAjax("../webServers/Customers.asmx/GetVsBy", { "CusName": $("#cusName").val(), "CusID": $("#cusID").val() }, function (d) {
-
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						$("<td>").text(j.CusID).appendTo(tr);
-						$("<td>").text(j.CusName).appendTo(tr);
-						$("<td>").text($.convertJonsTime(j.CusDate)).appendTo(tr);
-						$("<td>").text(j.UserName).appendTo(tr);
-						$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(" + j.CusID + ")' /></td>").appendTo(tr);
-						$("#dataLeft .dataTable").append(tr);
-					});
-				});
-			});
-			//查询
-			$(".up").keyup(function () {
-				$("#dataLeft .dataTable").empty();
-				$.myAjax("../webServers/Customers.asmx/GetVsBy", { "CusName": $("#cusName").val(), "CusID": $("#cusID").val() }, function (d) {
-
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						$("<td>").text(j.CusID).appendTo(tr);
-						$("<td>").text(j.CusName).appendTo(tr);
-						$("<td>").text($.convertJonsTime(j.CusDate)).appendTo(tr);
-						$("<td>").text(j.UserName).appendTo(tr);
-						$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(" + j.CusID + ")' /></td>").appendTo(tr);
-						$("#dataLeft .dataTable").append(tr);
-					});
-				});
-
-			});
-
-			//新增联系人
-			$("#newLink").click(function () {
-				$.showModalDialog("LinkManEdit.htm?data=" + Math.random(), { "CusID": id }, 600, 300, function (d) {
-						
+						$.each(d, function (i, j) {
 							var tr = $("<tr>");
-						$("<td>").text(d.LMName).appendTo(tr);
-						$("<td>").text(d.LMSex).appendTo(tr);
-						$("<td>").text(d.LMDuty).appendTo(tr);
-						$("<td>").text(d.LMMobileNo).appendTo(tr);
-						$("<td>").text(d.LMOfficeNo).appendTo(tr);
-						$("<td><img title='编辑' src='../images/33.gif' onclick='showLinkMan(this," + d.LMID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key='" + d.LMID + "'/></td>").appendTo(tr);
-						$("#dataRight .dataTable tbody").eq(0).append(tr);
-				
-
-				});
-
-			});
-			//委派删除联系人
-			$(document).on("click", "img[key]", function () {
-				if (confirm("是否确认删除")) {
-					var id = $(this).attr("key");//得到选中行id
-					var row = $(this).parent().parent();
-					//alert(id);
-					$.myAjax("../webServers/LinkMans.asmx/delLink", { "id": id }, function (d) {
-						$(row).remove();
-						//alert();
+							$("<td>").text(j.CusID).appendTo(tr);
+							$("<td>").text(j.CusName).appendTo(tr);
+							$("<td>").text($.convertJonsTime(j.CusDate)).appendTo(tr);
+							$("<td>").text(j.UserName).appendTo(tr);
+							$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(this," + j.CusID + ")' /></td>").appendTo(tr);
+							$("#dataLeft .dataTable").append(tr);
+						});
+							
+						} catch (e) {
+							alert("无访问权限：" + e);
+							window.location="../main.htm"
+						}
 					});
-				}
-
-			});
 
 
-			//新增交往记录
-			$("#newAct").click(function () {
-				$.showModalDialog("ActivitysEdit.htm?data=" + Math.random(), {"CusID": id }, 600, 300, function (d) {
-						var tr = $("<tr>");
-						$("<td>").text($.JonsTime(d.ActDate)).appendTo(tr);
-						$("<td>").text(d.ActAdd).appendTo(tr);
-						$("<td>").text(d.ActTitle).appendTo(tr);
-						$("<td>").text(d.ActDesc).appendTo(tr);
-						$("<td><img title='编辑' src='../images/33.gif' onclick='showActivitys(this," + d.ActID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key1='" + d.ActID + "'/></td>").appendTo(tr);
-						$("#dataRight .dataTable tbody").eq(1).append(tr);
+					//点击查询
+					$(":button:first").click(function () {
+						$("#dataLeft .dataTable").empty();
+						$.myAjax("../webServers/Customers.asmx/GetVsBy", { "CusName": $("#cusName").val(), "CusID": $("#cusID").val() }, function (d) {
 
-
-				});
-			});
-
-				$(document).on("click", "img[key1]", function () {
-				if (confirm("是否确认删除")) {
-					var id = $(this).attr("key1");//得到选中行id
-					var row = $(this).parent().parent();
-					//alert(id);
-					$.myAjax("../webServers/Activitys.asmx/delAct", { "id": id }, function (d) {
-						$(row).remove();
-						//alert();
+							$.each(d, function (i, j) {
+								var tr = $("<tr>");
+								$("<td>").text(j.CusID).appendTo(tr);
+								$("<td>").text(j.CusName).appendTo(tr);
+								$("<td>").text($.convertJonsTime(j.CusDate)).appendTo(tr);
+								$("<td>").text(j.UserName).appendTo(tr);
+								$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(" + j.CusID + ")' /></td>").appendTo(tr);
+								$("#dataLeft .dataTable").append(tr);
+							});
+						});
 					});
-				}
+					//查询
+					$(".up").keyup(function () {
+						$("#dataLeft .dataTable").empty();
+						$.myAjax("../webServers/Customers.asmx/GetVsBy", { "CusName": $("#cusName").val(), "CusID": $("#cusID").val() }, function (d) {
 
+							$.each(d, function (i, j) {
+								var tr = $("<tr>");
+								$("<td>").text(j.CusID).appendTo(tr);
+								$("<td>").text(j.CusName).appendTo(tr);
+								$("<td>").text($.convertJonsTime(j.CusDate)).appendTo(tr);
+								$("<td>").text(j.UserName).appendTo(tr);
+								$("<td><img src='../images/33.gif' title='编辑' onclick='showCustomer(" + j.CusID + ")' /></td>").appendTo(tr);
+								$("#dataLeft .dataTable").append(tr);
+							});
+						});
+
+					});
+
+					//新增联系人
+					$("#newLink").click(function () {
+						$.showModalDialog("LinkManEdit.htm?data=" + Math.random(), { "CusID": id }, 600, 300, function (d) {
+
+							var tr = $("<tr>");
+							$("<td>").text(d.LMName).appendTo(tr);
+							$("<td>").text(d.LMSex).appendTo(tr);
+							$("<td>").text(d.LMDuty).appendTo(tr);
+							$("<td>").text(d.LMMobileNo).appendTo(tr);
+							$("<td>").text(d.LMOfficeNo).appendTo(tr);
+							$("<td><img title='编辑' src='../images/33.gif' onclick='showLinkMan(this," + d.LMID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key='" + d.LMID + "'/></td>").appendTo(tr);
+							$("#dataRight .dataTable tbody").eq(0).append(tr);
+
+
+						});
+
+					});
+					//委派删除联系人
+					$(document).on("click", "img[key]", function () {
+						if (confirm("是否确认删除")) {
+							var id = $(this).attr("key");//得到选中行id
+							var row = $(this).parent().parent();
+							//alert(id);
+							$.myAjax("../webServers/LinkMans.asmx/delLink", { "id": id }, function (d) {
+								$(row).remove();
+								//alert();
+							});
+						}
+
+					});
+
+
+					//新增交往记录
+					$("#newAct").click(function () {
+						$.showModalDialog("ActivitysEdit.htm?data=" + Math.random(), { "CusID": id }, 600, 300, function (d) {
+							var tr = $("<tr>");
+							$("<td>").text($.JonsTime(d.ActDate)).appendTo(tr);
+							$("<td>").text(d.ActAdd).appendTo(tr);
+							$("<td>").text(d.ActTitle).appendTo(tr);
+							$("<td>").text(d.ActDesc).appendTo(tr);
+							$("<td><img title='编辑' src='../images/33.gif' onclick='showActivitys(this," + d.ActID + ")' />&nbsp;&nbsp;<img title='删除' src='../images/11.gif' key1='" + d.ActID + "'/></td>").appendTo(tr);
+							$("#dataRight .dataTable tbody").eq(1).append(tr);
+
+
+						});
+					});
+
+					$(document).on("click", "img[key1]", function () {
+						if (confirm("是否确认删除")) {
+							var id = $(this).attr("key1");//得到选中行id
+							var row = $(this).parent().parent();
+							//alert(id);
+							$.myAjax("../webServers/Activitys.asmx/delAct", { "id": id }, function (d) {
+								$(row).remove();
+								//alert();
+							});
+						}
+
+					});
+				} else {
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
+				}
 			});
+
 
         });
 
         //编辑客户信息
-		function showCustomer(bh) {
+		function showCustomer(obj,bh) {
 			//alert(bh); //打印编号
-			$.showModalDialog("CustomerEdit.htm?data=" + Math.random(), { "CusID": bh }, 600, 400);
+			var row = $(obj).parent().parent();
+			$.showModalDialog("CustomerEdit.htm?data=" + Math.random(), { "CusID": bh }, 600, 400, function (d) {
+				$(row).children().eq(1).text(d);
+			});
         }
         //修改联系人
 		function showLinkMan(obj, id) {
@@ -213,9 +234,9 @@
 
 			});
 		}
-
+		//表分页
 		$(document).ready(function display() {
-			var pageSize = 3;    //每页显示的记录条数
+			var pageSize = 5;    //每页显示的记录条数
 			var curPage = 0;        //当前页
 			var lastPage;        //最后页
 			var direct = 0;        //方向
@@ -233,22 +254,26 @@
 			$("#sjzl").text(len);
 
 			$("#btn1").click(function firstPage() {    // 首页
+				$("#current").text(1 + "/" + page);
 				curPage = 1;
 				direct = 0;
 				//alert("direct"+direct);
 				displayPage();
 			});
 			$("#btn2").click(function frontPage() {    // 上一页
+				$("#current").text(curPage-1 + "/" + page);
 				direct = -1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn3").click(function nextPage() {    // 下一页
+				$("#current").text(curPage+1 + "/" + page);
 				direct = 1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn4").click(function lastPage() {    // 尾页
+				$("#current").text(page + "/" + page);
 				curPage = page;
 				direct = 0;
 				// alert("direct"+direct);
@@ -272,11 +297,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 

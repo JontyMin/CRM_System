@@ -32,6 +32,7 @@
 				$.myAjax("../webServers/CustomServices.asmx/UpdDeal", { "service": d1 }, function (d) {
 
 					if (d > 0) {
+						window.returnValue = 1;
 						alert("处理完成");
 						window.close();
 					}

@@ -40,60 +40,73 @@
 		var row;
 		$(function () {
 
-			
-            //点击行显示暂缓措施界面
-            $("#dataLeft .dataTable").on("click", "tr:gt(0)", function() {
-                //添加选中样式
-                $("#dataLeft .selected").removeClass("selected");
-                $(this).addClass("selected");
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					//点击行显示暂缓措施界面
+					$("#dataLeft .dataTable").on("click", "tr:gt(0)", function () {
+						//添加选中样式
+						$("#dataLeft .selected").removeClass("selected");
+						$(this).addClass("selected");
 
-                //显示暂缓措施面板
-                $(".contentDiv div:first").show();
+						//显示暂缓措施面板
+						$(".contentDiv div:first").show();
 
-                //判断状态:状态3(确认流失)的客户，不需要再添加暂缓措施
-                if($(this).data("state") == 3){
-                    $("#MeasuresAdd").hide();
-                }else{
-                    $("#MeasuresAdd").show();
-				}
-				id = $(this).children(0).eq(0).text();
-				
+						//判断状态:状态3(确认流失)的客户，不需要再添加暂缓措施
+						if ($(this).data("state") == 3) {
+							$("#MeasuresAdd").hide();
+						} else {
+							$("#MeasuresAdd").show();
+						}
+						id = $(this).children(0).eq(0).text();
 
-				row = $(this);
-			//	console.log($(row).get(0).innerHTML);
-				
-				//alert(id);
-				$.myAjax("../webServers/Measures.asmx/GetMeasureBy", { "CLID": id }, function (d) {
-					$(".contentDiv .dataTable").empty();
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						var tr1 = $("<tr>");
-						$("<th>").text("时间："+($.JonsTime(j.MeDate))).appendTo(tr);
-						$("<td>").text(j.MeDesc).appendTo(tr1);
-						$(".contentDiv .dataTable").append(tr).append(tr1);
+
+						row = $(this);
+						//	console.log($(row).get(0).innerHTML);
+
+
+							//alert(id);
+						$.myAjax("../webServers/Measures.asmx/GetMeasureBy", { "CLID": id }, function (d) {
+							$(".contentDiv .dataTable").empty();
+							$.each(d, function (i, j) {
+								var tr = $("<tr>");
+								var tr1 = $("<tr>");
+								$("<th>").text("时间：" + ($.JonsTime(j.MeDate))).appendTo(tr);
+								$("<td>").text(j.MeDesc).appendTo(tr1);
+								$(".contentDiv .dataTable").append(tr).append(tr1);
+							});
+						});
 					});
+					$.myAjax("../webServers/CustomLosts.asmx/GetLosts", null, function (d) {
+						try {
 
+						//if (d = null) {
+						//	alert("无访问权限");
+						//	window.close();
+						//}
+						$.each(d, function (i, j) {
+							var tr = $("<tr data-state='" + j.CLState + "'>");
+							$("<td>").text(j.CLID).appendTo(tr).hide();
+							$("<td>").text(j.CusID).appendTo(tr);
+							$("<td>").text(j.CusName).appendTo(tr);
+							$("<td>").text($.JonsTime(j.CLOrderDate)).appendTo(tr);
+							$("<td>").text($.JonsTime(j.CLDate)).appendTo(tr);
+							$("<td>").text($.JonsTime(j.CLEnterDate)).appendTo(tr);
+							$("<td>").text((j.CLState == 1 ? "流失报警" : j.CLState == 2 ? "暂缓流失" : "确认流失")).appendTo(tr);
+							$("<td><img src='../images/bt_confirm.gif' title='流失确认' onclick='" + (j.CLState <= 2 ? 'showLostEnter(this,' + j.CLID + ')' : 'showLostInfo(' + j.CLID + ')') + "' /></td>").appendTo(tr);
+							$("#dataLeft .dataTable").append(tr);
+						});
+							
+						} catch (e) {
+							alert("无访问权限:" + e);
+							window.location="../main.htm"
+						}
+					});
+				} else {
 					
-				});
-
-
-			});
-			$.myAjax("../webServers/CustomLosts.asmx/GetLosts", null, function (d) {
-				$.each(d, function (i, j) {
-					var tr = $("<tr data-state='" + j.CLState + "'>");
-					$("<td>").text(j.CLID).appendTo(tr).hide();
-					$("<td>").text(j.CusID).appendTo(tr);
-					$("<td>").text(j.CusName).appendTo(tr);
-					$("<td>").text($.JonsTime(j.CLOrderDate)).appendTo(tr);
-					$("<td>").text($.JonsTime(j.CLDate)).appendTo(tr);
-					$("<td>").text($.JonsTime(j.CLEnterDate)).appendTo(tr);
-					$("<td>").text((j.CLState == 1 ? "流失报警" : j.CLState == 2 ? "暂缓流失" : "确认流失")).appendTo(tr);
-					$("<td><img src='../images/bt_confirm.gif' title='流失确认' onclick='"+(j.CLState<=2?'showLostEnter(this,'+j.CLID+')':'showLostInfo('+j.CLID+')')+"' /></td>").appendTo(tr);
-					$("#dataLeft .dataTable").append(tr);
-				});
-
-			});
-
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
+				}
+			})
 
         });
 
@@ -122,6 +135,8 @@
 
         //添加暂缓措施
 		function addMeasures() {
+			if ($.trim($("#MeDesc").val()).length!=0) {
+
 			var d1 = {
 				"CLID": id,
 				"MeDesc": $("#MeDesc").val()
@@ -142,7 +157,12 @@
 				      
 			});
      
+			} else {
+				alert("请输入暂缓措施");
+			}
 		}
+
+		//表分页
 		$(document).ready(function display() {
 			var pageSize = 3;    //每页显示的记录条数
 			var curPage = 0;        //当前页
@@ -162,28 +182,31 @@
 			$("#sjzl").text(len);
 
 			$("#btn1").click(function firstPage() {    // 首页
+				$("#current").text(1 + "/" + page);
 				curPage = 1;
 				direct = 0;
 				//alert("direct"+direct);
 				displayPage();
 			});
 			$("#btn2").click(function frontPage() {    // 上一页
+				$("#current").text(curPage-1 + "/" + page);
 				direct = -1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn3").click(function nextPage() {    // 下一页
+				$("#current").text(curPage+1 + "/" + page);
 				direct = 1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn4").click(function lastPage() {    // 尾页
+				$("#current").text(page + "/" + page);
 				curPage = page;
 				direct = 0;
 				// alert("direct"+direct);
 				displayPage();
 			});
-
 			$("#btn5").click(function changePage() {    // 转页
 				curPage = document.getElementById("changePage").value * 1;
 				if (!/^[1-9]\d*$/.test(curPage)) {
@@ -201,11 +224,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 

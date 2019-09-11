@@ -42,22 +42,29 @@
 		$(function () {
 			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
 				if (d.status) {
-					//加载查询数据
-					$.myAjax("../webServers/Chances.asmx/GetChanDue", null, function (d) {
-						$.each(d, function (k, v) {
-							//alert(v.ChanState);
-							var tr = $("<tr>");
-							$("<td>").text(v.ChanName).appendTo(tr);
-							$("<td>").text(v.ChanTitle).appendTo(tr);
-							$("<td>").text(v.ChanLinkMan).appendTo(tr);
-							$("<td>").text(v.ChanLinkTel).appendTo(tr);
-							$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
-							$("<td>").text(v.ChanStateText).appendTo(tr);
-							$("<td><img title='" + (v.ChanState == 2 ? '修改' : '查看') + "' src='" + (v.ChanState == 2 ? '../images/bt_feedback.gif' : '../images/bt_detail.gif') + "' onclick='" + (v.ChanState == 2 ? 'showOpen(this,' + v.ChanID + ')' : v.ChanState == 3 ? 'showOK(' + v.ChanID + ')' : 'showNo(' + v.ChanID + ')') + "' /></td>").appendTo(tr);
-							$(".dataTable").append(tr);
-						});
+					try {
 
-					});
+					//加载查询数据
+						$.myAjax("../webServers/Chances.asmx/GetChanDue", null, function (d) {
+							$.each(d, function (k, v) {
+								//alert(v.ChanState);
+								var tr = $("<tr>");
+								$("<td>").text(v.ChanName).appendTo(tr);
+								$("<td>").text(v.ChanTitle).appendTo(tr);
+								$("<td>").text(v.ChanLinkMan).appendTo(tr);
+								$("<td>").text(v.ChanLinkTel).appendTo(tr);
+								$("<td>").text($.convertJonsTime(v.ChanCreateDate)).appendTo(tr);
+								$("<td>").text(v.ChanStateText).appendTo(tr);
+								$("<td><img title='" + (v.ChanState == 2 ? '修改' : '查看') + "' src='" + (v.ChanState == 2 ? '../images/bt_feedback.gif' : '../images/bt_detail.gif') + "' onclick='" + (v.ChanState == 2 ? 'showOpen(this,' + v.ChanID + ')' : v.ChanState == 3 ? 'showOK(' + v.ChanID + ')' : 'showNo(' + v.ChanID + ')') + "' /></td>").appendTo(tr);
+								$(".dataTable").append(tr);
+							});
+
+						});
+						
+					} catch (e) {
+						alert("无访问权限，错误信息：" + e);
+						window.location = "../main.htm";
+					}
 				}
 				else {
 
@@ -86,22 +93,26 @@
 			$("#sjzl").text(len);
 
 			$("#btn1").click(function firstPage() {    // 首页
+				$("#current").text(1 + "/" + page);
 				curPage = 1;
 				direct = 0;
 				//alert("direct"+direct);
 				displayPage();
 			});
 			$("#btn2").click(function frontPage() {    // 上一页
+				$("#current").text(curPage-1 + "/" + page);
 				direct = -1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn3").click(function nextPage() {    // 下一页
+				$("#current").text(curPage+1 + "/" + page);
 				direct = 1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn4").click(function lastPage() {    // 尾页
+				$("#current").text(page + "/" + page);
 				curPage = page;
 				direct = 0;
 				// alert("direct"+direct);

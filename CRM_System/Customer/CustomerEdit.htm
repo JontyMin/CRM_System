@@ -7,7 +7,31 @@
 	<script src="../js/json.js"></script>
 	<script src="../js/MyJquery.js"></script>
 	<script>
+		//function checkinfo() {
+		//	var CusName = $("#CusName").val();//客户名
+		//	var CusAddress= $("#CusAddress").val();//地址
+		//	var CusZip= $("#CusZip").val();//邮编
+		//	var CusFax= $("#CusFax").val();//传真
+		//	var CusWebsite= $("#CusWebsite").val();	//网址
+		//	var CusLicenceNo= $("#CusLicenceNo").val();//营业执照注册号
+		//	var CusChieftain=$("#CusChieftain").val();//法人
+		//	var CusBankroll= $("#CusBankroll").val();//注册资金
+		//	var CusTurnover= $("#CusTurnover").val();//年营业额
+		//	var CusBank=$("#CusBank").val();//开户银行
+		//	var CusBankNo=$("#CusBankNo").val();//银行账号
+		//	var CusLocalTaxNo=$("#CusLocalTaxNo").val();//地税
+		//	var CusNationalTaxNo = $("#CusNationalTaxNo").val();//国税
+		//	if ($.trim(CusName).length=0) {
+		//		$("#CusName").select();
+		//		$("#CusName").focus();
+		//		alert("客户名不能为空");
+		//		return false;
+
+		//	}
+
+		//}
 		var data = window.dialogArguments;
+		var CusName;
 		$(function () {
 			$("#CusID").text(data.CusID);
 			$.myAjax("../webServers/Customers.asmx/GetCustomerBy", { "CusID": data.CusID }, function (d) {
@@ -15,6 +39,7 @@
 					$("#UserName").text(v.UserName);
 					$("#CusDate").text($.JonsTime(v.CusDate));
 					$("#CusName").val(v.CusName);
+					CusName = v.CusName;
 					$("#CusAddress").val(v.CusAddress);
 					$("#CusZip").val(v.CusZip);
 					$("#CusFax").val(v.CusFax);
@@ -30,31 +55,43 @@
 				})
 			});
 
-			$("#upCus").click(function () {
-				var d1 = {
-					"CusID":data.CusID,
-					"CusName": $("#CusName").val(),
-					"CusAddress": $("#CusAddress").val(),
-					"CusZip": $("#CusZip").val(),
-					"CusFax": $("#CusFax").val(),
-					"CusWebsite": $("#CusWebsite").val(),
-					//"CusEmail": $("#CusEmail").val(),
-					"CusLicenceNo": $("#CusLicenceNo").val(),
-					"CusChieftain": $("#CusChieftain").val(),
-					"CusBankroll": $("#CusBankroll").val(),
-					"CusTurnover": $("#CusTurnover").val(),
-					"CusBank": $("#CusBank").val(),
-					"CusBankNo": $("#CusBankNo").val(),
-					"CusLocalTaxNo": $("#CusLocalTaxNo").val(),
-					"CusNationalTaxNo": $("#CusNationalTaxNo").val(),
-				};
-				$.myAjax("../webServers/Customers.asmx/UpdCus", { "customer": d1 }, function (d) {
-					if (d > 0) {
-						alert("已保存");
-						window.close();
-					}
-			});
 
+
+		
+			$("#upCus").click(function () {
+				
+				if ($.trim($("#CusName").val()).length != 0) {
+
+					var d1 = {
+						"CusID": data.CusID,
+						"CusName": $("#CusName").val(),
+						"CusAddress": $("#CusAddress").val(),
+						"CusZip": $("#CusZip").val(),
+						"CusFax": $("#CusFax").val(),
+						"CusWebsite": $("#CusWebsite").val(),
+						//"CusEmail": $("#CusEmail").val(),
+						"CusLicenceNo": $("#CusLicenceNo").val(),
+						"CusChieftain": $("#CusChieftain").val(),
+						"CusBankroll": $("#CusBankroll").val(),
+						"CusTurnover": $("#CusTurnover").val(),
+						"CusBank": $("#CusBank").val(),
+						"CusBankNo": $("#CusBankNo").val(),
+						"CusLocalTaxNo": $("#CusLocalTaxNo").val(),
+						"CusNationalTaxNo": $("#CusNationalTaxNo").val(),
+					};
+					$.myAjax("../webServers/Customers.asmx/UpdCus", { "customer": d1 }, function (d) {
+						if (d > 0) {
+							window.returnValue = $("#CusName").val();
+							alert("已保存");
+							window.close();
+						}
+					});
+				
+				} else {
+					alert("客户名不能为空");
+					$("#CusName").val(CusName);
+				
+				}
 			});
 		});
 		
@@ -79,10 +116,10 @@
         <tr>
             <th>客户名称：</th>
             <td>
-                <input type="text" id="CusName"/>
+                <input type="text" id="CusName" />
              </td>
             <th>邮政编码：</th>
-            <td><input type="text" id="CusZip"/>
+            <td><input type="text" id="CusZip" maxlength="6" oninput = "value=value.replace(/[^\d]/g,'')"/>
             </td>
         </tr>
         <tr>
@@ -94,46 +131,47 @@
         <tr>
             <th>传真：</th>
             <td>
-                <input type="text" id="CusFax"/>
+                <input type="text" id="CusFax" maxlength="17" oninput = "value=value.replace(/[^\d]/g,'')"/>
              </td>
             <th>网站：</th>
-            <td><input type="text" id="CusWebsite"/>
+            <td><input type="text" id="CusWebsite" />
             </td>
         </tr>
          <tr>
             <th>营业执照注册号：</th>
             <td>
-                <input type="text" id="CusLicenceNo"/>
+                <input type="text" id="CusLicenceNo" maxlength="13" oninput = "value=value.replace(/[^\d]/g,'')"/>
              </td>
             <th>法人：</th>
-            <td><input type="text" id="CusChieftain"/>
+            <td><input type="text" id="CusChieftain" max="8"/>
             </td>
         </tr>
         <tr>
             <th>注册资金：</th>
-            <td>
-                <input type="text" id="CusBankroll"/>
-             </td>
+			<td>
+				<input type="text" id="CusBankroll" maxlength="8" oninput="value=value.replace(/[^\d]/g,'')" />
+			</td>
             <th>年营业额：</th>
-            <td><input type="text" id="CusTurnover"/>
-            </td>
+			<td>
+				<input type="text" id="CusTurnover" maxlength="8" oninput="value=value.replace(/[^\d]/g,'')" />
+			</td>
         </tr>
         <tr>
             <th>开户银行：</th>
             <td>
-                <input type="text" id="CusBank"/>
+                <input type="text" id="CusBank" maxlength="10"/>
              </td>
             <th>银行账号：</th>
-            <td><input type="text" id="CusBankNo"/>
+            <td><input type="text" id="CusBankNo" maxlength="19" oninput = "value=value.replace(/[^\d]/g,'')"/>
             </td>
         </tr>
         <tr>
             <th>地税登记号：</th>
             <td>
-                <input type="text" id="CusLocalTaxNo"/>
+                <input type="text" id="CusLocalTaxNo" maxlength="18" oninput = "value=value.replace(/[^\d]/g,'')"/>
              </td>
             <th>国税登记号：</th>
-            <td><input type="text" id="CusNationalTaxNo"/>
+            <td><input type="text" id="CusNationalTaxNo" maxlength="18" oninput = "value=value.replace(/[^\d]/g,'')"/>
             </td>
         </tr>
         <tr>

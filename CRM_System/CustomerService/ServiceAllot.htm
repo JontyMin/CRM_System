@@ -49,7 +49,7 @@
 
 		})
 		$(document).ready(function display() {
-			var pageSize = 3;    //每页显示的记录条数
+			var pageSize = 5;    //每页显示的记录条数
 			var curPage = 0;        //当前页
 			var lastPage;        //最后页
 			var direct = 0;        //方向
@@ -67,22 +67,26 @@
 			$("#sjzl").text(len);
 
 			$("#btn1").click(function firstPage() {    // 首页
+				$("#current").text(1 + "/" + page);
 				curPage = 1;
 				direct = 0;
 				//alert("direct"+direct);
 				displayPage();
 			});
 			$("#btn2").click(function frontPage() {    // 上一页
+				$("#current").text(curPage-1 + "/" + page);
 				direct = -1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn3").click(function nextPage() {    // 下一页
+					$("#current").text(curPage+1 + "/" + page);
 				direct = 1;
 				displayPage();
 				//alert("direct"+direct);
 			});
 			$("#btn4").click(function lastPage() {    // 尾页
+				$("#current").text(page + "/" + page);
 				curPage = page;
 				direct = 0;
 				// alert("direct"+direct);
@@ -106,11 +110,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 

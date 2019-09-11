@@ -47,7 +47,8 @@ namespace CRM_System.webServers
 		[WebMethod]
 		public List<Model.V_CustomServices> GetCustomServices()
 		{
-			return DalBase.SelectAll<Model.V_CustomServices>();
+			string sql = string.Format(@"select * from v_CustomServices order by CSID desc");
+			return DalBase.SelectsByWhere<Model.V_CustomServices>(sql,null);
 		}
 
 
@@ -72,7 +73,7 @@ namespace CRM_System.webServers
 		[WebMethod]
 		public List<Model.V_CustomServices> GetServicesBy(int CSState)
 		{
-			string sql = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = @CSState");
+			string sql = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = @CSState order by CSID desc");
 			SqlParameter[] sp = new SqlParameter[] {
 				new SqlParameter("@CSState",CSState)
 			};
