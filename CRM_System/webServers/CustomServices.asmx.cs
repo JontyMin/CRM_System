@@ -33,22 +33,42 @@ namespace CRM_System.webServers
 		/// <returns></returns>
 		[WebMethod]
 		public int InsertSer(Model.CustomServices customser) {
-			customser.CSState = 1;
-			customser.CSCreateDate = DateTime.Now;
-			return DalBase.Insert(customser);
 
+				customser.CSState = 1;
+				customser.CSCreateDate = DateTime.Now;
+				return DalBase.Insert(customser);
 		}
 
+		/// <summary>
+		/// 获取登录人id
+		/// </summary>
+		/// <returns></returns>
+		[WebMethod(EnableSession = true)]
+		public int GetRid() {
+			string UserLName = Session["UserLName"].ToString();
+			//当前登录人角色id
+			string sql1 = string.Format(@"select RoleID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int rid = DalBase.SelectObj(sql1, sp1);
+			return rid;
+		}
 
 		/// <summary>
 		/// 查询未指派服务
 		/// </summary>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession = true)]
 		public List<Model.V_CustomServices> GetCustomServices()
 		{
-			string sql = string.Format(@"select * from v_CustomServices order by CSID desc");
-			return DalBase.SelectsByWhere<Model.V_CustomServices>(sql,null);
+
+			if (GetRid()<3)
+			{
+				string sql = string.Format(@"select * from v_CustomServices order by CSID desc");
+				return DalBase.SelectsByWhere<Model.V_CustomServices>(sql, null);
+			}
+			return null;
 		}
 
 
@@ -70,14 +90,36 @@ namespace CRM_System.webServers
 		/// 根据状态查询
 		/// </summary>后期加入登录用户id，查询分配给登录用户的服务
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession =true)]
 		public List<Model.V_CustomServices> GetServicesBy(int CSState)
 		{
-			string sql = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = @CSState order by CSID desc");
-			SqlParameter[] sp = new SqlParameter[] {
+			//当前登录人id
+			string UserLName = Session["UserLName"].ToString();
+			string sql1 = string.Format(@"select UserID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int uid = DalBase.SelectObj(sql1, sp1);
+			int rid = GetRid();
+
+			if (rid < 3 || CSState==3)
+			{
+				string sql = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = @CSState order by CSID desc");
+				SqlParameter[] sp = new SqlParameter[] {
 				new SqlParameter("@CSState",CSState)
 			};
-			return DalBase.SelectsByWhere<Model.V_CustomServices>(sql,sp);
+				return DalBase.SelectsByWhere<Model.V_CustomServices>(sql, sp);
+			}
+			else if (rid==3&&CSState==2)
+			{
+				string sql3 = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = 2 and CSDueID=@CSDueID order by CSID desc");
+				SqlParameter[] sp3 = new SqlParameter[] {
+					new SqlParameter("@CSDueID",uid)
+				};
+				return DalBase.SelectsByWhere<Model.V_CustomServices>(sql3,sp3);
+			}
+
+			return null;
 		}
 
 
@@ -129,23 +171,27 @@ namespace CRM_System.webServers
 		/// <param name="CusName"></param>
 		/// <param name="STID"></param>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession =true)]
 		public List<Model.V_CustomServices> GetV_CustomServicesBy(string CusName,string STID) {
 
-			string sql = string.Format(@"select * from v_CustomServices where CSState=4");
-			if (CusName!=null && CusName!="")
+			if (GetRid()<=3)
 			{
-				sql += " and CusName like @CusName";
-			}
-			if (STID!=null && STID!="")
-			{
-				sql += " and STID=@STID";
-			}
-			SqlParameter[] sp = new SqlParameter[] {
+				string sql = string.Format(@"select * from v_CustomServices where CSState=4");
+				if (CusName != null && CusName != "")
+				{
+					sql += " and CusName like @CusName";
+				}
+				if (STID != null && STID != "")
+				{
+					sql += " and STID=@STID";
+				}
+				SqlParameter[] sp = new SqlParameter[] {
 				new SqlParameter("@CusName",CusName),
 				new SqlParameter("@STID",STID)
 			};
-			return DalBase.SelectsByWhere<Model.V_CustomServices>(sql,sp);
+				return DalBase.SelectsByWhere<Model.V_CustomServices>(sql, sp);
+			}
+			return null;
 		}
 	}
 }

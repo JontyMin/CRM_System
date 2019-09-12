@@ -174,6 +174,12 @@ namespace CRM_System.webServers
 				new SqlParameter("@ChanID",chances.ChanID)
 			};
 			int crid = DalBase.SelectObj(sql, sp);
+			//机会指派人id
+			string sql3 = string.Format(@"select ChanDueMan from Chances where ChanID=@ChanID");
+			SqlParameter[] sp3 = new SqlParameter[] {
+				new SqlParameter("@ChanID",chances.ChanID)
+			};
+			int cdid = DalBase.SelectObj(sql3, sp3);
 
 			//当前登录人id
 			string UserLName = Session["UserLName"].ToString();
@@ -197,6 +203,10 @@ namespace CRM_System.webServers
 			else if (rid == 3)
 			{
 				if (crid == uid)
+				{
+					DalBase.Updata(chances);
+				}
+				else if (cdid == uid)
 				{
 					DalBase.Updata(chances);
 				}

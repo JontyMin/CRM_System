@@ -9,39 +9,57 @@
 	<script src="../js/MyJquery.js"></script>
     <script type="text/javascript">
 		$(function () {
-			$.myAjax("../webServers/ServiceType.asmx/GetServiceTypes", null, function (d) {
-				$.each(d, function (i, j) {
-					var option = $("<option>").val(j.STID).text(j.STName);
-					$("#TypeInfo").append(option);
-				});
-			});
-
-			$(":button").eq(0).click(function () {
-				try {
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					$.myAjax("../webServers/CustomServices.asmx/GetRid", null, function (d) {
+						if (d <= 3) {
 
 
-					//alert(1)
-					$.myAjax("../webServers/Users.asmx/GetUID", null, function (d) {
+							$.myAjax("../webServers/ServiceType.asmx/GetServiceTypes", null, function (d) {
+								$.each(d, function (i, j) {
+									var option = $("<option>").val(j.STID).text(j.STName);
+									$("#TypeInfo").append(option);
+								});
+							});
 
-						var data = {
-							"CusID": $("#CusID").val(),
-							"STID": $("#TypeInfo :selected").val(),
-							"CSTitle": $("#CSTitle").val(),
-							"CSDesc": $("#CSDesc").val(),
-							"CSCreateID": d
-						};
-						//alert(JSON.stringify(data))
-						$.myAjax("../webServers/CustomServices.asmx/InsertSer", { "customser": data }, function (d) {
-							if (d > 0) {
-								alert("创建成功");
-							}
+							$(":button").eq(0).click(function () {
+								try {
 
-						});
+									//alert(1)
+									$.myAjax("../webServers/Users.asmx/GetUID", null, function (d) {
 
-					})
+										var data = {
+											"CusID": $("#CusID").val(),
+											"STID": $("#TypeInfo :selected").val(),
+											"CSTitle": $("#CSTitle").val(),
+											"CSDesc": $("#CSDesc").val(),
+											"CSCreateID": d
+										};
+										//alert(JSON.stringify(data))
+										$.myAjax("../webServers/CustomServices.asmx/InsertSer", { "customser": data }, function (d) {
+											if (d > 0) {
+												alert("创建成功");
+											}
 
-				} catch (e) {
-					alert("创建失败," + e);
+										});
+
+									})
+
+								} catch (e) {
+									alert("创建失败," + e);
+								}
+							});
+
+						} else {
+							alert("无访问权限");
+							window.location.href = "../main.htm";
+						}
+					});
+				}
+				else {
+
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
 				}
 			});
 

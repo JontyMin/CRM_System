@@ -14,84 +14,98 @@
 		}
 
 		$(function () {
-			$.myAjax("../webServers/ServiceType.asmx/GetServiceTypes", null, function (d) {
-				$.each(d, function (i, j) {
-					var option = $("<option>").val(j.STID).text(j.STName);
-					$("#Select1").append(option);
-				});
-			});
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					try {
 
-				$.myAjax("../webServers/CustomServices.asmx/GetServicesBy", {"CSState":4}, function (d) {
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						$("<td>").text(j.CusName).appendTo(tr);
-						$("<td>").text(j.CSTitle).appendTo(tr);
-						$("<td>").text(j.TypeName).appendTo(tr);
-						$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
-						$("<td>").text(j.CSCreateName).appendTo(tr);
-						$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
-						$("<td>").text(j.CSDueName).appendTo(tr);
-						$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
-						$(".dataTable").append(tr);
-					});
-				});
+						$.myAjax("../webServers/ServiceType.asmx/GetServiceTypes", null, function (d) {
+							$.each(d, function (i, j) {
+								var option = $("<option>").val(j.STID).text(j.STName);
+								$("#Select1").append(option);
+							});
+						});
 
-			$(":button").eq(0).click(function () {
-				//alert(1)
-				$(".dataTable").empty();
-				$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						$("<td>").text(j.CusName).appendTo(tr);
-						$("<td>").text(j.CSTitle).appendTo(tr);
-						$("<td>").text(j.TypeName).appendTo(tr);
-						$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
-						$("<td>").text(j.CSCreateName).appendTo(tr);
-						$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
-						$("<td>").text(j.CSDueName).appendTo(tr);
-						$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
-						$(".dataTable").append(tr);
-					});
-				});
+						$.myAjax("../webServers/CustomServices.asmx/GetServicesBy", { "CSState": 4 }, function (d) {
+							$.each(d, function (i, j) {
+								var tr = $("<tr>");
+								$("<td>").text(j.CusName).appendTo(tr);
+								$("<td>").text(j.CSTitle).appendTo(tr);
+								$("<td>").text(j.TypeName).appendTo(tr);
+								$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+								$("<td>").text(j.CSCreateName).appendTo(tr);
+								$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
+								$("<td>").text(j.CSDueName).appendTo(tr);
+								$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
+								$(".dataTable").append(tr);
+							});
+						});
 
-			});
+						$(":button").eq(0).click(function () {
+							//alert(1)
+							$(".dataTable").empty();
+							$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
+								$.each(d, function (i, j) {
+									var tr = $("<tr>");
+									$("<td>").text(j.CusName).appendTo(tr);
+									$("<td>").text(j.CSTitle).appendTo(tr);
+									$("<td>").text(j.TypeName).appendTo(tr);
+									$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+									$("<td>").text(j.CSCreateName).appendTo(tr);
+									$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
+									$("<td>").text(j.CSDueName).appendTo(tr);
+									$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
+									$(".dataTable").append(tr);
+								});
+							});
 
-			$("#Select1").change(function () {
-				$(".dataTable").empty();
-				$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						$("<td>").text(j.CusName).appendTo(tr);
-						$("<td>").text(j.CSTitle).appendTo(tr);
-						$("<td>").text(j.TypeName).appendTo(tr);
-						$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
-						$("<td>").text(j.CSCreateName).appendTo(tr);
-						$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
-						$("<td>").text(j.CSDueName).appendTo(tr);
-						$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
-						$(".dataTable").append(tr);
-					});
-				});
+						});
 
-			});
+						$("#Select1").change(function () {
+							$(".dataTable").empty();
+							$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
+								$.each(d, function (i, j) {
+									var tr = $("<tr>");
+									$("<td>").text(j.CusName).appendTo(tr);
+									$("<td>").text(j.CSTitle).appendTo(tr);
+									$("<td>").text(j.TypeName).appendTo(tr);
+									$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+									$("<td>").text(j.CSCreateName).appendTo(tr);
+									$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
+									$("<td>").text(j.CSDueName).appendTo(tr);
+									$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
+									$(".dataTable").append(tr);
+								});
+							});
 
-			$("#name").keyup(function () {
-				$(".dataTable").empty();
-				$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
-					$.each(d, function (i, j) {
-						var tr = $("<tr>");
-						$("<td>").text(j.CusName).appendTo(tr);
-						$("<td>").text(j.CSTitle).appendTo(tr);
-						$("<td>").text(j.TypeName).appendTo(tr);
-						$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
-						$("<td>").text(j.CSCreateName).appendTo(tr);
-						$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
-						$("<td>").text(j.CSDueName).appendTo(tr);
-						$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
-						$(".dataTable").append(tr);
-					});
-				});
-			});
+						});
+
+						$("#name").keyup(function () {
+							$(".dataTable").empty();
+							$.myAjax("../webServers/CustomServices.asmx/GetV_CustomServicesBy", { "CusName": $("#name").val(), "STID": $("#Select1 :selected").val() }, function (d) {
+								$.each(d, function (i, j) {
+									var tr = $("<tr>");
+									$("<td>").text(j.CusName).appendTo(tr);
+									$("<td>").text(j.CSTitle).appendTo(tr);
+									$("<td>").text(j.TypeName).appendTo(tr);
+									$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+									$("<td>").text(j.CSCreateName).appendTo(tr);
+									$("<td>").text($.JonsTime(j.CSDueDate)).appendTo(tr);
+									$("<td>").text(j.CSDueName).appendTo(tr);
+									$("<td><input type='image' src='../images/bt_detail.gif' onclick='showDetail(" + j.CSID + ")' /></td>").appendTo(tr);
+									$(".dataTable").append(tr);
+								});
+							});
+						});
+
+					} catch (e) {
+						alert("无访问权限，错误信息：" + e);
+						window.location.href = "../main.htm";
+					}
+				} else {
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
+				}
+			})
 		});
 		$(document).ready(function display() {
 			var pageSize = 3;    //每页显示的记录条数

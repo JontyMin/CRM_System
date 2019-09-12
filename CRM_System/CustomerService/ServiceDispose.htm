@@ -19,18 +19,32 @@
 
 		}
 		$(function () {
-			$.myAjax("../webServers/CustomServices.asmx/GetServicesBy", {"CSState":2}, function (d) {
-				$.each(d, function (i, j) {
-					var tr = $("<tr>");
-					$("<td>").text(j.CusName).appendTo(tr);
-					$("<td>").text(j.CSTitle).appendTo(tr);
-					$("<td>").text(j.TypeName).appendTo(tr);
-					$("<td>").text(j.CSCreateName).appendTo(tr);
-					$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
-					$("<td><input type='image' src='../images/bt_deal.gif' onclick='showDispose(this," + j.CSID + ")' /></td>").appendTo(tr);
-					$(".dataTable").append(tr);
-				});
-			});
+			$.myAjax("../webServers/Main.asmx/GetUsersInfo", null, function (d) {
+				if (d.status) {
+					try {
+
+						$.myAjax("../webServers/CustomServices.asmx/GetServicesBy", { "CSState": 2 }, function (d) {
+							$.each(d, function (i, j) {
+								var tr = $("<tr>");
+								$("<td>").text(j.CusName).appendTo(tr);
+								$("<td>").text(j.CSTitle).appendTo(tr);
+								$("<td>").text(j.TypeName).appendTo(tr);
+								$("<td>").text(j.CSCreateName).appendTo(tr);
+								$("<td>").text($.JonsTime(j.CSCreateDate)).appendTo(tr);
+								$("<td><input type='image' src='../images/bt_deal.gif' onclick='showDispose(this," + j.CSID + ")' /></td>").appendTo(tr);
+								$(".dataTable").append(tr);
+							});
+						});
+
+					} catch (e) {
+						alert("无访问权限，错误信息：" + e);
+						window.location.href = "../main.htm";
+					}
+				} else {
+					alert(d.UserLName);
+					window.location.href = "../login.htm";
+				}
+			})
 		});
 
 		$(document).ready(function display() {
