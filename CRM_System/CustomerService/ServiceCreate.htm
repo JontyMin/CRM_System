@@ -25,6 +25,9 @@
 							$(":button").eq(0).click(function () {
 								try {
 
+									if ($.trim($("#CusID").val()).length != 0 && $.trim($("#CSTitle").val()).length != 0 & $.trim($("#CSDesc").val()).length != 0) {
+
+									
 									//alert(1)
 									$.myAjax("../webServers/Users.asmx/GetUID", null, function (d) {
 
@@ -44,7 +47,9 @@
 										});
 
 									})
-
+									} else {
+										alert("请将服务信息填写完整");
+									}
 								} catch (e) {
 									alert("创建失败," + e);
 								}
