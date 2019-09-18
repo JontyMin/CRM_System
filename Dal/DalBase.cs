@@ -374,6 +374,13 @@ namespace Dal
 			return Convert.ToInt32( ExecuteObject(sql,sp));
 
 		}
+
+
+		public static int Insert(string sql, SqlParameter[] sp)
+		{
+			return MyExecuteNonQuery(sql,sp);
+
+		}
 		public static int GetMax<T>() where T : ModelBase
 		{
 			Type t = typeof(T);

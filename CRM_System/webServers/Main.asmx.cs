@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
-
+using Model;
+using Dal;
+using System.Data.SqlClient;
 namespace CRM_System.webServers
 {
 	/// <summary>
@@ -84,5 +86,25 @@ namespace CRM_System.webServers
 		//	return weekstr;
 		//}
 		//#endregion
+
+		[WebMethod]
+		public void Warning() {
+			string sql = string.Format("select * from (select *, datediff(month, OrderDate, getdate()) as c from Orders) as rel where rel.c > 6");
+			List<Orders> orders = DalBase.SelectsByWhere<Orders>(sql,null);
+			if (orders!=null)
+			{
+				
+				foreach (var item in orders)
+				{
+					string sql1 = string.Format(@"insert into CustomLosts (CusID,CLOrderDate,CLDate,CLState)values(@CusID,@CLOrderDate,getdate(),1);");
+					SqlParameter[] sp = new SqlParameter[] {
+						new SqlParameter("@CusID",item.CusID),
+						new SqlParameter("@CLOrderDate",item.OrderDate),
+					};
+					DalBase.Insert(sql1, sp);
+
+				}
+			}
+		}
 	}
 }

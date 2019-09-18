@@ -1,7 +1,19 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title></title>
+	<title></title>
+	<script src="js/jquery-1.10.2.js"></script>
+	<script src="js/json.js"></script>
+	<script src="js/MyJquery.js"></script>
+	<script>
+		
+		$(function () {
+			setTimeout(function Warning() {
+			$.myAjax("../webServers/Main.asmx/Warning", null, function () { });
+		},1000*60*60);
+
+		});
+	</script>
 </head>
 <frameset rows="97p,*,8px" frameborder="no"  border="0">
     <frame src="head.htm" scrolling="No" noresize="noresize" ></frame>

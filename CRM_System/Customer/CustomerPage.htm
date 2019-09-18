@@ -60,6 +60,8 @@
 							});
 
 						})
+
+						//根据客户id查询交往信息
 						$.myAjax("../webServers/Activitys.asmx/GetActivitys", { "CusID": id }, function (d) {
 							$("#dataRight .dataTable tbody").eq(1).empty();
 							$.each(d, function (i, j) {
