@@ -39,7 +39,7 @@
 				});
 			});
 
-			$(":button").eq(0).click(function () {
+			$("#from1").on("submit",function (event) {
 				var d1 = {
 					"CSID": id.CSID,
 					"CSResult": $("#CSResult").val(),
@@ -53,7 +53,8 @@
 						alert("已反馈");
 						window.close();
 					}
-				});
+					});
+				event.preventDefault();
 			});
 		});
 
@@ -120,34 +121,36 @@
              </td>
         </tr>
     </table>
-    <table class="tableEdit" style="width:500px;">
-        <thead>
-            <tr>
-                <td colspan="4">服务反馈</td>
-            </tr>
-        </thead>
-        <tr>
-            <th>处理结果：</th>
-            <td>
-                <input type="text" id="CSResult"/>
-             </td>
-            <th>满意度：</th>
-			<td id="rang">
-				<span>☆</span>
-				<span>☆</span>
-				<span>☆</span>
-				<span>☆</span>
-				<span>☆</span>
-			</td>
-        </tr>
-        <tfoot>
-            <tr>
-                <td colspan="4">
-                     <input type="button" value="确定"/>&nbsp;&nbsp;
-                     <input type="button" value="关闭" onclick="window.close()" />
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+ <form id="from1">
+ 	<table class="tableEdit" style="width:500px;">
+ 		<thead>
+ 			<tr>
+ 				<td colspan="4">服务反馈</td>
+ 			</tr>
+ 		</thead>
+ 		<tr>
+ 			<th>处理结果：</th>
+ 			<td>
+ 				<input type="text" id="CSResult" required="required"/>
+ 			</td>
+ 			<th>满意度：</th>
+ 			<td id="rang">
+ 				<span>☆</span>
+ 				<span>☆</span>
+ 				<span>☆</span>
+ 				<span>☆</span>
+ 				<span>☆</span>
+ 			</td>
+ 		</tr>
+ 		<tfoot>
+ 			<tr>
+ 				<td colspan="4">
+ 					<input type="submit" value="确定" />&nbsp;&nbsp;
+ 					<input type="button" value="关闭" onclick="window.close()" />
+ 				</td>
+ 			</tr>
+ 		</tfoot>
+ 	</table>
+ </form>
 </body>
 </html>

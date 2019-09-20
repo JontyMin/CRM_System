@@ -14,9 +14,8 @@
 		$(function () {
 			if (data.CusID != null) {
 				$("#dpTitle").text("新增客户来往记录");
-				$(":button").eq(1).hide();
-				$(":button").eq(0).click(function () {
-					if ($.trim($("#ActDate").val()).length != 0 && $.trim($("#ActAdd").val()).length != 0 && $.trim($("#ActTitle").val()).length != 0 && $.trim($("#ActMemo").val()).length != 0 && $.trim($("#ActDesc").val()).length != 0) {
+				$(":button").eq(0).hide();
+				$("#form1").on("submit",function (event) {
 						var d3 = {
 							"CusID": data.CusID,
 							"ActDate": $("#ActDate").val(),
@@ -46,13 +45,10 @@
 
 
 						});
-					} else {
-						alert("请将交往信息填写完整");
-					}
-
+					event.preventDefault();
 				})
 			} else {
-				$(":button").eq(0).hide();
+				$(":submit").hide();
 				$.myAjax("../webServers/Activitys.asmx/GetActivityBy", { "ActID": data.ActID }, function (d) {
 					$.each(d, function (i, j) {
 						$("#ActDate").val($.JonsTime(j.ActDate));
@@ -63,7 +59,7 @@
 					});
 				});
 
-				$(":button").eq(1).click(function () {
+				$(":button").eq(0).click(function () {
 					//alert(1);
 					var d1 = {
 						"ActID": data.ActID,
@@ -99,40 +95,43 @@
 	</script>
 </head>
 <body>
-<table class="tableEdit">
-        <thead>
-            <tr>
-                <td colspan="4" id="dpTitle">编辑客户来往记录</td>
-            </tr>
-        </thead>
-        <tr>
-            <th>交往时间：</th>
-            <td>
-                <input type="text" onclick="WdatePicker()" id="ActDate"/></td>
-            <th>交往地点：</th>
-            <td>
-                <input type="text" id="ActAdd"/>
-            </td>
-        </tr>
-        <tr>
-            <th>概要：</th>
-            <td><input type="text" id="ActTitle"/></td>
-            <th>备注：</th>
-            <td><input type="text" id="ActMemo"/></td>
-        </tr>
-        <tr>
-            <th>详细描述：</th>
-            <td colspan="3"><textarea id="ActDesc"></textarea></td>
-        </tr>
-        <tfoot>
-            <tr>
-				<td colspan="4">
-					<input type="button" value="确定" />&nbsp;&nbsp;
-					<input type="button" value="确定" />&nbsp;&nbsp;
-					<input type="button" value="关闭" onclick="window.close()" />
+	<form id="form1">
+		<table class="tableEdit">
+			<thead>
+				<tr>
+					<td colspan="4" id="dpTitle">编辑客户来往记录</td>
+				</tr>
+			</thead>
+			<tr>
+				<th>交往时间：</th>
+				<td>
+					<input type="text" onclick="WdatePicker()" id="ActDate" required="required"/>
 				</td>
-            </tr>
-        </tfoot>
-    </table>
+				<th>交往地点：</th>
+				<td>
+					<input type="text" id="ActAdd" required="required"/>
+				</td>
+			</tr>
+			<tr>
+				<th>概要：</th>
+				<td><input type="text" id="ActTitle" required="required"/></td>
+				<th>备注：</th>
+				<td><input type="text" id="ActMemo" required="required"/></td>
+			</tr>
+			<tr>
+				<th>详细描述：</th>
+				<td colspan="3"><textarea id="ActDesc" required="required"></textarea></td>
+			</tr>
+			<tfoot>
+				<tr>
+					<td colspan="4">
+						<input type="submit" value="确定" />&nbsp;&nbsp;
+						<input type="button" value="确定" />&nbsp;&nbsp;
+						<input type="button" value="关闭" onclick="window.close()" />
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
 </body>
 </html>

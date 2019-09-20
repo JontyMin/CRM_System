@@ -21,19 +21,11 @@
 <script>
 	$(function () {
 
-		//按钮点击拿到文本框的值，进行登录操作
-		$("#bt1").click(function () {
+		//submit验证表单,ajax提交
+		$("#form1").on("submit",function (event) {
 			//alert("aa");
 			var UserLName = $(":input:eq(0)").val();//第1个文本框的值—用户名
 			var UserLPWD = $(":input:eq(1)").val();//第2个文本框的值—密码
-			//alert(UserLName + "" + UserLPWD);
-			if (UserLName == "" || UserLName == null) {//非空判断
-				alert("请输入用户名");
-			}
-			if (UserLPWD == "" || UserLPWD == null) {
-				alert("请输入密码");
-			}
-			if (UserLName != "" && UserLPWD!="") {//都不为空调用ajax
 
 			$.myAjax("../webServers/Users.asmx/UsersLogin", { "UserLName": UserLName, "UserLPWD": UserLPWD }, function (d) {
 
@@ -44,10 +36,7 @@
 				}
 
 			});
-				
-			} else {
-				alert("请输入用户名和密码");
-			}
+			event.preventDefault();
 		});
 
 	});
@@ -88,7 +77,7 @@
                                                 </td>
                                                 <td width="57%" height="25">
                                                     <div align="center">
-                                                        <input type="text" name="textfield" style="width: 105px; height: 17px; background-color: #292929;
+                                                        <input type="text" name="textfield" required="required" Autofocus="autofocus" style="width: 105px; height: 17px; background-color: #292929;
                                                             border: solid 1px #7dbad7; font-size: 12px; color: #6cd0ff">
                                                     </div>
                                                 </td>
@@ -103,13 +92,13 @@
                                                 </td>
                                                 <td height="25">
                                                     <div align="center">
-                                                        <input type="password" name="textfield2" style="width: 105px; height: 17px; background-color: #292929;
+                                                        <input type="password" name="textfield2" pattern="^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)])+$).{1,16}$"  required="required" style="width: 105px; height: 17px; background-color: #292929;
                                                             border: solid 1px #7dbad7; font-size: 12px; color: #6cd0ff">
                                                     </div>
                                                 </td>
                                                 <td height="25">
                                                     <div align="left">
-                                                        <input type="button" id="bt1" style="background-image:url(images/dl.gif);border:none;width:49px;height:18px" value=""  />
+                                                        <input type="submit" id="bt1" style="background-image:url(images/dl.gif);border:none;width:49px;height:18px" value=""  />
                                                     </div>
                                                 </td>
                                             </tr>

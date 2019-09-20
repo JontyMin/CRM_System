@@ -22,10 +22,10 @@
 								});
 							});
 
-							$(":button").eq(0).click(function () {
+							$("#form1").on("submit",function (event) {
 								try {
 
-									if ($.trim($("#CusID").val()).length != 0 && $.trim($("#CSTitle").val()).length != 0 & $.trim($("#CSDesc").val()).length != 0) {
+									//if ($.trim($("#CusID").val()).length != 0 && $.trim($("#CSTitle").val()).length != 0 & $.trim($("#CSDesc").val()).length != 0) {
 
 									
 									//alert(1)
@@ -47,12 +47,13 @@
 										});
 
 									})
-									} else {
-										alert("请将服务信息填写完整");
-									}
+									//} else {
+									//	alert("请将服务信息填写完整");
+									//}
 								} catch (e) {
 									alert("创建失败," + e);
 								}
+								event.preventDefault();
 							});
 
 						} else {
@@ -78,44 +79,47 @@
     </script>
 </head>
 <body>
-<table class="tableEdit" style="width:600px;">
-        <thead>
-            <tr>
-                <td colspan="4">创建服务</td>
-            </tr>
-        </thead>
-        <tr>
-            <th>客户编号：</th>
-            <td>
-                <input type="text" id="CusID" ondblclick="showCustomer(this)" /></td>
-            <th>服务类型：</th>
-            <td>
-                <select style="width:100px" id="TypeInfo">
-                    <!--<option>咨询</option>
-                    <option>投诉</option>
-                    <option>建议</option>-->
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th>服务概要：</th>
-            <td colspan="3">
-                <input type="text" id="CSTitle" />
-             </td>
-        </tr>
-        <tr>
-            <th>详细信息：</th>
-            <td colspan="3">
-                <textarea id="CSDesc"></textarea>
-             </td>
-        </tr>
-        <tfoot>
-            <tr>
-                <td colspan="4">
-                    <input type="button" value="确定" />&nbsp;&nbsp;
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+	<form id="form1">
+		<table class="tableEdit" style="width:600px;">
+			<thead>
+				<tr>
+					<td colspan="4">创建服务</td>
+				</tr>
+			</thead>
+			<tr>
+				<th>客户编号：</th>
+				<td>
+					<input type="text" id="CusID" ondblclick="showCustomer(this)" required="required"/>
+				</td>
+				<th>服务类型：</th>
+				<td>
+					<select style="width:100px" id="TypeInfo">
+						<!--<option>咨询</option>
+					<option>投诉</option>
+					<option>建议</option>-->
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>服务概要：</th>
+				<td colspan="3">
+					<input type="text" id="CSTitle" required="required"/>
+				</td>
+			</tr>
+			<tr>
+				<th>详细信息：</th>
+				<td colspan="3">
+					<textarea id="CSDesc" required="required"></textarea>
+				</td>
+			</tr>
+			<tfoot>
+				<tr>
+					<td colspan="4">
+						<input type="submit" value="确定" />&nbsp;&nbsp;
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
 </body>
 </html>

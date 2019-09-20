@@ -7,29 +7,7 @@
 	<script src="../js/json.js"></script>
 	<script src="../js/MyJquery.js"></script>
 	<script>
-		//function checkinfo() {
-		//	var CusName = $("#CusName").val();//客户名
-		//	var CusAddress= $("#CusAddress").val();//地址
-		//	var CusZip= $("#CusZip").val();//邮编
-		//	var CusFax= $("#CusFax").val();//传真
-		//	var CusWebsite= $("#CusWebsite").val();	//网址
-		//	var CusLicenceNo= $("#CusLicenceNo").val();//营业执照注册号
-		//	var CusChieftain=$("#CusChieftain").val();//法人
-		//	var CusBankroll= $("#CusBankroll").val();//注册资金
-		//	var CusTurnover= $("#CusTurnover").val();//年营业额
-		//	var CusBank=$("#CusBank").val();//开户银行
-		//	var CusBankNo=$("#CusBankNo").val();//银行账号
-		//	var CusLocalTaxNo=$("#CusLocalTaxNo").val();//地税
-		//	var CusNationalTaxNo = $("#CusNationalTaxNo").val();//国税
-		//	if ($.trim(CusName).length=0) {
-		//		$("#CusName").select();
-		//		$("#CusName").focus();
-		//		alert("客户名不能为空");
-		//		return false;
-
-		//	}
-
-		//}
+		
 		var data = window.dialogArguments;
 		var CusName;
 		$(function () {
@@ -58,7 +36,7 @@
 
 
 		
-			$("#upCus").click(function () {
+			$("#form1").on("submit",function (event) {
 				
 				if ($.trim($("#CusName").val()).length != 0) {
 
@@ -92,6 +70,8 @@
 					$("#CusName").val(CusName);
 				
 				}
+
+				event.preventDefault();
 			});
 		});
 		
@@ -99,6 +79,7 @@
 	</script>
 </head>
 <body>
+<form id="form1">
 <table class="tableEdit">
         <thead>
             <tr>
@@ -116,44 +97,44 @@
         <tr>
             <th>客户名称：</th>
             <td>
-                <input type="text" id="CusName" />
+                <input type="text" id="CusName" required="required" autofocus="autofocus"/>
              </td>
             <th>邮政编码：</th>
-            <td><input type="text" id="CusZip" maxlength="6" oninput = "value=value.replace(/[^\d]/g,'')"/>
+            <td><input type="text" id="CusZip" pattern="[1-9]\d{5}(?!\d)" />
             </td>
         </tr>
         <tr>
             <th>地址：</th>
             <td colspan="3">
-                <input type="text" style="width:90%" id="CusAddress"/>
+                <input type="text" style="width:90%" id="CusAddress" maxlength="100" />
              </td>
         </tr>
         <tr>
             <th>传真：</th>
             <td>
-                <input type="text" id="CusFax" maxlength="17" oninput = "value=value.replace(/[^\d]/g,'')"/>
+                <input type="text" id="CusFax" pattern="(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}" />
              </td>
             <th>网站：</th>
-            <td><input type="text" id="CusWebsite" />
+            <td><input type="text" id="CusWebsite" pattern="^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+" />
             </td>
         </tr>
          <tr>
             <th>营业执照注册号：</th>
             <td>
-                <input type="text" id="CusLicenceNo" maxlength="13" oninput = "value=value.replace(/[^\d]/g,'')"/>
+                <input type="text" id="CusLicenceNo" pattern="\d{17}[\d|x]|\d{15}" />
              </td>
             <th>法人：</th>
-            <td><input type="text" id="CusChieftain" max="8"/>
+            <td><input type="text" id="CusChieftain" maxlength="10"/>
             </td>
         </tr>
         <tr>
             <th>注册资金：</th>
 			<td>
-				<input type="text" id="CusBankroll" maxlength="8" oninput="value=value.replace(/[^\d]/g,'')" />
+				<input type="number" id="CusBankroll" pattern="^[0-9]*[1-9][0-9]*$"/>
 			</td>
             <th>年营业额：</th>
 			<td>
-				<input type="text" id="CusTurnover" maxlength="8" oninput="value=value.replace(/[^\d]/g,'')" />
+				<input type="number" id="CusTurnover" pattern="^[0-9]*[1-9][0-9]*$"/>
 			</td>
         </tr>
         <tr>
@@ -162,16 +143,16 @@
                 <input type="text" id="CusBank" maxlength="10"/>
              </td>
             <th>银行账号：</th>
-            <td><input type="text" id="CusBankNo" maxlength="19" oninput = "value=value.replace(/[^\d]/g,'')"/>
+            <td><input type="number" id="CusBankNo" pattern="/^([1-9]{1})(\d{14}|\d{18})$/"/>
             </td>
         </tr>
         <tr>
             <th>地税登记号：</th>
             <td>
-                <input type="text" id="CusLocalTaxNo" maxlength="18" oninput = "value=value.replace(/[^\d]/g,'')"/>
+                <input type="number" id="CusLocalTaxNo" pattern="/^[0-9a-zA-z_]{18}$/"/>
              </td>
             <th>国税登记号：</th>
-            <td><input type="text" id="CusNationalTaxNo" maxlength="18" oninput = "value=value.replace(/[^\d]/g,'')"/>
+            <td><input type="number" id="CusNationalTaxNo" pattern="/^[0-9a-zA-z_]{18}$/"/>
             </td>
         </tr>
         <tr>
@@ -186,11 +167,12 @@
         <tfoot>
             <tr>
                 <td colspan="4">
-                    <input type="button" value="确定" id="upCus">&nbsp;&nbsp;
+                    <input type="submit" value="确定" id="upCus">&nbsp;&nbsp;
                     <input type="button" value="关闭" onclick="window.close()" />
                 </td>
             </tr>
         </tfoot>
     </table>
+	</form>
 </body>
 </html>

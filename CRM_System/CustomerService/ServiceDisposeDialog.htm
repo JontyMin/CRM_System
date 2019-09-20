@@ -23,7 +23,7 @@
 			});
 
 
-			$(":button").eq(0).click(function () {
+			$("#form1").on("submit",function (event) {
 
 				var d1 = {
 					"CSID": id.CSID,
@@ -37,6 +37,7 @@
 						window.close();
 					}
 				});
+				event.preventDefault();
 			});
 		});
 
@@ -81,26 +82,28 @@
              </td>
         </tr>
     </table>
- <table class="tableEdit" style="width:500px;">
-        <thead>
-            <tr>
-                <td colspan="4">服务处理</td>
-            </tr>
-        </thead>
-        <tr>
-            <th>服务处理：</th>
-            <td colspan="3">
-               <textarea id="CSDeal"></textarea>
-             </td>
-        </tr>
-         <tfoot>
-            <tr>
-                <td colspan="4">
-                     <input type="button" value="确定" />&nbsp;&nbsp;
-                     <input type="button" value="关闭" onclick="window.close()" />
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+<form id="form1">
+	<table class="tableEdit" style="width:500px;">
+		<thead>
+			<tr>
+				<td colspan="4">服务处理</td>
+			</tr>
+		</thead>
+		<tr>
+			<th>服务处理：</th>
+			<td colspan="3">
+				<textarea id="CSDeal" required="required"></textarea>
+			</td>
+		</tr>
+		<tfoot>
+			<tr>
+				<td colspan="4">
+					<input type="submit" value="确定" />&nbsp;&nbsp;
+					<input type="button" value="关闭" onclick="window.close()" />
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</form>
 </body>
 </html>

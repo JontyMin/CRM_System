@@ -110,7 +110,7 @@
 					return false;
 			}
 			
-			$("#addChance").click(function () {
+			$("#form1").on("submit",function (event) {
 				try {
 
 					if (isNotNull($("#ChanName").val()) && isNotNull($("#ChanLinkMan").val()) && isNotNull($("#ChanLinkTel").val()) && isNotNull($("#ChanTitle").val()) && isNotNull($("#ChanDesc").val())) {
@@ -165,6 +165,7 @@
 				} catch (e) {
 					alert("添加失败，请稍后重试" + e);
 				}
+				event.preventDefault();
 			});
 
 		});
@@ -172,7 +173,7 @@
 	</script>
 </head>
 <body>
-	<form>
+	<form id="form1">
 		<table class="tableEdit">
 			<thead>
 				<tr>
@@ -182,7 +183,7 @@
 			<tr>
 				<th>客户名称：</th>
 				<td>
-					<input type="text" id="ChanName" maxlength="15"/>
+					<input type="text" id="ChanName" required="required" autofocus="autofocus" maxlength="15"/>
 				</td>
 				<th>成功几率：</th>
 				<td>
@@ -203,22 +204,22 @@
 			</tr>
 			<tr>
 				<th>联系人：</th>
-				<td><input type="text" id="ChanLinkMan" max="6"/></td>
+				<td><input type="text" id="ChanLinkMan" required="required" maxlength="25"/></td>
 				<th>联系电话：</th>
-				<td><input type="text" id="ChanLinkTel" maxlength="11" onkeyup="value=value.replace(/[^\d]/g,'')"/></td>
+				<td><input type="text" id="ChanLinkTel" maxlength="11" required="required" pattern="^[1]+\d{10}$"/></td>
 			</tr>
 			<tr>
 				<th>概要：</th>
-				<td colspan="3"><input type="text" style="width:300px" id="ChanTitle" /></td>
+				<td colspan="3"><input type="text" style="width:300px" required="required" id="ChanTitle" maxlength="2500"/></td>
 			</tr>
 			<tr>
 				<th>机会描述：</th>
-				<td colspan="3"><textarea id="ChanDesc"></textarea></td>
+				<td colspan="3"><textarea id="ChanDesc" required="required"></textarea></td>
 			</tr>
 			<tfoot>
 				<tr>
 					<td colspan="4">
-						<input type="button" value="确定" id="addChance" />&nbsp;&nbsp;
+						<input type="submit" value="确定" id="addChance" />&nbsp;&nbsp;
 						<input type="button" value="确定" id="UpdChance" />&nbsp;&nbsp;
 						<input type="button" value="关闭" onclick="window.close()" />
 					</td>

@@ -12,9 +12,8 @@
 		$(function () {
 			if (data.CusID != null) {
 				$("#dpTitle").text("新增联系人");
-				$(":button").eq(1).hide();
-				$(":button").eq(0).click(function () {
-					if ($.trim($("#LMName").val()).length != 0 && $.trim($(":radio:checked").val()).length != 0 && $.trim($("#LMDuty").val()).length != 0 && $.trim($("#LMMobileNo").val()).length != 0 && $.trim($("#LMMemo").val()).length != 0) {
+				$(":button").eq(0).hide();
+				$("#form1").on("submit",function (event) {
 						var d3 = {
 
 							"CusID": data.CusID,
@@ -47,13 +46,12 @@
 
 
 						});
-					} else {
-						alert("请将联系人资料填写完整");
-					}
 
+
+					event.preventDefault();
 				})
 			} else {
-				$(":button").eq(0).hide();
+				$(":submit").hide();
 				$.myAjax("../webServers/LinkMans.asmx/GetLinkManByLM", { "LMID": data.LMID }, function (d) {
 					$.each(d, function (i, j) {
 						$("#LMName").val(j.LMName);
@@ -65,7 +63,7 @@
 					});
 				});
 
-				$(":button").eq(1).click(function () {
+				$(":button").eq(0).click(function () {
 					//alert(1);
 					var d1 = {
 						"LMID": data.LMID,
@@ -102,46 +100,49 @@
 	</script>
 </head>
 <body>
-<table class="tableEdit">
-        <thead>
-            <tr>
-                <td colspan="4" id="dpTitle">编辑联系人</td>
-            </tr>
-        </thead>
-        <tr>
-            <th>姓名：</th>
-            <td>
-                <input type="text" id="LMName" maxlength="8"/></td>
-            <th>性别：</th>
-            <td>
-                <input type="radio" id="LMSex" value="男"/>男&nbsp;&nbsp;<input type="radio" id="LMSex" value="女"/>女
-            </td>
-        </tr>
-        <tr>
-            <th>职位：</th>
-            <td><input type="text" id="LMDuty"maxlength="12"/></td>
-            <th>固定电话：</th>
-            <td><input type="text" id="LMOfficeNo" maxlength="17" oninput = "value=value.replace(/[^\d]/g,'')"/></td>
-        </tr>
-         <tr>
-            <th>手机号码：</th>
-            <td><input type="text" id="LMMobileNo" maxlength="11" oninput = "value=value.replace(/[^\d]/g,'')"/></td>
-            <th></th>
-            <td></td>
-        </tr>
-        <tr>
-            <th>备注：</th>
-            <td colspan="3"><textarea id="LMMemo"></textarea></td>
-        </tr>
-        <tfoot>
-            <tr>
-				<td colspan="4">
-					<input type="button" value="确定" />&nbsp;&nbsp;
-					<input type="button" value="确定" />&nbsp;&nbsp;
-					<input type="button" value="关闭" onclick="window.close()" />
+	<form id="form1">
+		<table class="tableEdit">
+			<thead>
+				<tr>
+					<td colspan="4" id="dpTitle">编辑联系人</td>
+				</tr>
+			</thead>
+			<tr>
+				<th>姓名：</th>
+				<td>
+					<input type="text" id="LMName" maxlength="8" required="required" autofocus="autofocus"/>
 				</td>
-            </tr>
-        </tfoot>
-    </table>
+				<th>性别：</th>
+				<td>
+					<input type="radio" id="LMSex" value="男" />男&nbsp;&nbsp;<input type="radio" id="LMSex" value="女" />女
+				</td>
+			</tr>
+			<tr>
+				<th>职位：</th>
+				<td><input type="text" id="LMDuty" maxlength="12" required="required"/></td>
+				<th>固定电话：</th>
+				<td><input type="text" id="LMOfficeNo" pattern="[0-9-()（）]{7,18}" required="required" /></td>
+			</tr>
+			<tr>
+				<th>手机号码：</th>
+				<td><input type="text" id="LMMobileNo" pattern="0?(13|14|15|18|17)[0-9]{9}" required="required" /></td>
+				<th></th>
+				<td></td>
+			</tr>
+			<tr>
+				<th>备注：</th>
+				<td colspan="3"><textarea id="LMMemo" required="required"></textarea></td>
+			</tr>
+			<tfoot>
+				<tr>
+					<td colspan="4">
+						<input type="submit" value="确定" />&nbsp;&nbsp;
+						<input type="button" value="确定" />&nbsp;&nbsp;
+						<input type="button" value="关闭" onclick="window.close()" />
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
 </body>
 </html>
