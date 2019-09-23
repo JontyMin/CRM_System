@@ -39,17 +39,26 @@ namespace CRM_System.webServers
 			try
 			{
 				//先根据角色id删除已有权限
-				//Model.Power p = new Model.Power() {RoleID=rid };
-				DalBase.Delete<Model.Power>(rid);
-				foreach (int item in hs)
+				Model.Power p = new Model.Power() {RoleID=rid };
+				if (DalBase.Delete(p) != 0)
 				{
-					Model.Power p1 = new Model.Power() {
-						MenuID=item,
-						RoleID=rid
-					};
-					DalBase.Insert(p1);
+					foreach (int item in hs)
+					{
+						Model.Power p1 = new Model.Power()
+						{
+							MenuID = item,
+							RoleID = rid
+						};
+						DalBase.Insert(p1);
+					}
+					return true;
+
+
 				}
-				return true;
+				else
+				{
+					return false;
+				}
 			}
 			catch (Exception)
 			{

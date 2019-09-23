@@ -332,7 +332,7 @@ namespace Dal
 			return MyExecuteNonQuery(sb.ToString(), list.ToArray()); ;
 		}
 		/// <summary>
-		///删除
+		///删除根据主键
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="o"></param>
@@ -362,6 +362,50 @@ namespace Dal
 			return MyExecuteNonQuery(sb.ToString(),new SqlParameter[] { sp}) ;
 		}
 
+		/// <summary>
+		/// 根据字段删除
+		/// </summary>
+		/// <param name="bas"></param>
+		/// <returns></returns>
+		public static int Delete(ModelBase bas)
+		{
+			List<SqlParameter> ls = new List<SqlParameter>();
+			Type t = bas.GetType();
+			string TableName = t.Name;
+			// string sql = string.Format("delete from {0} where ");
+
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append("delete from ");
+			sb.Append(TableName);
+			sb.Append(" where 1=1 ");
+
+
+
+			//获得属性 判断哪个属性赋值了 就把这个属性作为删除的条件
+			PropertyInfo[] ps = t.GetProperties();
+			foreach (PropertyInfo p in ps)
+			{
+				if (p.GetValue(bas, null) != null)
+				{
+					sb.Append(" and ");
+					sb.Append(p.Name);
+					sb.Append(" = ");
+					sb.Append("@" + p.Name);
+					ls.Add(new SqlParameter("@" + p.Name, p.GetValue(bas, null)));
+				}
+			}
+			string sql = sb.ToString();
+			return MyExecuteNonQuery(sql, ls.ToArray());
+
+		}
+
+
+		/// <summary>
+		/// 得到数据行
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
 		public static int GetCount<T>() where T : ModelBase
 		{
 			Type t = typeof(T);
@@ -370,17 +414,36 @@ namespace Dal
 			return Convert.ToInt32(ExecuteObject(sql,null));
 		}
 
+
+		/// <summary>
+		/// 单值查询
+		/// </summary>
+		/// <param name="sql"></param>
+		/// <param name="sp"></param>
+		/// <returns></returns>
 		public static int SelectObj(string sql,SqlParameter[]sp) {
 			return Convert.ToInt32( ExecuteObject(sql,sp));
 
 		}
 
 
+	/// <summary>
+	/// 非反射插入
+	/// </summary>
+	/// <param name="sql"></param>
+	/// <param name="sp"></param>
+	/// <returns></returns>
 		public static int Insert(string sql, SqlParameter[] sp)
 		{
 			return MyExecuteNonQuery(sql,sp);
 
 		}
+
+		/// <summary>
+		/// 得到最大id
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
 		public static int GetMax<T>() where T : ModelBase
 		{
 			Type t = typeof(T);

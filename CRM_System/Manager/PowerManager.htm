@@ -69,9 +69,9 @@
 
 		});
 
-		   function setPower(roleID) {
-			   console.log(roleID);
-			   $.showModalDialog("EditRolePower.htm?data=" + Math.random(), roleID, 600, 560, function () {
+		function setPower(roleID) {
+			//alert(roleID);
+			$.showModalDialog("EditRolePower.htm?data=" + Math.random(), roleID, 600, 560, function () {
                 //...打开模式对话窗口，设置角色权限
             });
         }
