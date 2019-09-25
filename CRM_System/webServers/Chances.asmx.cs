@@ -42,11 +42,19 @@ namespace CRM_System.webServers
 				new SqlParameter("@UserLName",UserLName)
 			};
 			int rid = DalBase.SelectObj(sql1, sp1);
-			if (rid<=3)
+
+			//查询当前用户是否有访问权限
+			string sql2 = string.Format(@"select count(*) from Power where RoleID=@RoleID and MenuID=5");
+			SqlParameter[] sp2 = new SqlParameter[] {
+				new SqlParameter("@RoleID",rid)
+			};
+
+			if (DalBase.SelectObj(sql2,sp2)!=0)
 			{
 				string sql = string.Format(@"select * from Chances where ChanState=1  order by ChanID desc");
 				return DalBase.SelectsByWhere<Model.Chances>(sql, null);
 			}
+			
 			return null;
 			
 		}
@@ -261,6 +269,8 @@ namespace CRM_System.webServers
 				new SqlParameter("@UserLName",UserLName)
 			};
 			int rid = DalBase.SelectObj(sql2, sp2);
+
+
 
 			string sql = string.Format(@"select * from V_Chances  order by ChanID desc");
 			if (rid<=2)

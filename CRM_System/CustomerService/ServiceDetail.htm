@@ -108,7 +108,7 @@
 			})
 		});
 		$(document).ready(function display() {
-			var pageSize = 3;    //每页显示的记录条数
+			var pageSize = 5;    //每页显示的记录条数
 			var curPage = 0;        //当前页
 			var lastPage;        //最后页
 			var direct = 0;        //方向
@@ -169,11 +169,11 @@
 			function displayPage() {
 				if (curPage <= 1 && direct == -1) {
 					direct = 0;
-					alert("已经是第一页了");
+					//alert("已经是第一页了");
 					return;
 				} else if (curPage >= page && direct == 1) {
 					direct = 0;
-					alert("已经是最后一页了");
+					//alert("已经是最后一页了");
 					return;
 				}
 

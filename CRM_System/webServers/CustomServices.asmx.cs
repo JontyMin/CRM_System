@@ -102,7 +102,7 @@ namespace CRM_System.webServers
 			int uid = DalBase.SelectObj(sql1, sp1);
 			int rid = GetRid();
 
-			if (rid < 3 || CSState==3)
+			if (rid < 3 || CSState==3 )
 			{
 				string sql = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = @CSState order by CSID desc");
 				SqlParameter[] sp = new SqlParameter[] {
@@ -118,6 +118,15 @@ namespace CRM_System.webServers
 				};
 				return DalBase.SelectsByWhere<Model.V_CustomServices>(sql3,sp3);
 			}
+			else if (rid == 3 &&  CSState == 4)
+			{
+				string sql4 = string.Format(@"select * from [dbo].[v_CustomServices] where CSState = 4 and CSDueID=@CSDueID order by CSID desc");
+				SqlParameter[] sp4 = new SqlParameter[] {
+					new SqlParameter("@CSDueID",uid)
+				};
+				return DalBase.SelectsByWhere<Model.V_CustomServices>(sql4, sp4);
+			}
+
 
 			return null;
 		}

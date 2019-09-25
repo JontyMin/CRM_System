@@ -50,7 +50,7 @@
 			var data = window.dialogArguments;
 			//alert(data.key1);
 			if (data != null) {
-				$(":button:eq(0)").hide();
+				$(":submit").hide();
 				$("#dpTitle").text("修改用户");
 				UserID = data.key1;
 				$.myAjax("../webServers/Users.asmx/GetUser", { "uid": UserID }, function (d) {
@@ -65,7 +65,7 @@
 				});
 			} else {
 				$("#dpTitle").text("添加用户");
-				  $(":button:eq(1)").hide();
+				  $(":button:eq(0)").hide();
 			}
 
 
@@ -97,69 +97,74 @@
 
 			});
 
-			
-				
+			//用户名输入判断是否存在该用户
+			$("#UserLName").keyup(function () {
+				$.myAjax("../webServers/Users.asmx/ExisUser", { "User": $("#UserLName").val() }, function (d) {
+					if (d == 0) {
+						//alert(1);
+						$("#add").removeProp("disabled");
+					} else {
+						$("#add").attr("disabled", "true");
+						alert("用户已存在");
+					}
+				});
+
+			});
 			
 			//点击添加用户
-			$("#add").click(function () {
+			$("#form1").on("submit",function (e) {
 				try {
+					//alert(1);
 
-				if (isNotNull($("#UserLName").val()) && isNotNull($("#UserLPWD").val()) && isNotNull($("#ckPwd").val()) && isNotNull($("#UserName").val())) {
+					var data = {
+						"UserLName": $("#UserLName").val(),
+						"UserLPWD": $("#UserLPWD").val(),
+						"UserName": $("#UserName").val(),
+						"RoleID": $("#RolsInfo option:selected").val(),
+					};
+					//alert(JSON.stringify(data));
+					$.myAjax("../webServers/Users.asmx/AddUsers", { "users": data }, function (d) {
+						if (d > 0) {
+							alert("新增成功");
 
-					$.myAjax("../webServers/Users.asmx/ExisUser", { "User": $("#UserLName").val() }, function (d) {
-						if (d ==0) {
+							var data1 = {
+								"UserID": d,
+								"UserLName": $("#UserLName").val(),
+								"UserLPWD": $("#UserLPWD").val(),
+								"UserName": $("#UserName").val(),
+								"RoleName": $("#RolsInfo option:selected").text(),
+							};
 
-							//alert(1);
-							if (isEqual($("#UserLPWD").val(), $("#ckPwd").val())) {
-								var data = {
-									"UserLName": $("#UserLName").val(),
-									"UserLPWD": $("#UserLPWD").val(),
-									"UserName": $("#UserName").val(),
-									"RoleID": $("#RolsInfo option:selected").val(),
-								};
-								//alert(JSON.stringify(data));
-								$.myAjax("../webServers/Users.asmx/AddUsers", { "users": data }, function (d) {
-									if (d > 0) {
-										alert("新增成功");
-
-										var data1 = {
-											"UserID": d,
-											"UserLName": $("#UserLName").val(),
-											"UserLPWD": $("#UserLPWD").val(),
-											"UserName": $("#UserName").val(),
-											"RoleName": $("#RolsInfo option:selected").text(),
-										};
-
-										window.returnValue = data1;
-										window.close();
-									}
-								});
-							} else {
-								alert("密码不一致");
-							}
-						} else {
-							alert("用户名已存在");
+							window.returnValue = data1;
+							window.close();
 						}
-
 					});
 
-				} else {
-					alert("请填写完整");
-					}
-					
 				} catch (e) {
 					alert("添加失败，请稍后重试" + e);
 				}
+				e.preventDefault();
 			});
 
 
-
+			//二次密码验证
+			$("#ckPwd").blur(function () {
+				
+				var p1 = $("#UserLPWD").val();
+				var p2 = $("#ckPwd").val();
+				if (p1 != p2) {
+					$("#add").attr("disabled", "true");
+					alert("密码不一致");
+				} else {
+					$("#add").removeProp("disabled");
+				}
+			});
 
 		});
-
 	</script>
 </head>
 <body>
+	<form id="form1">
 		<table class="tableEdit">
 			<thead>
 				<tr>
@@ -168,19 +173,19 @@
 			</thead>
 			<tr>
 				<th>登陆名：</th>
-				<td colspan="3"><input type="text"  style="width:300px" id="UserLName" /></td>
+				<td colspan="3"><input type="text" style="width:300px" id="UserLName" required="required" /></td>
 			</tr>
 			<tr>
 				<th>密码：</th>
-				<td colspan="3"><input type="text"  maxlength="16" style="width:300px" id="UserLPWD"/></td>
+				<td colspan="3"><input type="text" maxlength="16" style="width:300px" id="UserLPWD" required="required" pattern="^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)])+$).{1,16}$" /></td>
 			</tr>
 			<tr>
 				<th>确认密码：</th>
-				<td colspan="3"><input type="text"   maxlength="16" style="width:300px" id="ckPwd" /><span id="ck"></span></td>
+				<td colspan="3"><input type="text" maxlength="16" style="width:300px" pattern="^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)])+$).{1,16}$" id="ckPwd" /></td>
 			</tr>
 			<tr>
 				<th>真实姓名：</th>
-				<td colspan="3"><input type="text"  style="width:300px" id="UserName" /></td>
+				<td colspan="3"><input type="text" style="width:300px" id="UserName" required="required" /></td>
 			</tr>
 			<tr>
 				<th>所属角色：</th>
@@ -192,12 +197,13 @@
 			<tfoot>
 				<tr>
 					<td colspan="4">
-						<input type="button" value="确定" id="add"/>&nbsp;&nbsp;
-						<input type="button" value="确定" id="update"/>&nbsp;&nbsp;
+						<input type="submit" value="确定" id="add" />&nbsp;&nbsp;
+						<input type="button" value="确定" id="update" />&nbsp;&nbsp;
 						<input type="button" value="关闭" onclick="window.close()" />
 					</td>
 				</tr>
 			</tfoot>
 		</table>
+	</form>
 </body>
 </html>

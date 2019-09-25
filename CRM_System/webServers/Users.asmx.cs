@@ -93,9 +93,24 @@ namespace CRM_System.webServers
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		[WebMethod]
+		[WebMethod(EnableSession =true)]
 		public int DelUsersById(int id) {
-			return DalBase.Delete<Model.Users>(id);
+
+			//根据当前登录name查询id
+			//判断是否相等
+			//当前登录人id
+			string UserLName = Session["UserLName"].ToString();
+			string sql1 = string.Format(@"select UserID from Users where UserLName=@UserLName");
+			SqlParameter[] sp1 = new SqlParameter[] {
+				new SqlParameter("@UserLName",UserLName)
+			};
+			int uid = DalBase.SelectObj(sql1, sp1);
+
+			if (id!=uid)
+			{
+				return DalBase.Delete<Model.Users>(id);
+			}
+			return -1;
 		}
 
 
